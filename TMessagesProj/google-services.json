@@ -1,69 +1,42 @@
 {
   "project_info": {
-    "project_number": "551995224478",
-    "firebase_url": "https://nekogram-b43bb.firebaseio.com",
-    "project_id": "nekogram-b43bb",
-    "storage_bucket": "nekogram-b43bb.appspot.com"
+    "project_number": "576098195411",
+    "firebase_url": "https://nekogramx.firebaseio.com",
+    "project_id": "nekogramx",
+    "storage_bucket": "nekogramx.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:551995224478:android:3010b8545df7fa6e",
+        "mobilesdk_app_id": "1:576098195411:android:888ac43e1c6b8d06b8c126",
         "android_client_info": {
-          "package_name": "tw.nekomimi.nekogram"
+          "package_name": "moe.wataru.nekogram"
         }
       },
       "oauth_client": [
         {
-          "client_id": "551995224478-u59bvc0oqd8ma9499rvo9s5vvgofrd0f.apps.googleusercontent.com",
+          "client_id": "576098195411-373c2i9795td3qfdsrgtna0rfo3g4urb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "moe.wataru.nekogram",
+            "certificate_hash": "0c926acb401a559aa22678d84284adf6e155ac74"
+          }
+        },
+        {
+          "client_id": "576098195411-aukrbj07ekkquk9m7n6q6daltm0k8o4v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCGMAA5lSWvRAgaVtF1-Bh3Di07zePnUbA"
-        },
-        {
-          "current_key": "AIzaSyB1FZcptgvQQZcUrPV7cJmjG5zkbCWxiK0"
+          "current_key": "AIzaSyC2TGE49I4DPUTPkfreUDEc3KXrt_BmtfI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "551995224478-u59bvc0oqd8ma9499rvo9s5vvgofrd0f.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:551995224478:android:99f9755a158003cb3a268f",
-        "android_client_info": {
-          "package_name": "tw.nekomimi.nekogram.beta"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "551995224478-u59bvc0oqd8ma9499rvo9s5vvgofrd0f.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCGMAA5lSWvRAgaVtF1-Bh3Di07zePnUbA"
-        },
-        {
-          "current_key": "AIzaSyB1FZcptgvQQZcUrPV7cJmjG5zkbCWxiK0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "551995224478-u59bvc0oqd8ma9499rvo9s5vvgofrd0f.apps.googleusercontent.com",
+              "client_id": "576098195411-aukrbj07ekkquk9m7n6q6daltm0k8o4v.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
