@@ -96,7 +96,7 @@ android {
             debuggable true
             jniDebuggable true
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".beta"
+           // applicationIdSuffix ".beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -139,18 +139,14 @@ android {
             manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
         }
 
-        /*
-
         HA {
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".beta"
+           // applicationIdSuffix ".beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
-         */
 
         release {
             debuggable false
@@ -180,13 +176,10 @@ android {
         java.srcDirs = ['src/multidex/java']
     }
 
-    /*
-
     sourceSets.HA {
         manifest.srcFile 'config/debug/AndroidManifest.xml'
     }
 
-     */
     sourceSets.release {
         manifest.srcFile 'config/release/AndroidManifest.xml'
         java.srcDirs = ['src/multidex/java']
