@@ -139,6 +139,8 @@ android {
             manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
         }
 
+        /*
+
         HA {
             debuggable false
             jniDebuggable false
@@ -147,6 +149,8 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+         */
 
         release {
             debuggable false
@@ -176,10 +180,13 @@ android {
         java.srcDirs = ['src/multidex/java']
     }
 
+    /*
+
     sourceSets.HA {
         manifest.srcFile 'config/debug/AndroidManifest.xml'
     }
 
+     */
     sourceSets.release {
         manifest.srcFile 'config/release/AndroidManifest.xml'
         java.srcDirs = ['src/multidex/java']
