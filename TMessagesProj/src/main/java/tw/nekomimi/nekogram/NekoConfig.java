@@ -12,8 +12,8 @@ import org.telegram.messenger.FileLog;
 public class NekoConfig {
 
     private static final Object sync = new Object();
-    public static boolean useIPv6 = false;
-    public static boolean hidePhone = true;
+    public static boolean useIPv6 = true;
+    public static boolean hidePhone = false;
     public static boolean ignoreBlocked = false;
     public static boolean forceTablet = false;
     public static int typeface = 0;
@@ -24,12 +24,12 @@ public class NekoConfig {
     public static boolean hideProxySponsorChannel = false;
     public static boolean saveCacheToPrivateDirectory = Build.VERSION.SDK_INT >= 24;
     public static float stickerSize = 14.0f;
-    public static boolean unlimitedFavedStickers = false;
+    public static boolean unlimitedFavedStickers = true;
     public static boolean disablePhotoSideAction = true;
-    public static boolean unlimitedPinnedDialogs = false;
-    public static boolean openArchiveOnPull = false;
+    public static boolean unlimitedPinnedDialogs = true;
+    public static boolean openArchiveOnPull = true;
 
-    public static boolean showAddToSavedMessages = true;
+    public static boolean showAddToSavedMessages = false;
     public static boolean showReport = false;
     public static boolean showPrPr = false;
     public static boolean showViewHistory = true;
@@ -38,7 +38,7 @@ public class NekoConfig {
     public static boolean showDeleteDownloadedFile = true;
     public static boolean showMessageDetails = false;
     public static boolean showTranslate = true;
-    public static boolean showRepeat = true;
+    public static boolean showRepeat = false;
 
     public static int eventType = 0;
     public static int actionBarDecoration = 0;
