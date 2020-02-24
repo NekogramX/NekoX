@@ -187,8 +187,10 @@ public class LoginActivity extends BaseFragment {
                         finishFragment();
                     }
                 } else if (id == 2) {
-                    presentFragment(new LanguageSelectActivity());
+                    presentFragment(new ProxyListActivity());
                 } else if (id == 3) {
+                    presentFragment(new LanguageSelectActivity());
+                } else if (id == 4) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(LocaleController.getString("BotLogin", R.string.BotLogin));
 
@@ -291,11 +293,12 @@ public class LoginActivity extends BaseFragment {
 
         ActionBarMenu menu = actionBar.createMenu();
 
-        menu.addItem(2, R.drawable.menu_language);
+        menu.addItem(2, R.drawable.proxy_on);
+        menu.addItem(3, R.drawable.ic_translate);
 
         if (NekoConfig.showTestBackend) {
 
-            menu.addItem(3, R.drawable.list_bot);
+            menu.addItem(4, R.drawable.list_bot);
 
         }
 
