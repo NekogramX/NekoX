@@ -9,116 +9,47 @@
 package org.telegram.ui;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.StateListAnimator;
+import android.animation.*;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Canvas;
-import android.graphics.Outline;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.text.*;
 import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.util.Base64;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
+import android.view.*;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import org.telegram.PhoneFormat.PhoneFormat;
-import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.ContactsController;
-import org.telegram.messenger.ImageLocation;
-import org.telegram.messenger.MessageObject;
-import org.telegram.messenger.MessagesController;
-import org.telegram.messenger.MessagesStorage;
-import org.telegram.messenger.NotificationCenter;
-import org.telegram.messenger.ApplicationLoader;
-import org.telegram.messenger.BuildVars;
-import org.telegram.messenger.FileLog;
-import org.telegram.messenger.LocaleController;
-import org.telegram.messenger.R;
-import org.telegram.messenger.SRPHelper;
+import org.telegram.messenger.*;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.RequestDelegate;
 import org.telegram.tgnet.SerializedData;
 import org.telegram.tgnet.TLRPC;
-import org.telegram.messenger.UserConfig;
-import org.telegram.messenger.Utilities;
-import org.telegram.ui.ActionBar.ActionBar;
-import org.telegram.ui.ActionBar.ActionBarMenu;
-import org.telegram.ui.ActionBar.ActionBarMenuItem;
-import org.telegram.ui.ActionBar.AlertDialog;
-import org.telegram.ui.ActionBar.BaseFragment;
-import org.telegram.ui.ActionBar.Theme;
-import org.telegram.ui.ActionBar.ThemeDescription;
+import org.telegram.ui.ActionBar.*;
 import org.telegram.ui.Cells.CheckBoxCell;
-import org.telegram.ui.Components.AlertsCreator;
-import org.telegram.ui.Components.AvatarDrawable;
-import org.telegram.ui.Components.BackupImageView;
-import org.telegram.ui.Components.CombinedDrawable;
-import org.telegram.ui.Components.ContextProgressView;
-import org.telegram.ui.Components.EditTextBoldCursor;
-import org.telegram.ui.Components.HintEditText;
-import org.telegram.ui.Components.ImageUpdater;
-import org.telegram.ui.Components.LayoutHelper;
-import org.telegram.ui.Components.RadialProgressView;
-import org.telegram.ui.Components.SlideView;
+import org.telegram.ui.Components.*;
+import tw.nekomimi.nekogram.NekoConfig;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import tw.nekomimi.nekogram.NekoConfig;
+import java.util.*;
 
 @SuppressLint("HardwareIds")
 public class LoginActivity extends BaseFragment {
@@ -149,7 +80,7 @@ public class LoginActivity extends BaseFragment {
     private FrameLayout floatingButtonContainer;
     private RadialProgressView floatingProgressView;
     private int progressRequestId;
-    private boolean[] doneButtonVisible = new boolean[] {true, false};
+    private boolean[] doneButtonVisible = new boolean[]{true, false};
 
     private static final int DONE_TYPE_FLOATING = 0;
     private static final int DONE_TYPE_ACTION = 1;
@@ -256,6 +187,8 @@ public class LoginActivity extends BaseFragment {
                         finishFragment();
                     }
                 } else if (id == 2) {
+                    presentFragment(new LanguageSelectActivity());
+                } else if (id == 3) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(LocaleController.getString("BotLogin", R.string.BotLogin));
 
@@ -291,7 +224,7 @@ public class LoginActivity extends BaseFragment {
                         }
 
                         ConnectionsManager.getInstance(currentAccount).cleanup(false);
-                        final TLRPC.TL_auth_importBotAuthorization req = new TLRPC.TL_auth_importBotAuthorization ();
+                        final TLRPC.TL_auth_importBotAuthorization req = new TLRPC.TL_auth_importBotAuthorization();
 
                         req.api_hash = BuildVars.APP_HASH;
                         req.api_id = BuildVars.APP_ID;
@@ -348,8 +281,6 @@ public class LoginActivity extends BaseFragment {
                             editText.setLayoutParams(layoutParams);
                         }
                     }
-                } else if (id == 3) {
-                    presentFragment(new LanguageSelectActivity());
                 }
             }
         });
@@ -360,13 +291,13 @@ public class LoginActivity extends BaseFragment {
 
         ActionBarMenu menu = actionBar.createMenu();
 
+        menu.addItem(2, R.drawable.menu_language);
+
         if (NekoConfig.showTestBackend) {
 
-            menu.addItem(2, R.drawable.list_bot);
+            menu.addItem(3, R.drawable.list_bot);
 
         }
-
-        menu.addItem(3, R.drawable.menu_language);
 
         actionBar.setAllowOverlayTitle(true);
         doneItem = menu.addItemWithWidth(done_button, R.drawable.ic_done, AndroidUtilities.dp(56));
@@ -912,7 +843,7 @@ public class LoginActivity extends BaseFragment {
             views[currentViewNum].onNextPressed();
         }
     }
-    
+
     private void showEditDoneProgress(final boolean show, boolean animated) {
         if (doneItemAnimation != null) {
             doneItemAnimation.cancel();
@@ -4119,7 +4050,7 @@ public class LoginActivity extends BaseFragment {
 
     @Override
     public ThemeDescription[] getThemeDescriptions() {
-        for (int a = 0;a < views.length; a++) {
+        for (int a = 0; a < views.length; a++) {
             if (views[a] == null) {
                 return new ThemeDescription[0];
             }
