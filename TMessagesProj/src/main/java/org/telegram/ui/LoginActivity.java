@@ -348,6 +348,8 @@ public class LoginActivity extends BaseFragment {
                             editText.setLayoutParams(layoutParams);
                         }
                     }
+                } else if (id == 3) {
+                    presentFragment(new LanguageSelectActivity());
                 }
             }
         });
@@ -363,6 +365,8 @@ public class LoginActivity extends BaseFragment {
             menu.addItem(2, R.drawable.list_bot);
 
         }
+
+        menu.addItem(3, R.drawable.menu_language);
 
         actionBar.setAllowOverlayTitle(true);
         doneItem = menu.addItemWithWidth(done_button, R.drawable.ic_done, AndroidUtilities.dp(56));
