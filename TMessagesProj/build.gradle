@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 repositories {
     mavenCentral()
     google()
@@ -32,6 +35,9 @@ dependencies {
     implementation 'com.stripe:stripe-android:2.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation files('libs/libgsaverification-client.aar')
+  //  implementation files('libs/libv2ray.aar')
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation "com.microsoft.appcenter:appcenter-analytics:2.5.1"
 }
 
