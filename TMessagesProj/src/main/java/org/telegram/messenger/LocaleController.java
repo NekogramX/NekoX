@@ -379,6 +379,42 @@ public class LocaleController {
         languagesDict.put(localeInfo.getKey(), localeInfo);
 
         localeInfo = new LocaleInfo();
+        localeInfo.name = "中文 (香港)";
+        localeInfo.nameEnglish = "Chinese (hongkong)";
+        localeInfo.shortName = "hongkong";
+        localeInfo.baseLangCode = "zh_hant_hk";
+        localeInfo.isRtl = false;
+        localeInfo.pathToFile = "unofficial";
+        localeInfo.pluralLangCode = "zh_hk";
+        localeInfo.builtIn = true;
+        languages.add(localeInfo);
+        languagesDict.put(localeInfo.getKey(), localeInfo);
+
+        localeInfo = new LocaleInfo();
+        localeInfo.name = "香港人口語";
+        localeInfo.nameEnglish = "Chinese (hongkonger)";
+        localeInfo.shortName = "hongkonger";
+        localeInfo.baseLangCode = "zh_hant_hk";
+        localeInfo.isRtl = false;
+        localeInfo.pathToFile = "unofficial";
+        localeInfo.pluralLangCode = "zh_hk";
+        localeInfo.builtIn = true;
+        languages.add(localeInfo);
+        languagesDict.put(localeInfo.getKey(), localeInfo);
+
+        localeInfo = new LocaleInfo();
+        localeInfo.name = "廣東話";
+        localeInfo.nameEnglish = "Chinese (cantonese)";
+        localeInfo.shortName = "cantonese";
+        localeInfo.baseLangCode = "zh_hant_cantonese";
+        localeInfo.isRtl = false;
+        localeInfo.pathToFile = "unofficial";
+        localeInfo.pluralLangCode = "zh_hk";
+        localeInfo.builtIn = true;
+        languages.add(localeInfo);
+        languagesDict.put(localeInfo.getKey(), localeInfo);
+
+        localeInfo = new LocaleInfo();
         localeInfo.name = "日本語";
         localeInfo.nameEnglish = "Japanese";
         localeInfo.shortName = "ja_raw";
