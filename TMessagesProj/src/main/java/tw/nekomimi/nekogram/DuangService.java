@@ -49,9 +49,9 @@ public class DuangService extends Service {
 
             try {
 
-                VmessLoader loader = new VmessLoader();
+                VmessLoader loader = new VmessLoader(getApplication());
 
-                loader.initConfig(InteralProxy.mkConfig());
+                loader.initPublic();
 
                 loader.start();
 
