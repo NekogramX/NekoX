@@ -116,7 +116,16 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             checkImageView.setScaleType(ImageView.ScaleType.CENTER);
             checkImageView.setContentDescription(LocaleController.getString("Edit", R.string.Edit));
             addView(checkImageView, LayoutHelper.createFrame(48, 48, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 8, 8, 8, 0));
-            checkImageView.setOnClickListener(v -> presentFragment(new ProxySettingsActivity(currentInfo)));
+            checkImageView.setOnClickListener(v -> {
+                if (currentInfo.isInternal) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getParentActivity());
+                    alert.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
+                    alert.setNegativeButton(LocaleController.getString("OK", R.string.OK), null);
+                    alert.show()
+                } else {
+                    presentFragment(new ProxySettingsActivity(currentInfo));
+                }
+            });
 
             setWillNotDraw(false);
         }
