@@ -774,10 +774,6 @@ public class SharedConfig {
         ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
         internalProxy.isInternal = true;
         proxyList.add(internalProxy);
-        if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-            ProxyInfo info = currentProxy = new ProxyInfo(proxyAddress, proxyPort, proxyUsername, proxyPassword, proxySecret);
-            proxyList.add(0, info);
-        }
     }
 
     public static void saveProxyList() {
