@@ -36,6 +36,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
+
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.*;
 import org.telegram.tgnet.ConnectionsManager;
@@ -45,6 +46,7 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.*;
 import org.telegram.ui.Cells.CheckBoxCell;
 import org.telegram.ui.Components.*;
+
 import tw.nekomimi.nekogram.NekoConfig;
 
 import java.io.BufferedReader;
@@ -52,7 +54,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 @SuppressLint("HardwareIds")
-public class LoginActivity extends BaseFragment {
+public class LoginActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
     private int currentViewNum;
     private SlideView[] views = new SlideView[9];
@@ -86,6 +88,9 @@ public class LoginActivity extends BaseFragment {
     private static final int DONE_TYPE_ACTION = 1;
 
     private final static int done_button = 1;
+
+    private ActionBarMenuItem proxyItem;
+    private ProxyDrawable proxyDrawable;
 
     private class ProgressView extends View {
 
@@ -293,7 +298,11 @@ public class LoginActivity extends BaseFragment {
 
         ActionBarMenu menu = actionBar.createMenu();
 
-        menu.addItem(2, R.drawable.proxy_on);
+        proxyDrawable = new ProxyDrawable(context);
+        proxyItem = menu.addItem(2, proxyDrawable);
+        proxyItem.setContentDescription(LocaleController.getString("ProxySettings", R.string.ProxySettings));
+        updateProxyButton(true);
+
         menu.addItem(3, R.drawable.ic_translate);
 
         if (NekoConfig.showTestBackend) {
@@ -506,6 +515,47 @@ public class LoginActivity extends BaseFragment {
         actionBar.setTitle(views[currentViewNum].getHeaderName());
 
         return fragmentView;
+    }
+
+    int currentConnectionState = ConnectionsManager.ConnectionStateConnecting;
+
+    private void updateProxyButton(boolean animated) {
+        if (proxyDrawable == null) {
+            return;
+        }
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+        String proxyAddress = preferences.getString("proxy_ip", "");
+        boolean proxyEnabled;
+        if ((proxyEnabled = preferences.getBoolean("proxy_enabled", false) && !TextUtils.isEmpty(proxyAddress)) || getMessagesController().blockedCountry && !SharedConfig.proxyList.isEmpty()) {
+            if (!actionBar.isSearchFieldVisible()) {
+                proxyItem.setVisibility(View.VISIBLE);
+            }
+            int state = ConnectionsManager.getInstance(1).getConnectionState();
+            proxyDrawable.setConnected(true, state == ConnectionsManager.ConnectionStateConnected || state == ConnectionsManager.ConnectionStateUpdating, animated);
+        }
+    }
+
+    @Override
+    public boolean onFragmentCreate() {
+
+        getNotificationCenter().addObserver(this, NotificationCenter.proxySettingsChanged);
+        getNotificationCenter().addObserver(this, NotificationCenter.didUpdateConnectionState);
+
+        return super.onFragmentCreate();
+    }
+
+    @Override
+    public void didReceivedNotification(int id, int account, Object... args) {
+        int state = ConnectionsManager.getInstance(account).getConnectionState();
+        if (currentConnectionState != state) {
+            if (BuildVars.LOGS_ENABLED) {
+                FileLog.d("switch to state " + state);
+            }
+            currentConnectionState = state;
+            //   updateCurrentConnectionState(account);
+        } else if (id == NotificationCenter.proxySettingsChanged) {
+            updateProxyButton(false);
+        }
     }
 
     @Override
@@ -1519,10 +1569,10 @@ public class LoginActivity extends BaseFragment {
             HashMap<String, String> languageMap = new HashMap<>();
             if (NekoConfig.showTestBackend) {
                 countriesArray.add("Test Number");
-                countriesMap.put("Test Number","999");
-                codesMap.put("000","Test Number");
-                languageMap.put("TG","Test Number");
-                phoneFormatMap.put("999","XX X XXXX");
+                countriesMap.put("Test Number", "999");
+                codesMap.put("000", "Test Number");
+                languageMap.put("TG", "Test Number");
+                phoneFormatMap.put("999", "XX X XXXX");
             }
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().getAssets().open("countries.txt")));

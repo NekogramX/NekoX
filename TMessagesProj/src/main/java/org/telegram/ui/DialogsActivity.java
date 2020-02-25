@@ -3341,7 +3341,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             if (!actionBar.isSearchFieldVisible()) {
                 proxyItem.setVisibility(View.VISIBLE);
             }
-            proxyDrawable.setConnected(proxyEnabled, currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating, animated);
+            proxyDrawable.setConnected(true, currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating, animated);
             proxyItemVisisble = true;
         } else {
            // proxyItem.setVisibility(View.GONE);
