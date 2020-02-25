@@ -336,8 +336,6 @@ public class LocaleController {
         localeInfo.builtIn = true;
         languages.add(localeInfo);
         languagesDict.put(localeInfo.getKey(), localeInfo);
-        languagesDict.put("zh_cn", localeInfo);
-        languagesDict.put("zh_sg", localeInfo);
 
         localeInfo = new LocaleInfo();
         localeInfo.name = "瓜體中文";
@@ -350,9 +348,6 @@ public class LocaleController {
         localeInfo.builtIn = true;
         languages.add(localeInfo);
         languagesDict.put(localeInfo.getKey(), localeInfo);
-        languagesDict.put("zh_tw", localeInfo);
-        languagesDict.put("zh_hk", localeInfo);
-        languagesDict.put("zh_mo", localeInfo);
 
         localeInfo = new LocaleInfo();
         localeInfo.name = "简体中文";
@@ -365,6 +360,8 @@ public class LocaleController {
         localeInfo.builtIn = true;
         languages.add(localeInfo);
         languagesDict.put(localeInfo.getKey(), localeInfo);
+        languagesDict.put("zh_cn", localeInfo);
+        languagesDict.put("zh_sg", localeInfo);
 
         localeInfo = new LocaleInfo();
         localeInfo.name = "正體中文";
@@ -377,6 +374,7 @@ public class LocaleController {
         localeInfo.builtIn = true;
         languages.add(localeInfo);
         languagesDict.put(localeInfo.getKey(), localeInfo);
+        languagesDict.put("zh_tw", localeInfo);
 
         localeInfo = new LocaleInfo();
         localeInfo.name = "中文 (香港)";
@@ -389,6 +387,8 @@ public class LocaleController {
         localeInfo.builtIn = true;
         languages.add(localeInfo);
         languagesDict.put(localeInfo.getKey(), localeInfo);
+        languagesDict.put("zh_hk", localeInfo);
+        languagesDict.put("zh_mo", localeInfo);
 
         localeInfo = new LocaleInfo();
         localeInfo.name = "香港人口語";
