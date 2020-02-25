@@ -70,9 +70,9 @@ public class InteralProxy {
 
     public static String mkConfig() throws Exception {
 
-        String cfg = "{\"inbounds\":[{\"listen\":\"127.0.0.1\",\"port\":11210,\"protocol\":\"socks\",\"settings\":{\"auth\":\"noauth\",\"udp\":true,\"userLevel\":8},\"sniffing\":{\"destOverride\":[\"http\",\"tls\"],\"enabled\":true}},{\"listen\":\"127.0.0.1\",\"port\":11211,\"protocol\":\"http\",\"settings\":{\"userLevel\":8}}],\"outbounds\":[{\"protocol\":\"vmess\",\"settings\":{\"vnext\":[{\"address\":\"<internal>\",\"port\":443,\"users\":[{\"alterId\":64,\"id\":\"73670f86-6046-4ffd-b468-6cd73cea1f29\",\"level\":8,\"security\":\"none\"}]}]},\"streamSettings\":{\"network\":\"ws\",\"security\":\"tls\",\"tlssettings\":{\"allowInsecure\":true,\"serverName\":\"kurumi.io\"},\"wssettings\":{\"connectionReuse\":true,\"headers\":{\"Host\":\"kurumi.io\"},\"path\":\"/internet\"}}}]}";
-
-        return cfg.replace("<internal>", newAddress());
+        String cfg = "{\"inbounds\":[{\"listen\":\"127.0.0.1\",\"port\":11210,\"protocol\":\"socks\",\"settings\":{\"auth\":\"noauth\",\"udp\":true,\"userLevel\":8},\"sniffing\":{\"destOverride\":[\"http\",\"tls\"],\"enabled\":true}},{\"listen\":\"127.0.0.1\",\"port\":11211,\"protocol\":\"http\",\"settings\":{\"userLevel\":8}}],\"outbounds\":[{\"protocol\":\"vmess\",\"settings\":{\"vnext\":[{\"address\":\"_address\",\"port\":443,\"users\":[{\"alterId\":64,\"id\":\"73670f86-6046-4ffd-b468-6cd73cea1f29\",\"level\":8,\"security\":\"none\"}]}]},\"streamSettings\":{\"network\":\"ws\",\"security\":\"tls\",\"tlssettings\":{\"allowInsecure\":true,\"serverName\":\"kurumi.io\"},\"wssettings\":{\"connectionReuse\":true,\"headers\":{\"Host\":\"kurumi.io\"},\"path\":\"/internet\"}}}]}";
+            
+        return cfg.replace("_address", newAddress());
 
     }
 
