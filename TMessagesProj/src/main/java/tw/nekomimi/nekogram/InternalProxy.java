@@ -62,7 +62,7 @@ public class InternalProxy {
 
             } catch (Exception e) {
 
-                Log.d(TAG, "IP " + address + " 不可用");
+                Log.d(TAG, "IP " + address + " : " + e.getMessage());
 
             }
 
