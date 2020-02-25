@@ -1054,7 +1054,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     switchItem.setVisibility(View.GONE);
                 }
                 if (proxyItem != null && proxyItemVisisble) {
-                    proxyItem.setVisibility(View.GONE);
+                    //proxyItem.setVisibility(View.GONE);
                 }
                 if (listView != null) {
                     if (searchString != null) {
@@ -3344,7 +3344,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             proxyDrawable.setConnected(proxyEnabled, currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating, animated);
             proxyItemVisisble = true;
         } else {
-            proxyItem.setVisibility(View.GONE);
+           // proxyItem.setVisibility(View.GONE);
             proxyItemVisisble = false;
         }
     }
