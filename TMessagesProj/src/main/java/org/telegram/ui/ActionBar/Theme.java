@@ -1372,7 +1372,7 @@ public class Theme {
         }
 
         public String getName() {
-            if ("Blue".equals(name)) {
+            if ("Indigo".equals(name) || "Blue".equals(name)) {
                 return LocaleController.getString("ThemeClassic", R.string.ThemeClassic);
             } else if ("Dark Blue".equals(name)) {
                 return LocaleController.getString("ThemeDark", R.string.ThemeDark);

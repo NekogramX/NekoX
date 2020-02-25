@@ -114,9 +114,9 @@ public class DrawerProfileCell extends FrameLayout {
         }
         darkThemeView.setOnClickListener(v -> {
             SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("themeconfig", Activity.MODE_PRIVATE);
-            String dayThemeName = preferences.getString("lastDayTheme", "Blue");
+            String dayThemeName = preferences.getString("lastDayTheme", "Indigo");
             if (Theme.getTheme(dayThemeName) == null) {
-                dayThemeName = "Blue";
+                dayThemeName = "Indigo";
             }
             String nightThemeName = preferences.getString("lastDarkTheme", "Dark Blue");
             if (Theme.getTheme(nightThemeName) == null) {
@@ -125,7 +125,7 @@ public class DrawerProfileCell extends FrameLayout {
             Theme.ThemeInfo themeInfo = Theme.getActiveTheme();
             if (dayThemeName.equals(nightThemeName)) {
                 if (themeInfo.isDark()) {
-                    dayThemeName = "Blue";
+                    dayThemeName = "Indigo";
                 } else {
                     nightThemeName = "Dark Blue";
                 }
