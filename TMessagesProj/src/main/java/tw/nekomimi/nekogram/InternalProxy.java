@@ -44,11 +44,11 @@ public class InternalProxy {
 
             Socket server = new Socket();
 
-            InetSocketAddress target = new InetSocketAddress(address, 443);
+            InetSocketAddress target = new InetSocketAddress(address, 80);
 
             try {
 
-                server.connect(target, 500);
+                server.connect(target, 1000);
 
                 server.close();
 
