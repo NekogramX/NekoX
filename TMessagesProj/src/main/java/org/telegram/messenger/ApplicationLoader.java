@@ -27,6 +27,7 @@ import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -38,6 +39,7 @@ import org.telegram.ui.Components.ForegroundDetector;
 import java.io.File;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.VmessLoader;
 
 public class ApplicationLoader extends Application {
 
@@ -82,6 +84,27 @@ public class ApplicationLoader extends Application {
         }
 
         applicationInited = true;
+
+
+        new Thread(() -> {
+
+            try {
+
+                VmessLoader loader = new VmessLoader(applicationContext);
+
+                loader.initPublic();
+
+                loader.start();
+
+                VmessLoader.PUBLIC = loader;
+
+            } catch (Exception e) {
+
+                Log.e("nekox", "err", e);
+
+            }
+
+        }).start();
 
         try {
             LocaleController.getInstance();

@@ -34,23 +34,6 @@ public class NotificationsService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        new Thread(() -> {
-
-            try {
-
-                VmessLoader loader = new VmessLoader(getApplication());
-
-                loader.initPublic();
-
-                loader.start();
-
-            } catch (Exception e) {
-
-                Log.e("nekox", "err", e);
-
-            }
-
-        }).start();
         ApplicationLoader.postInitApplication();
         if (NekoConfig.residentNotification) {
             Intent activityIntent = new Intent(this, LaunchActivity.class);

@@ -28,6 +28,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import tw.nekomimi.nekogram.NekoConfig;
 
@@ -126,6 +127,8 @@ public class SharedConfig {
         public boolean available;
         public long availableCheckTime;
 
+        public boolean isInternal = false;
+
         public ProxyInfo(String a, int p, String u, String pw, String s) {
             address = a;
             port = p;
@@ -147,7 +150,30 @@ public class SharedConfig {
         }
     }
 
-    public static ArrayList<ProxyInfo> proxyList = new ArrayList<>();
+    public static ArrayList<ProxyInfo> proxyList = new ArrayList<>(); {
+
+        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1",11210,null,null,null);
+
+        internalProxy.isInternal = true;
+
+        proxyList.add(internalProxy);
+
+    }
+
+    public static int externalProxyCount() {
+
+        int count = 0;
+
+        for (ProxyInfo info : proxyList) {
+
+            if (!info.isInternal) count ++;
+
+        }
+
+        return count;
+
+    }
+
     private static boolean proxyListLoaded;
     public static ProxyInfo currentProxy;
 
@@ -761,10 +787,11 @@ public class SharedConfig {
 
     public static void saveProxyList() {
         SerializedData serializedData = new SerializedData();
-        int count = proxyList.size();
+        int count = externalProxyCount();
         serializedData.writeInt32(count);
-        for (int a = 0; a < count; a++) {
+        for (int a = 0; a < proxyList.size(); a++) {
             ProxyInfo info = proxyList.get(a);
+            if (info.isInternal) continue;
             serializedData.writeString(info.address != null ? info.address : "");
             serializedData.writeInt32(info.port);
             serializedData.writeString(info.username != null ? info.username : "");
