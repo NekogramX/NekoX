@@ -152,7 +152,7 @@ public class SharedConfig {
 
     public static ArrayList<ProxyInfo> proxyList = new ArrayList<>(); {
 
-        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1",11210,null,null,null);
+        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
 
         internalProxy.isInternal = true;
 
@@ -166,7 +166,7 @@ public class SharedConfig {
 
         for (ProxyInfo info : proxyList) {
 
-            if (!info.isInternal) count ++;
+            if (!info.isInternal) count++;
 
         }
 

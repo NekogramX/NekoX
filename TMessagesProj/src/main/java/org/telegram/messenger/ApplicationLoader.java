@@ -26,8 +26,8 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.google.android.exoplayer2.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -100,7 +100,7 @@ public class ApplicationLoader extends Application {
 
             } catch (Exception e) {
 
-                Log.e("nekox", "err", e);
+                Log.e("nekox", "V2RAY ERROR", e);
 
             }
 
@@ -236,7 +236,7 @@ public class ApplicationLoader extends Application {
             applicationContext.stopService(new Intent(applicationContext, NotificationsService.class));
 
             PendingIntent pintent = PendingIntent.getService(applicationContext, 0, new Intent(applicationContext, NotificationsService.class), 0);
-            AlarmManager alarm = (AlarmManager)applicationContext.getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarm = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
             alarm.cancel(pintent);
         }
     }
