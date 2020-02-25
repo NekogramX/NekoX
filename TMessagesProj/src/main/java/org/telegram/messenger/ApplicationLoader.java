@@ -89,15 +89,15 @@ public class ApplicationLoader extends Application {
 
         applicationInited = true;
 
-        if (!new File(applicationContext.getFilesDir(),"unoffical_base_classic_zh_cn.xml").isFile()) {
+        if (!new File(applicationContext.getFilesDir(), "unoffical_base_classic_zh_cn.xml").isFile()) {
 
             try {
 
-                ZipUtil.unzip(applicationContext.getAssets().open("built-in-languages.zip"),applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
+                ZipUtil.unzip(applicationContext.getAssets().open("built-in-languages.zip"), applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
 
             } catch (IOException e) {
 
-                Log.e("nekox","load languages error",e);
+                Log.e("nekox", "load languages error", e);
 
             }
 
@@ -105,11 +105,23 @@ public class ApplicationLoader extends Application {
 
         SharedConfig.loadProxyList();
 
-        SharedPreferences preferences = applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+        SharedPreferences preferences = MessagesController.getGlobalMainSettings();
 
         if (!preferences.contains("proxy_enabled")) {
 
-            preferences.edit().putBoolean("proxy_enabled",true).commit();
+            SharedConfig.currentProxy = SharedConfig.proxyList.get(0);
+
+            SharedPreferences.Editor editor = preferences.edit();
+
+            editor.putString("proxy_ip", SharedConfig.currentProxy.address);
+            editor.putString("proxy_pass", SharedConfig.currentProxy.password);
+            editor.putString("proxy_user", SharedConfig.currentProxy.username);
+            editor.putInt("proxy_port", SharedConfig.currentProxy.port);
+            editor.putString("proxy_secret", SharedConfig.currentProxy.secret);
+
+            editor.putBoolean("proxy_enabled", true)
+
+            editor.commit();
 
         }
 
@@ -261,7 +273,7 @@ public class ApplicationLoader extends Application {
             applicationContext.stopService(new Intent(applicationContext, NotificationsService.class));
 
             PendingIntent pintent = PendingIntent.getService(applicationContext, 0, new Intent(applicationContext, NotificationsService.class), 0);
-            AlarmManager alarm = (AlarmManager)applicationContext.getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarm = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
             alarm.cancel(pintent);
         }
     }
