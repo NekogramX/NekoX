@@ -29,23 +29,19 @@ public class VmessLoader {
 
     }
 
-    static String cfg = Base64.decodeStr("eyJpbmJvdW5kcyI6W3sidGFnIjoic29ja3MtaW4iLCJsaXN0ZW4iOiIxMjcuMC4wLjEiLCJwb3J0IjoxMTIxMCwicHJvdG9jb2wiOiJzb2NrcyIsInNldHRpbmdzIjp7ImF1dGgiOiJub2F1dGgiLCJ1ZHAiOnRydWUsInVzZXJMZXZlbCI6OH0sInNuaWZmaW5nIjp7ImRlc3RPdmVycmlkZSI6WyJodHRwIiwidGxzIl0sImVuYWJsZWQiOnRydWV9fV0sIm91dGJvdW5kcyI6W3sidGFnIjoicHJveHkiLCJwcm90b2NvbCI6InZtZXNzIiwic2V0dGluZ3MiOnsidm5leHQiOlt7ImFkZHJlc3MiOiJfYWRkcmVzcyIsInBvcnQiOjQ0MywidXNlcnMiOlt7ImFsdGVySWQiOjY0LCJpZCI6IjczNjcwZjg2LTYwNDYtNGZmZC1iNDY4LTZjZDczY2VhMWYyOSIsImxldmVsIjo4LCJzZWN1cml0eSI6Im5vbmUifV19XX0sInN0cmVhbVNldHRpbmdzIjp7Im5ldHdvcmsiOiJ3cyIsInNlY3VyaXR5IjoidGxzIiwidGxzc2V0dGluZ3MiOnsiYWxsb3dJbnNlY3VyZSI6dHJ1ZSwic2VydmVyTmFtZSI6Im5la294Lm1lIn0sIndzc2V0dGluZ3MiOnsiY29ubmVjdGlvblJldXNlIjp0cnVlLCJoZWFkZXJzIjp7Ikhvc3QiOiJuZWtveC5tZSJ9LCJwYXRoIjoiL2ludGVybmV0In19fV0sInJvdXRpbmciOnsiZG9tYWluU3RyYXRlZ3kiOiJJUElmTm9uTWF0Y2giLCJydWxlcyI6W3siaW5ib3VuZFRhZyI6WyJzb2Nrcy1pbiJdLCJvdXRib3VuZFRhZyI6InByb3h5IiwidHlwZSI6ImZpZWxkIn1dfX0=");
-
     public void initPublic() throws Exception {
 
         if (point.getIsRunning()) stop();
 
-        initConfig(cfg.replace("_address", "104.24.108.141"));
+        String addr = InternalProxy.newAddress();
 
-        point.setDomainName("104.24.108.141:443");
+        String cfg = Base64.decodeStr("eyJpbmJvdW5kcyI6W3sidGFnIjoic29ja3MtaW4iLCJsaXN0ZW4iOiIxMjcuMC4wLjEiLCJwb3J0IjoxMTIxMCwicHJvdG9jb2wiOiJzb2NrcyIsInNldHRpbmdzIjp7ImF1dGgiOiJub2F1dGgiLCJ1ZHAiOnRydWUsInVzZXJMZXZlbCI6OH0sInNuaWZmaW5nIjp7ImRlc3RPdmVycmlkZSI6WyJodHRwIiwidGxzIl0sImVuYWJsZWQiOnRydWV9fV0sIm91dGJvdW5kcyI6W3sidGFnIjoicHJveHkiLCJwcm90b2NvbCI6InZtZXNzIiwic2V0dGluZ3MiOnsidm5leHQiOlt7ImFkZHJlc3MiOiJfYWRkcmVzcyIsInBvcnQiOjQ0MywidXNlcnMiOlt7ImFsdGVySWQiOjY0LCJpZCI6IjczNjcwZjg2LTYwNDYtNGZmZC1iNDY4LTZjZDczY2VhMWYyOSIsImxldmVsIjo4LCJzZWN1cml0eSI6Im5vbmUifV19XX0sInN0cmVhbVNldHRpbmdzIjp7Im5ldHdvcmsiOiJ3cyIsInNlY3VyaXR5IjoidGxzIiwidGxzc2V0dGluZ3MiOnsiYWxsb3dJbnNlY3VyZSI6dHJ1ZSwic2VydmVyTmFtZSI6Im5la294Lm1lIn0sIndzc2V0dGluZ3MiOnsiY29ubmVjdGlvblJldXNlIjp0cnVlLCJoZWFkZXJzIjp7Ikhvc3QiOiJuZWtveC5tZSJ9LCJwYXRoIjoiL2ludGVybmV0In19fV0sInJvdXRpbmciOnsiZG9tYWluU3RyYXRlZ3kiOiJJUElmTm9uTWF0Y2giLCJydWxlcyI6W3siaW5ib3VuZFRhZyI6WyJzb2Nrcy1pbiJdLCJvdXRib3VuZFRhZyI6InByb3h5IiwidHlwZSI6ImZpZWxkIn1dfX0=");
 
-        start();
+        cfg = cfg.replace("_address", InternalProxy.newAddress());
 
-        String newCfg = cfg.replace("_address", InternalProxy.newAddress());
+        initConfig(cfg);
 
-        stop();
-
-        initConfig(newCfg);
+        point.setDomainName(addr + ":443");
 
         start();
 
