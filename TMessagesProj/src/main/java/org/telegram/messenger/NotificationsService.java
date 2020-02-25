@@ -33,6 +33,7 @@ public class NotificationsService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
         new Thread(() -> {
 
             try {
