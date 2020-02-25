@@ -48,7 +48,7 @@ public class InternalProxy {
 
             try {
 
-                server.connect(target, 1000);
+                server.connect(target, 200);
 
                 server.close();
 
