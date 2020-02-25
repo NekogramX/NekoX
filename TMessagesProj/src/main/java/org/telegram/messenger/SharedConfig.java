@@ -751,6 +751,9 @@ public class SharedConfig {
         proxyList.clear();
         currentProxy = null;
         String list = preferences.getString("proxy_list", null);
+        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
+        internalProxy.isInternal = true;
+        proxyList.add(internalProxy);
         if (!TextUtils.isEmpty(list)) {
             byte[] bytes = Base64.decode(list, Base64.DEFAULT);
             SerializedData data = new SerializedData(bytes);
@@ -771,9 +774,6 @@ public class SharedConfig {
             }
             data.cleanup();
         }
-        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
-        internalProxy.isInternal = true;
-        proxyList.add(internalProxy);
     }
 
     public static void saveProxyList() {
