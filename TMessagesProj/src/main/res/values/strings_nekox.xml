@@ -2,6 +2,7 @@
 <resources>
 
     <string name="NekoXProxy">NekoX Public Proxy</string>
-    <string name="NekoXProxyInfo">:)</string>
+    <string name="NekoXProxyInfo">Enjoy :)</string>
+    <string name="BuiltInProxyCannotBeDeleted">You cannot delete a built-in proxy :)</string>
 
 </resources>

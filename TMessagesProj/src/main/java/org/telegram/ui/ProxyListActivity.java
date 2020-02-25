@@ -118,10 +118,11 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             addView(checkImageView, LayoutHelper.createFrame(48, 48, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 8, 8, 8, 0));
             checkImageView.setOnClickListener(v -> {
                 if (currentInfo.isInternal) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getParentActivity());
-                    alert.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
-                    alert.setNegativeButton(LocaleController.getString("OK", R.string.OK), null);
-                    alert.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                    builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
+                    builder.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
+                    builder.setNegativeButton(LocaleController.getString("OK", R.string.OK), null);
+                    builder.show();
                 } else {
                     presentFragment(new ProxySettingsActivity(currentInfo));
                 }
@@ -374,28 +375,39 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         listView.setOnItemLongClickListener((view, position) -> {
             if (position >= proxyStartRow && position < proxyEndRow) {
                 final SharedConfig.ProxyInfo info = SharedConfig.proxyList.get(position - proxyStartRow);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-                builder.setMessage(LocaleController.getString("DeleteProxy", R.string.DeleteProxy));
-                builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
                 builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialog, which) -> {
-                    SharedConfig.deleteProxy(info);
-                    if (SharedConfig.currentProxy == null) {
-                        useProxyForCalls = false;
-                        useProxySettings = false;
-                    }
-                    NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
-                    NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
-                    NotificationCenter.getGlobalInstance().addObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
-                    updateRows(false);
-                    if (listAdapter != null) {
-                        listAdapter.notifyItemRemoved(position);
+
+                if (info.isInternal) {
+
+                    builder.setMessage(LocaleController.getString("BuiltInProxyCannotBeDeleted", R.string.BuiltInProxyCannotBeDeleted));
+                    builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
+
+                } else {
+
+                    builder.setMessage(LocaleController.getString("DeleteProxy", R.string.DeleteProxy));
+                    builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
+                    builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
+                    builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialog, which) -> {
+                        SharedConfig.deleteProxy(info);
                         if (SharedConfig.currentProxy == null) {
-                            listAdapter.notifyItemChanged(useProxyRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
-                            listAdapter.notifyItemChanged(callsRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
+                            useProxyForCalls = false;
+                            useProxySettings = false;
                         }
-                    }
-                });
+                        NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
+                        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+                        NotificationCenter.getGlobalInstance().addObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
+                        updateRows(false);
+                        if (listAdapter != null) {
+                            listAdapter.notifyItemRemoved(position);
+                            if (SharedConfig.currentProxy == null) {
+                                listAdapter.notifyItemChanged(useProxyRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
+                                listAdapter.notifyItemChanged(callsRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
+                            }
+                        }
+                    });
+                }
                 showDialog(builder.create());
                 return true;
             }
