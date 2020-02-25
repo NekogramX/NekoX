@@ -773,6 +773,8 @@ public class SharedConfig {
                 }
             }
             data.cleanup();
+        } else {
+            currentProxy = internalProxy;
         }
     }
 
