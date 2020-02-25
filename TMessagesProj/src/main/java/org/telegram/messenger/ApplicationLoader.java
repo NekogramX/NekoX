@@ -37,7 +37,10 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.Components.ForegroundDetector;
 
 import java.io.File;
+import java.io.IOException;
 
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ZipUtil;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.VmessLoader;
 
@@ -84,6 +87,20 @@ public class ApplicationLoader extends Application {
         }
 
         applicationInited = true;
+
+        if (!new File(applicationContext.getFilesDir(),"unoffical_base_classic_zh_cn.xml").isFile()) {
+
+            try {
+
+                ZipUtil.unzip(applicationContext.getAssets().open("built-in-languages.zip"),applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
+
+            } catch (IOException e) {
+
+                Log.e("nekox","load languages error",e);
+
+            }
+
+        }
 
         new Thread(() -> {
 
