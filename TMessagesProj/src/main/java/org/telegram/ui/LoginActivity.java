@@ -1517,6 +1517,13 @@ public class LoginActivity extends BaseFragment {
             }
 
             HashMap<String, String> languageMap = new HashMap<>();
+            if (NekoConfig.showTestBackend) {
+                countriesArray.add("Test Number");
+                countriesMap.put("Test Number","999");
+                codesMap.put("000","Test Number");
+                languageMap.put("TG","Test Number");
+                phoneFormatMap.put("999","XX X XXXX");
+            }
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().getAssets().open("countries.txt")));
                 String line;

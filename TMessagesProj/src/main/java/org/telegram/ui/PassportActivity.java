@@ -140,6 +140,8 @@ import java.util.TimerTask;
 
 import javax.crypto.Cipher;
 
+import tw.nekomimi.nekogram.NekoConfig;
+
 public class PassportActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
     public final static int TYPE_REQUEST = 0;
@@ -2784,6 +2786,13 @@ public class PassportActivity extends BaseFragment implements NotificationCenter
         actionBar.setTitle(LocaleController.getString("PassportPhone", R.string.PassportPhone));
 
         languageMap = new HashMap<>();
+        if (NekoConfig.showTestBackend) {
+            countriesArray.add("Test Number");
+            countriesMap.put("Test Number","999");
+            codesMap.put("000","Test Number");
+            languageMap.put("TG","Test Number");
+            phoneFormatMap.put("999","XX X XXXX");
+        }
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(context.getResources().getAssets().open("countries.txt")));
             String line;
@@ -5027,6 +5036,9 @@ public class PassportActivity extends BaseFragment implements NotificationCenter
 
         if (json != null && languageMap == null) {
             languageMap = new HashMap<>();
+            if (NekoConfig.showTestBackend) {
+                languageMap.put("TG","Test Number");
+            }
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(ApplicationLoader.applicationContext.getResources().getAssets().open("countries.txt")));
                 String line;

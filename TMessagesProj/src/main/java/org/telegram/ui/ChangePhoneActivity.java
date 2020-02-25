@@ -83,6 +83,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tw.nekomimi.nekogram.NekoConfig;
+
 public class ChangePhoneActivity extends BaseFragment {
 
     private int currentViewNum = 0;
@@ -614,6 +616,13 @@ public class ChangePhoneActivity extends BaseFragment {
             addView(textView2, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT, 0, 28, 0, 10));
 
             HashMap<String, String> languageMap = new HashMap<>();
+            if (NekoConfig.showTestBackend) {
+                countriesArray.add("Test Number");
+                countriesMap.put("Test Number","999");
+                codesMap.put("000","Test Number");
+                languageMap.put("TG","Test Number");
+                phoneFormatMap.put("999","XX X XXXX");
+            }
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().getAssets().open("countries.txt")));
                 String line;
