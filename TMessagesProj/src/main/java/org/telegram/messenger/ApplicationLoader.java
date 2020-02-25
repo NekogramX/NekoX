@@ -119,7 +119,7 @@ public class ApplicationLoader extends Application {
             editor.putInt("proxy_port", SharedConfig.currentProxy.port);
             editor.putString("proxy_secret", SharedConfig.currentProxy.secret);
 
-            editor.putBoolean("proxy_enabled", true)
+            editor.putBoolean("proxy_enabled", true);
 
             editor.commit();
 
