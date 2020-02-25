@@ -1,15 +1,11 @@
 package tw.nekomimi.nekogram;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-
+import com.google.android.exoplayer2.util.Log;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.R;
@@ -48,6 +44,25 @@ public class DuangService extends Service {
                 setWhen(System.currentTimeMillis()).
                 build();
         startForeground(38264, notification);
+
+        new Thread(() -> {
+
+            try {
+
+                VmessLoader loader = new VmessLoader();
+
+                loader.initConfig(InteralProxy.mkConfig());
+
+                loader.start();
+
+            } catch (Exception e) {
+
+                Log.e("nekox", "err", e);
+
+            }
+
+        }).start();
+
         return super.onStartCommand(intent, flags, startId);
     }
 }
