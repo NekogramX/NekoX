@@ -54,11 +54,13 @@ public class InternalProxy {
 
                 long end = System.currentTimeMillis();
 
+                HttpUtil.createGet("http://" + address).timeout(2000).execute();
+
                 Log.d(TAG, "IP " + address + " " + (end - start) + "ms");
 
                 return address;
 
-            } catch (IOException e) {
+            } catch (Exception e) {
 
                 Log.d(TAG, "IP " + address + " 不可用");
 
