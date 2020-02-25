@@ -121,7 +121,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     AlertDialog.Builder alert = new AlertDialog.Builder(getParentActivity());
                     alert.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
                     alert.setNegativeButton(LocaleController.getString("OK", R.string.OK), null);
-                    alert.show()
+                    alert.show();
                 } else {
                     presentFragment(new ProxySettingsActivity(currentInfo));
                 }
