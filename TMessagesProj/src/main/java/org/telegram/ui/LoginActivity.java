@@ -538,16 +538,6 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     @Override
     public boolean onFragmentCreate() {
 
-        SharedConfig.loadProxyList();
-
-        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
-
-        if (!preferences.contains("proxy_enabled")) {
-
-            preferences.edit().putBoolean("proxy_enabled",true).commit();
-
-        }
-
         getNotificationCenter().addObserver(this, NotificationCenter.proxySettingsChanged);
         getNotificationCenter().addObserver(this, NotificationCenter.didUpdateConnectionState);
 

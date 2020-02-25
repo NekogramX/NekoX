@@ -9,6 +9,7 @@
 package org.telegram.messenger;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
@@ -99,6 +100,16 @@ public class ApplicationLoader extends Application {
                 Log.e("nekox","load languages error",e);
 
             }
+
+        }
+
+        SharedConfig.loadProxyList();
+
+        SharedPreferences preferences = applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+
+        if (!preferences.contains("proxy_enabled")) {
+
+            preferences.edit().putBoolean("proxy_enabled",true).commit();
 
         }
 
