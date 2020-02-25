@@ -150,15 +150,7 @@ public class SharedConfig {
         }
     }
 
-    public static ArrayList<ProxyInfo> proxyList = new ArrayList<>(); {
-
-        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
-
-        internalProxy.isInternal = true;
-
-        proxyList.add(internalProxy);
-
-    }
+    public static ArrayList<ProxyInfo> proxyList = new ArrayList<>();
 
     public static int externalProxyCount() {
 
@@ -763,6 +755,14 @@ public class SharedConfig {
             byte[] bytes = Base64.decode(list, Base64.DEFAULT);
             SerializedData data = new SerializedData(bytes);
             int count = data.readInt32(false);
+            ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
+            internalProxy.isInternal = true;
+            proxyList.add(internalProxy);
+            if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+                if (proxyAddress.equals(internalProxy.address) && proxyPort == internalProxy.port && proxyUsername.equals(internalProxy.username) && proxyPassword.equals(internalProxy.password)) {
+                    currentProxy = internalProxy;
+                }
+            }
             for (int a = 0; a < count; a++) {
                 ProxyInfo info = new ProxyInfo(
                         data.readString(false),
