@@ -546,13 +546,13 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
     @Override
     public void didReceivedNotification(int id, int account, Object... args) {
-        int state = ConnectionsManager.getInstance(account).getConnectionState();
-        if (currentConnectionState != state) {
-            if (BuildVars.LOGS_ENABLED) {
-                FileLog.d("switch to state " + state);
+        if (id == NotificationCenter.didUpdateConnectionState) {
+            int state = AccountInstance.getInstance(account).getConnectionsManager().getConnectionState();
+            if (currentConnectionState != state) {
+                currentConnectionState = state;
+                updateProxyButton(true);
             }
-            currentConnectionState = state;
-            //   updateCurrentConnectionState(account);
+
         } else if (id == NotificationCenter.proxySettingsChanged) {
             updateProxyButton(false);
         }
@@ -588,7 +588,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     }
 
     @Override
-    public void onRequestPermissionsResultFragment(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResultFragment(int requestCode, String[] permissions,
+                                                   int[] grantResults) {
         if (requestCode == 6) {
             checkPermissions = false;
             if (currentViewNum == 0) {
@@ -647,7 +648,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         editor.commit();
     }
 
-    private void putBundleToEditor(Bundle bundle, SharedPreferences.Editor editor, String prefix) {
+    private void putBundleToEditor(Bundle bundle, SharedPreferences.Editor editor, String
+            prefix) {
         Set<String> keys = bundle.keySet();
         for (String key : keys) {
             Object obj = bundle.get(key);
