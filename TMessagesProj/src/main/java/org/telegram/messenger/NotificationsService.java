@@ -21,19 +21,15 @@ import android.os.IBinder;
 
 import androidx.core.app.NotificationCompat;
 
-import com.google.android.exoplayer2.util.Log;
-
 import org.telegram.ui.LaunchActivity;
 
 import tw.nekomimi.nekogram.NekoConfig;
-import tw.nekomimi.nekogram.VmessLoader;
 
 public class NotificationsService extends Service {
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         ApplicationLoader.postInitApplication();
         if (NekoConfig.residentNotification) {
             Intent activityIntent = new Intent(this, LaunchActivity.class);
