@@ -332,7 +332,7 @@ public class LocaleController {
         localeInfo.baseLangCode = "zh_hans_raw";
         localeInfo.isRtl = false;
         localeInfo.pathToFile = "unofficial";
-        localeInfo.pluralLangCode = "zh_duang";
+        localeInfo.pluralLangCode = "zh_cn";
         localeInfo.builtIn = true;
         languages.add(localeInfo);
         languagesDict.put(localeInfo.getKey(), localeInfo);
@@ -343,7 +343,7 @@ public class LocaleController {
         localeInfo.name = "瓜體中文";
         localeInfo.nameEnglish = "Duangified Chinese (Traditional)";
         localeInfo.shortName = "duang_zh_hant";
-        localeInfo.baseLangCode = "zh_hant_raw";
+        localeInfo.baseLangCode = "zh_hant";
         localeInfo.isRtl = false;
         localeInfo.pathToFile = "unofficial";
         localeInfo.pluralLangCode = "zh_tw";
