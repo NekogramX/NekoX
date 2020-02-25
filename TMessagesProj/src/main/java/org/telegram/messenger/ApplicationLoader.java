@@ -85,7 +85,6 @@ public class ApplicationLoader extends Application {
 
         applicationInited = true;
 
-
         new Thread(() -> {
 
             try {
@@ -93,8 +92,6 @@ public class ApplicationLoader extends Application {
                 VmessLoader loader = new VmessLoader(applicationContext);
 
                 loader.initPublic();
-
-                loader.start();
 
                 VmessLoader.PUBLIC = loader;
 
