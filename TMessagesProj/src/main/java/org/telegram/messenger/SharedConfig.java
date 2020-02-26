@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONArray;
+
 import tw.nekomimi.nekogram.NekoConfig;
 
 public class SharedConfig {
@@ -133,6 +134,7 @@ public class SharedConfig {
         public long availableCheckTime;
 
         public boolean isInternal = false;
+        public String descripton;
 
         public ProxyInfo(String a, int p, String u, String pw, String s) {
             address = a;
@@ -771,15 +773,21 @@ public class SharedConfig {
 
         if (proxyListFile.isFile()) {
 
-            List<String> serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile)).toList(String.class);
+            List<cn.hutool.json.JSONObject> serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile)).toList(cn.hutool.json.JSONObject.class);
 
-            for (String config : serverList) {
+            for (cn.hutool.json.JSONObject config : serverList) {
 
                 try {
 
-                    ProxyInfo info = parseProxyInfo(config);
+                    ProxyInfo info = parseProxyInfo(config.getStr("proxy"));
 
                     info.isInternal = true;
+
+                    if (config.containsKey("desc")) {
+
+                        info.descripton = config.getStr("desc");
+
+                    }
 
                     proxyList.add(info);
 

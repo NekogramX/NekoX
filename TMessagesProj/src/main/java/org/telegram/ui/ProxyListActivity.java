@@ -127,7 +127,11 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 if (currentInfo.isInternal) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
                     builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                    builder.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
+                    if (currentInfo.descripton == null) {
+                        builder.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
+                    } else {
+                        builder.setMessage(currentInfo.descripton);
+                    }
                     builder.setNegativeButton(LocaleController.getString("OK", R.string.OK), null);
                     builder.show();
                 } else {
@@ -144,8 +148,10 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         }
 
         public void setProxy(SharedConfig.ProxyInfo proxyInfo) {
-            if (proxyInfo.isInternal) {
-                textView.setText(R.string.NekoXProxy);
+            if (proxyInfo.isInternal && proxyInfo.descripton == null) {
+                textView.setText(LocaleController.formatString("NekoXProxy", R.string.NekoXProxy));
+            } else if (proxyInfo.isInternal) {
+                textView.setText(LocaleController.formatString("PublicPrefix", R.string.PublicPrefix) + proxyInfo.address + ":" + proxyInfo.port);
             } else {
                 textView.setText(proxyInfo.address + ":" + proxyInfo.port);
             }
@@ -266,7 +272,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
             } catch (Exception e) {
 
-                Log.w("nekox","update proxy list failed",e);
+                Log.w("nekox", "update proxy list failed", e);
 
             }
 
