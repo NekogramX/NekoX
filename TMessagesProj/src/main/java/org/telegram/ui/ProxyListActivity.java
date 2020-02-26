@@ -245,19 +245,26 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
         new Thread(() -> {
 
-            File save = new File(getParentActivity().getFilesDir(), "proxy_list.json");
+            try {
 
-            String serverList = new JSONArray(HttpUtil.get("https://raw.githubusercontent.com/NekogramX/ProxyList/master/index.json")).toStringPretty();
+                File save = new File(getParentActivity().getFilesDir(), "proxy_list.json");
 
-            FileUtil.writeUtf8String(serverList, save);
+                String serverList = new JSONArray(HttpUtil.get("https://raw.githubusercontent.com/NekogramX/ProxyList/master/index.json")).toStringPretty();
 
-            getParentActivity().runOnUiThread(() -> {
+                if (save.isFile() && FileUtil.readUtf8String(save).equals(serverList)) return;
 
-                SharedConfig.loadProxyList(true);
+                FileUtil.writeUtf8String(serverList, save);
 
-                updateRows(true);
+                getParentActivity().runOnUiThread(() -> {
 
-            });
+                    SharedConfig.loadProxyList(true);
+
+                    updateRows(true);
+
+                });
+
+            } catch (Exception ignored) {
+            }
 
         }).start();
 
@@ -698,6 +705,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 return 4;
             }
         }
+
     }
 
     @Override
