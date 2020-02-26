@@ -93,7 +93,7 @@ public class ApplicationLoader extends Application {
 
             try {
 
-                ZipUtil.unzip(applicationContext.getAssets().open("built-in-languages.zip"), applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
+                ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
 
             } catch (IOException e) {
 
