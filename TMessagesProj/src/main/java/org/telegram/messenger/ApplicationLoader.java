@@ -39,6 +39,7 @@ import org.telegram.ui.Components.ForegroundDetector;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.zip.ZipInputStream;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -93,7 +94,7 @@ public class ApplicationLoader extends Application {
 
             try {
 
-                ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
+                ZipUtil.unzip(new ZipInputStream(applicationContext.getAssets().open("languages.zip")), applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
 
             } catch (IOException e) {
 
