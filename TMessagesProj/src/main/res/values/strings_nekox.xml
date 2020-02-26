@@ -3,8 +3,6 @@
 
     <string name="NekoXProxy">NekoX Public Proxy</string>
     <string name="PublicPrefix">[ Public ]</string>
-    <string name="NekoXProxyInfo">It may take tens of seconds to load the NekoX Public built-in proxy :)
-
-    Note: NekoX Public Proxy is only available in countries and regions where network censorship exists, as well as RTHK.</string>
+    <string name="NekoXProxyInfo">It may take tens of seconds to load the NekoX Public built-in proxy :)\n\nNote: NekoX Public Proxy is only available in countries and regions where network censorship exists, as well as RTHK.</string>
 
 </resources>
