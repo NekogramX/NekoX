@@ -301,7 +301,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         proxyDrawable = new ProxyDrawable(context);
         proxyItem = menu.addItem(2, proxyDrawable);
         proxyItem.setContentDescription(LocaleController.getString("ProxySettings", R.string.ProxySettings));
-        updateProxyButton(true);
+        updateProxyButton(false);
 
         menu.addItem(3, R.drawable.ic_translate);
 
