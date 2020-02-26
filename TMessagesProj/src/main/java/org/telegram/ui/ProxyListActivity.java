@@ -10,6 +10,7 @@ package org.telegram.ui;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
@@ -54,6 +55,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.List;
 
 import cn.hutool.core.io.FileUtil;
@@ -117,27 +119,17 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             valueTextView.setPadding(0, 0, 0, 0);
             addView(valueTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, (LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP, (LocaleController.isRTL ? 56 : 21), 35, (LocaleController.isRTL ? 21 : 56), 0));
 
-            checkImageView = new ImageView(context);
-            checkImageView.setImageResource(R.drawable.profile_info);
-            checkImageView.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText3), PorterDuff.Mode.MULTIPLY));
-            checkImageView.setScaleType(ImageView.ScaleType.CENTER);
-            checkImageView.setContentDescription(LocaleController.getString("Edit", R.string.Edit));
-            addView(checkImageView, LayoutHelper.createFrame(48, 48, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 8, 8, 8, 0));
-            checkImageView.setOnClickListener(v -> {
-                if (currentInfo.isInternal) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-                    builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                    if (currentInfo.descripton == null) {
-                        builder.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
-                    } else {
-                        builder.setMessage(currentInfo.descripton);
-                    }
-                    builder.setNegativeButton(LocaleController.getString("OK", R.string.OK), null);
-                    builder.show();
-                } else {
-                    presentFragment(new ProxySettingsActivity(currentInfo));
-                }
-            });
+            if (!currentInfo.isInternal) {
+
+                checkImageView = new ImageView(context);
+                checkImageView.setImageResource(R.drawable.profile_info);
+                checkImageView.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText3), PorterDuff.Mode.MULTIPLY));
+                checkImageView.setScaleType(ImageView.ScaleType.CENTER);
+                checkImageView.setContentDescription(LocaleController.getString("Edit", R.string.Edit));
+                addView(checkImageView, LayoutHelper.createFrame(48, 48, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 8, 8, 8, 0));
+                checkImageView.setOnClickListener(v -> presentFragment(new ProxySettingsActivity(currentInfo)));
+
+            }
 
             setWillNotDraw(false);
         }
@@ -151,7 +143,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             if (proxyInfo.isInternal && proxyInfo.descripton == null) {
                 textView.setText(LocaleController.formatString("NekoXProxy", R.string.NekoXProxy));
             } else if (proxyInfo.isInternal) {
-                textView.setText(LocaleController.formatString("PublicPrefix", R.string.PublicPrefix) + proxyInfo.address + ":" + proxyInfo.port);
+                textView.setText(LocaleController.formatString("PublicPrefix", R.string.PublicPrefix) + " " + proxyInfo.address + ":" + proxyInfo.port);
             } else {
                 textView.setText(proxyInfo.address + ":" + proxyInfo.port);
             }
@@ -422,8 +414,71 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 if (info.isInternal) {
 
-                    builder.setMessage(LocaleController.getString("BuiltInProxyCannotBeDeleted", R.string.BuiltInProxyCannotBeDeleted));
+                    if (info.descripton == null) {
+
+                        builder.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
+
+                    } else {
+
+                        builder.setMessage(info.descripton);
+
+                    }
+
                     builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
+                    builder.setNegativeButton(LocaleController.getString("ShareFile", R.string.ShareFile),(it,x) -> {
+
+                        StringBuilder params = new StringBuilder();
+                        String address = info.address;
+                        String password = info.password;
+                        String user = info.username;
+                        String port = info.port + "";
+                        String secret = info.secret;
+                        String url;
+                        try {
+                            if (!TextUtils.isEmpty(address)) {
+                                params.append("server=").append(URLEncoder.encode(address, "UTF-8"));
+                            }
+                            if (!TextUtils.isEmpty(port)) {
+                                if (params.length() != 0) {
+                                    params.append("&");
+                                }
+                                params.append("port=").append(URLEncoder.encode(port, "UTF-8"));
+                            }
+                            if (!"".equals(secret)) {
+                                url = "https://t.me/proxy?";
+                                if (params.length() != 0) {
+                                    params.append("&");
+                                }
+                                params.append("secret=").append(URLEncoder.encode(secret, "UTF-8"));
+                            } else {
+                                url = "https://t.me/socks?";
+                                if (!TextUtils.isEmpty(user)) {
+                                    if (params.length() != 0) {
+                                        params.append("&");
+                                    }
+                                    params.append("user=").append(URLEncoder.encode(user, "UTF-8"));
+                                }
+                                if (!TextUtils.isEmpty(password)) {
+                                    if (params.length() != 0) {
+                                        params.append("&");
+                                    }
+                                    params.append("pass=").append(URLEncoder.encode(password, "UTF-8"));
+                                }
+                            }
+                        } catch (Exception ignore) {
+                            return;
+                        }
+                        if (params.length() == 0) {
+                            return;
+                        }
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, url + params.toString());
+                        Intent chooserIntent = Intent.createChooser(shareIntent, LocaleController.getString("ShareLink", R.string.ShareLink));
+                        chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getParentActivity().startActivity(chooserIntent);
+
+                    });
 
                 } else {
 
