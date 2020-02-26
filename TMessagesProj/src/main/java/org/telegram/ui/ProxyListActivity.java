@@ -259,13 +259,9 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 FileUtil.writeUtf8String(serverList, save);
 
-                SharedConfig.loadProxyList(true);
+                SharedConfig.reloadProxyList();
 
-                getParentActivity().runOnUiThread(() -> {
-
-                    updateRows(true);
-
-                });
+                updateRows(true);
 
             } catch (Exception e) {
 

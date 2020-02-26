@@ -30,6 +30,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -157,7 +158,7 @@ public class SharedConfig {
         }
     }
 
-    public static ArrayList<ProxyInfo> proxyList = new ArrayList<>();
+    public static LinkedList<ProxyInfo> proxyList = new LinkedList<>();
 
     public static int externalProxyCount() {
 
@@ -743,31 +744,13 @@ public class SharedConfig {
         LocaleController.resetImperialSystemType();
     }
 
-    public static void loadProxyList() {
+    public static void reloadProxyList() {
 
-        loadProxyList(false);
+        LinkedList<ProxyInfo> proxy = new LinkedList<>();
 
-    }
-
-    public static void loadProxyList(boolean force) {
-        if (proxyListLoaded && !force) {
-            return;
-        }
-        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
-        String proxyAddress = preferences.getString("proxy_ip", "");
-        String proxyUsername = preferences.getString("proxy_user", "");
-        String proxyPassword = preferences.getString("proxy_pass", "");
-        String proxySecret = preferences.getString("proxy_secret", "");
-        int proxyPort = preferences.getInt("proxy_port", 1080);
-
-        proxyListLoaded = true;
-        proxyList.clear();
-        currentProxy = null;
-
-        String list = preferences.getString("proxy_list", null);
         ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
         internalProxy.isInternal = true;
-        proxyList.add(internalProxy);
+        proxy.add(internalProxy);
 
         File proxyListFile = new File(ApplicationLoader.applicationContext.getFilesDir(), "proxy_list.json");
 
@@ -789,7 +772,7 @@ public class SharedConfig {
 
                     }
 
-                    proxyList.add(info);
+                    proxy.add(info);
 
                 } catch (InvalidProxyException ignored) {
 
@@ -800,6 +783,35 @@ public class SharedConfig {
             }
 
         }
+
+        Iterator<ProxyInfo> iter = proxyList.iterator();
+
+        while (iter.hasNext()) {
+
+            if (iter.next().isInternal) iter.remove();
+
+        }
+
+        proxyList.addAll(0,proxy);
+
+    }
+
+    public static void loadProxyList() {
+        if (proxyListLoaded) {
+            return;
+        }
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+        String proxyAddress = preferences.getString("proxy_ip", "");
+        String proxyUsername = preferences.getString("proxy_user", "");
+        String proxyPassword = preferences.getString("proxy_pass", "");
+        String proxySecret = preferences.getString("proxy_secret", "");
+        int proxyPort = preferences.getInt("proxy_port", 1080);
+
+        proxyListLoaded = true;
+        proxyList.clear();
+        currentProxy = null;
+
+        String list = preferences.getString("proxy_list", null);
 
         if (!TextUtils.isEmpty(list)) {
             byte[] bytes = Base64.decode(list, Base64.DEFAULT);
@@ -817,8 +829,10 @@ public class SharedConfig {
             data.cleanup();
         }
 
+        reloadProxyList();
+
         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-            currentProxy = internalProxy;
+            currentProxy = proxyList.get(0);
         }
     }
 
