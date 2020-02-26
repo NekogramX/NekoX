@@ -134,6 +134,62 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     } else {
                         builder.setMessage(currentInfo.descripton);
                     }
+                    if (currentInfo.descripton != null) {
+                        builder.setNegativeButton(LocaleController.getString("ShareFile", R.string.ShareFile), (it, x) -> {
+
+                            StringBuilder params = new StringBuilder();
+                            String address = currentInfo.address;
+                            String password = currentInfo.password;
+                            String user = currentInfo.username;
+                            String port = currentInfo.port + "";
+                            String secret = currentInfo.secret;
+                            String url;
+                            try {
+                                if (!TextUtils.isEmpty(address)) {
+                                    params.append("server=").append(URLEncoder.encode(address, "UTF-8"));
+                                }
+                                if (!TextUtils.isEmpty(port)) {
+                                    if (params.length() != 0) {
+                                        params.append("&");
+                                    }
+                                    params.append("port=").append(URLEncoder.encode(port, "UTF-8"));
+                                }
+                                if (!"".equals(secret)) {
+                                    url = "https://t.me/proxy?";
+                                    if (params.length() != 0) {
+                                        params.append("&");
+                                    }
+                                    params.append("secret=").append(URLEncoder.encode(secret, "UTF-8"));
+                                } else {
+                                    url = "https://t.me/socks?";
+                                    if (!TextUtils.isEmpty(user)) {
+                                        if (params.length() != 0) {
+                                            params.append("&");
+                                        }
+                                        params.append("user=").append(URLEncoder.encode(user, "UTF-8"));
+                                    }
+                                    if (!TextUtils.isEmpty(password)) {
+                                        if (params.length() != 0) {
+                                            params.append("&");
+                                        }
+                                        params.append("pass=").append(URLEncoder.encode(password, "UTF-8"));
+                                    }
+                                }
+                            } catch (Exception ignore) {
+                                return;
+                            }
+                            if (params.length() == 0) {
+                                return;
+                            }
+                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, url + params.toString());
+                            Intent chooserIntent = Intent.createChooser(shareIntent, LocaleController.getString("ShareLink", R.string.ShareLink));
+                            chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            getParentActivity().startActivity(chooserIntent);
+
+                        });
+                    }
                     builder.setNegativeButton(LocaleController.getString("OK", R.string.OK), null);
                     builder.show();
                 } else {
@@ -415,101 +471,33 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             if (position >= proxyStartRow && position < proxyEndRow) {
                 final SharedConfig.ProxyInfo info = SharedConfig.proxyList.get(position - proxyStartRow);
 
+                if (info.isInternal) return false;
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
 
-                if (info.isInternal) {
-
-                    if (info.descripton == null) {
-
-                        builder.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
-
-                    } else {
-
-                        builder.setMessage(info.descripton);
-
+                builder.setMessage(LocaleController.getString("DeleteProxy", R.string.DeleteProxy));
+                builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
+                builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
+                builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialog, which) -> {
+                    SharedConfig.deleteProxy(info);
+                    if (SharedConfig.currentProxy == null) {
+                        useProxyForCalls = false;
+                        useProxySettings = false;
                     }
-
-                    builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
-                    builder.setNegativeButton(LocaleController.getString("ShareFile", R.string.ShareFile), (it, x) -> {
-
-                        StringBuilder params = new StringBuilder();
-                        String address = info.address;
-                        String password = info.password;
-                        String user = info.username;
-                        String port = info.port + "";
-                        String secret = info.secret;
-                        String url;
-                        try {
-                            if (!TextUtils.isEmpty(address)) {
-                                params.append("server=").append(URLEncoder.encode(address, "UTF-8"));
-                            }
-                            if (!TextUtils.isEmpty(port)) {
-                                if (params.length() != 0) {
-                                    params.append("&");
-                                }
-                                params.append("port=").append(URLEncoder.encode(port, "UTF-8"));
-                            }
-                            if (!"".equals(secret)) {
-                                url = "https://t.me/proxy?";
-                                if (params.length() != 0) {
-                                    params.append("&");
-                                }
-                                params.append("secret=").append(URLEncoder.encode(secret, "UTF-8"));
-                            } else {
-                                url = "https://t.me/socks?";
-                                if (!TextUtils.isEmpty(user)) {
-                                    if (params.length() != 0) {
-                                        params.append("&");
-                                    }
-                                    params.append("user=").append(URLEncoder.encode(user, "UTF-8"));
-                                }
-                                if (!TextUtils.isEmpty(password)) {
-                                    if (params.length() != 0) {
-                                        params.append("&");
-                                    }
-                                    params.append("pass=").append(URLEncoder.encode(password, "UTF-8"));
-                                }
-                            }
-                        } catch (Exception ignore) {
-                            return;
-                        }
-                        if (params.length() == 0) {
-                            return;
-                        }
-                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                        shareIntent.setType("text/plain");
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, url + params.toString());
-                        Intent chooserIntent = Intent.createChooser(shareIntent, LocaleController.getString("ShareLink", R.string.ShareLink));
-                        chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getParentActivity().startActivity(chooserIntent);
-
-                    });
-
-                } else {
-
-                    builder.setMessage(LocaleController.getString("DeleteProxy", R.string.DeleteProxy));
-                    builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
-                    builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                    builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialog, which) -> {
-                        SharedConfig.deleteProxy(info);
+                    NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
+                    NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+                    NotificationCenter.getGlobalInstance().addObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
+                    updateRows(false);
+                    if (listAdapter != null) {
+                        listAdapter.notifyItemRemoved(position);
                         if (SharedConfig.currentProxy == null) {
-                            useProxyForCalls = false;
-                            useProxySettings = false;
+                            listAdapter.notifyItemChanged(useProxyRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
+                            listAdapter.notifyItemChanged(callsRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
                         }
-                        NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
-                        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
-                        NotificationCenter.getGlobalInstance().addObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
-                        updateRows(false);
-                        if (listAdapter != null) {
-                            listAdapter.notifyItemRemoved(position);
-                            if (SharedConfig.currentProxy == null) {
-                                listAdapter.notifyItemChanged(useProxyRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
-                                listAdapter.notifyItemChanged(callsRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
-                            }
-                        }
-                    });
-                }
+                    }
+                });
+
                 showDialog(builder.create());
                 return true;
             }
