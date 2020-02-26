@@ -124,12 +124,17 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             checkImageView.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText3), PorterDuff.Mode.MULTIPLY));
             checkImageView.setScaleType(ImageView.ScaleType.CENTER);
             checkImageView.setContentDescription(LocaleController.getString("Edit", R.string.Edit));
+
+            addView(checkImageView, LayoutHelper.createFrame(48, 48, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 8, 8, 8, 0));
+
+            checkImageView.setOnClickListener(v -> presentFragment(new ProxySettingsActivity(currentInfo)));
+
             if (!currentInfo.isInternal) {
 
-                addView(checkImageView, LayoutHelper.createFrame(48, 48, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 8, 8, 8, 0));
-                checkImageView.setOnClickListener(v -> presentFragment(new ProxySettingsActivity(currentInfo)));
+                checkImageView.setVisibility(View.GONE);
 
             }
+
 
             setWillNotDraw(false);
         }
