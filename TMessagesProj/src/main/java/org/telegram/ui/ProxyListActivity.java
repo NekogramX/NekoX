@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -255,15 +256,18 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 FileUtil.writeUtf8String(serverList, save);
 
-                getParentActivity().runOnUiThread(() -> {
+                SharedConfig.loadProxyList(true);
 
-                    SharedConfig.loadProxyList(true);
+                getParentActivity().runOnUiThread(() -> {
 
                     updateRows(true);
 
                 });
 
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+
+                Log.w("nekox","update proxy list failed",e);
+
             }
 
         }).start();

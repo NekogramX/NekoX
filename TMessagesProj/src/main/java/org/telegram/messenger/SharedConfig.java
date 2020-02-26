@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.util.SparseArray;
 
 import org.json.JSONObject;
@@ -778,9 +779,14 @@ public class SharedConfig {
 
                     ProxyInfo info = parseProxyInfo(config);
 
+                    info.isInternal = true;
+
                     proxyList.add(info);
 
                 } catch (InvalidProxyException ignored) {
+
+                    Log.w("nekox","invalid config: " + config);
+
                 }
 
             }
