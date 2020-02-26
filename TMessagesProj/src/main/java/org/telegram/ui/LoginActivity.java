@@ -298,10 +298,9 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
         ActionBarMenu menu = actionBar.createMenu();
 
-        proxyDrawable = new ProxyDrawable(context);
-        proxyItem = menu.addItem(2, proxyDrawable);
+        proxyItem = menu.addItem(2, R.drawable.proxy_on);
         proxyItem.setContentDescription(LocaleController.getString("ProxySettings", R.string.ProxySettings));
-        updateProxyButton(false);
+
 
         menu.addItem(3, R.drawable.ic_translate);
 
@@ -515,47 +514,6 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         actionBar.setTitle(views[currentViewNum].getHeaderName());
 
         return fragmentView;
-    }
-
-    int currentConnectionState = ConnectionsManager.ConnectionStateConnecting;
-
-    private void updateProxyButton(boolean animated) {
-        if (proxyDrawable == null) {
-            return;
-        }
-        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
-        String proxyAddress = preferences.getString("proxy_ip", "");
-        boolean proxyEnabled;
-        if ((proxyEnabled = preferences.getBoolean("proxy_enabled", false) && !TextUtils.isEmpty(proxyAddress)) || getMessagesController().blockedCountry && !SharedConfig.proxyList.isEmpty()) {
-            if (!actionBar.isSearchFieldVisible()) {
-                proxyItem.setVisibility(View.VISIBLE);
-            }
-            int state = ConnectionsManager.getInstance(1).getConnectionState();
-            proxyDrawable.setConnected(true, state == ConnectionsManager.ConnectionStateConnected || state == ConnectionsManager.ConnectionStateUpdating, animated);
-        }
-    }
-
-    @Override
-    public boolean onFragmentCreate() {
-
-        getNotificationCenter().addObserver(this, NotificationCenter.proxySettingsChanged);
-        getNotificationCenter().addObserver(this, NotificationCenter.didUpdateConnectionState);
-
-        return super.onFragmentCreate();
-    }
-
-    @Override
-    public void didReceivedNotification(int id, int account, Object... args) {
-        if (id == NotificationCenter.didUpdateConnectionState) {
-            int state = AccountInstance.getInstance(account).getConnectionsManager().getConnectionState();
-            if (currentConnectionState != state) {
-                currentConnectionState = state;
-                updateProxyButton(true);
-            }
-
-        } else if (id == NotificationCenter.proxySettingsChanged) {
-            updateProxyButton(false);
-        }
     }
 
     @Override
