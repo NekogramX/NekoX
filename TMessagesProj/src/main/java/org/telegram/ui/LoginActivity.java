@@ -54,7 +54,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 @SuppressLint("HardwareIds")
-public class LoginActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
+public class LoginActivity extends BaseFragment {
 
     private int currentViewNum;
     private SlideView[] views = new SlideView[9];
