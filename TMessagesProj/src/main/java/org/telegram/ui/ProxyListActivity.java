@@ -119,14 +119,14 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             valueTextView.setPadding(0, 0, 0, 0);
             addView(valueTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, (LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP, (LocaleController.isRTL ? 56 : 21), 35, (LocaleController.isRTL ? 21 : 56), 0));
 
+            checkImageView = new ImageView(context);
+            checkImageView.setImageResource(R.drawable.profile_info);
+            checkImageView.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText3), PorterDuff.Mode.MULTIPLY));
+            checkImageView.setScaleType(ImageView.ScaleType.CENTER);
+            checkImageView.setContentDescription(LocaleController.getString("Edit", R.string.Edit));
+            addView(checkImageView, LayoutHelper.createFrame(48, 48, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 8, 8, 8, 0));
             if (!currentInfo.isInternal) {
 
-                checkImageView = new ImageView(context);
-                checkImageView.setImageResource(R.drawable.profile_info);
-                checkImageView.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText3), PorterDuff.Mode.MULTIPLY));
-                checkImageView.setScaleType(ImageView.ScaleType.CENTER);
-                checkImageView.setContentDescription(LocaleController.getString("Edit", R.string.Edit));
-                addView(checkImageView, LayoutHelper.createFrame(48, 48, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 8, 8, 8, 0));
                 checkImageView.setOnClickListener(v -> presentFragment(new ProxySettingsActivity(currentInfo)));
 
             }
@@ -425,7 +425,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     }
 
                     builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
-                    builder.setNegativeButton(LocaleController.getString("ShareFile", R.string.ShareFile),(it,x) -> {
+                    builder.setNegativeButton(LocaleController.getString("ShareFile", R.string.ShareFile), (it, x) -> {
 
                         StringBuilder params = new StringBuilder();
                         String address = info.address;
