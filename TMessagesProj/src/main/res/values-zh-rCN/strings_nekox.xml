@@ -3,6 +3,8 @@
 
     <string name="NekoXProxy">NekoX 公共代理</string>
     <string name="PublicPrefix">[ 公共 ]</string>
-    <string name="NekoXProxyInfo">这可能需要几十秒的时间来加载 NekoX 公共代理 :)</string>
+    <string name="NekoXProxyInfo">这可能需要几十秒的时间来加载 NekoX 公共代理 :)
+
+        注意: NekoX 公共代理仅向存在网络审查的国家/地区以及港台提供.</string>
 
 </resources>
