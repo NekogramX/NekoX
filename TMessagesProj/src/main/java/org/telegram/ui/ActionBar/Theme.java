@@ -574,7 +574,7 @@ public class Theme {
                 String key;
                 switch (b) {
                     case 0:
-                        key = "Indigo";
+                        key = "Blue";
                         break;
                     case 1:
                         key = "Dark Blue";
@@ -1372,7 +1372,7 @@ public class Theme {
         }
 
         public String getName() {
-            if ("Indigo".equals(name)) {
+            if ("Blue".equals(name)) {
                 return LocaleController.getString("ThemeClassic", R.string.ThemeClassic);
             } else if ("Dark Blue".equals(name)) {
                 return LocaleController.getString("ThemeDark", R.string.ThemeDark);
@@ -3701,32 +3701,9 @@ public class Theme {
         SharedPreferences themeConfig = ApplicationLoader.applicationContext.getSharedPreferences("themeconfig", Activity.MODE_PRIVATE);
 
         ThemeInfo themeInfo = new ThemeInfo();
-        themeInfo.name = "Indigo";
-        themeInfo.assetName = "indigo.attheme";
-        themeInfo.previewBackgroundColor = Color.parseColor("#3f51b5");
-        themeInfo.previewInColor = 0xffffffff;
-        themeInfo.previewOutColor = 0xffd0e6ff;
-        themeInfo.firstAccentIsDefault = true;
-        themeInfo.currentAccentId = DEFALT_THEME_ACCENT_ID;
-        themeInfo.sortIndex = 1;
-        themeInfo.setAccentColorOptions(
-                new int[]{0xFF5890C5, 0xFF239853, 0xFFCE5E82, 0xFF7F63C3, 0xFF2491AD, 0xFF299C2F, 0xFF8854B4, 0xFF328ACF, 0xFF43ACC7, 0xFF52AC44, 0xFFCD5F93, 0xFFD28036, 0xFF8366CC, 0xFFCE4E57, 0xFFD3AE40, 0xFF7B88AB},
-                new int[]{0xFFB8E18D, 0xFFFAFBCC, 0xFFFFF9DC, 0xFFC14F6E, 0xFFD1BD1B, 0xFFFFFAC9, 0xFFFCF6D8, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000},
-                new int[]{0x00000000, 0xFFF2FBC9, 0xFFFBF4DF, 0, 0, 0xFFFDEDB4, 0xFFFCF7B6, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000},
-                new int[]{0x00000000, 0xFFDFE2A0, 0xFFE2B991, 0xFFD7C1E9, 0xFFDCD1C0, 0xFFEFB576, 0xFFC0A2D1, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000},
-                new int[]{0x00000000, 0xFFC1E1A3, 0xFFEBE2BA, 0xFFE8CDD6, 0xFFE0DFC6, 0xFFECE771, 0xFFDECCDE, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000},
-                new int[]{99, 9, 10, 11, 12, 13, 14, 0, 1, 2, 3, 4, 5, 6, 7, 8},
-                new String[]{"", "p-pXcflrmFIBAAAAvXYQk-mCwZU", "JqSUrO0-mFIBAAAAWwTvLzoWGQI", "O-wmAfBPSFADAAAA4zINVfD_bro", "RepJ5uE_SVABAAAAr4d0YhgB850", "-Xc-np9y2VMCAAAARKr0yNNPYW0", "dhf9pceaQVACAAAAbzdVo4SCiZA", "", "", "", "", "", "", "", "", ""},
-                new int[]{0, 180, 45, 0, 45, 180, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                new int[]{0, 52, 46, 57, 45, 64, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-        );
-        themes.add(currentDayTheme = currentTheme = defaultTheme = themeInfo);
-        themesDict.put("Indigo", themeInfo);
-
-        /*
 
         themeInfo.name = "Blue";
-        themeInfo.assetName = "bluebubbles.attheme";
+        themeInfo.assetName = "indigo.attheme";
         themeInfo.previewBackgroundColor = 0xff95beec;
         themeInfo.previewInColor = 0xffffffff;
         themeInfo.previewOutColor = 0xffd0e6ff;
@@ -3745,8 +3722,6 @@ public class Theme {
         );
         themes.add(currentDayTheme = currentTheme = themeInfo);
         themesDict.put("Blue", themeInfo);
-
-         */
 
         themeInfo = new ThemeInfo();
         themeInfo.name = "Dark Blue";
@@ -3879,7 +3854,7 @@ public class Theme {
 
             String theme = preferences.getString("theme", null);
             if ("Default".equals(theme)) {
-                applyingTheme = themesDict.get("Indigo");
+                applyingTheme = themesDict.get("Blue");
                 applyingTheme.currentAccentId = DEFALT_THEME_ACCENT_ID;
             } else if ("Dark".equals(theme)) {
                 applyingTheme = themeDarkBlue;
@@ -3895,7 +3870,7 @@ public class Theme {
 
             theme = preferences.getString("nighttheme", null);
             if ("Default".equals(theme)) {
-                applyingTheme = themesDict.get("Indigo");
+                applyingTheme = themesDict.get("Blue");
                 applyingTheme.currentAccentId = DEFALT_THEME_ACCENT_ID;
             } else if ("Dark".equals(theme)) {
                 currentNightTheme = themeDarkBlue;
@@ -5168,7 +5143,7 @@ public class Theme {
                 String key;
                 switch (b) {
                     case 0:
-                        key = "Indigo";
+                        key = "Blue";
                         break;
                     case 1:
                         key = "Dark Blue";
@@ -5823,7 +5798,7 @@ public class Theme {
 
     public static String getBaseThemeKey(TLRPC.TL_themeSettings settings) {
         if (settings.base_theme instanceof TLRPC.TL_baseThemeClassic) {
-            return "Indigo";
+            return "Blue";
         } else if (settings.base_theme instanceof TLRPC.TL_baseThemeDay) {
             return "Day";
         } else if (settings.base_theme instanceof TLRPC.TL_baseThemeTinted) {
@@ -5837,7 +5812,7 @@ public class Theme {
     }
 
     public static TLRPC.BaseTheme getBaseThemeByKey(String key) {
-        if ("Indigo".equals(key)) {
+        if ("Blue".equals(key)) {
             return new TLRPC.TL_baseThemeClassic();
         } else if ("Day".equals(key)) {
             return new TLRPC.TL_baseThemeDay();
