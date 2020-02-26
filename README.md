@@ -1,5 +1,5 @@
-# Nekogram
-![Logo](https://raw.githubusercontent.com/NekogramX/NekoX/master/TMessagesProj/src/main/ic_launcher_web.png)  
+# NekoX
+![Logo](https://raw.githubusercontent.com/NekogramX/NekoX/master/TMessagesProj/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 NekogramX is an UNOFFICIAL app that uses Telegram's API.
 
 - Google play store: https://play.google.com/store/apps/details?id=tw.nekomimi.nekogram
