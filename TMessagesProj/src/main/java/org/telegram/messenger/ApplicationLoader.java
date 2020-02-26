@@ -125,23 +125,19 @@ public class ApplicationLoader extends Application {
 
         }
 
-        new Thread(() -> {
+        try {
 
-            try {
+            VmessLoader loader = new VmessLoader(applicationContext);
 
-                VmessLoader loader = new VmessLoader(applicationContext);
+            loader.initPublic();
 
-                loader.initPublic();
+            VmessLoader.PUBLIC = loader;
 
-                VmessLoader.PUBLIC = loader;
+        } catch (Exception e) {
 
-            } catch (Exception e) {
+            Log.e("nekox", "V2RAY ERROR", e);
 
-                Log.e("nekox", "V2RAY ERROR", e);
-
-            }
-
-        }).start();
+        }
 
         try {
             LocaleController.getInstance();
