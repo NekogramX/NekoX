@@ -105,9 +105,9 @@ public class SharedConfig {
     public static int repeatMode;
     public static boolean allowBigEmoji;
     public static boolean useSystemEmoji;
-    public static int fontSize = 16;
+    public static int fontSize = 12;
     public static int bubbleRadius = 10;
-    public static int ivFontSize = 16;
+    public static int ivFontSize = 12;
     private static int devicePerformanceClass;
 
     public static boolean drawDialogIcons;
