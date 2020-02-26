@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -51,7 +52,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.List;
+
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONArray;
 
 public class ProxyListActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
@@ -236,6 +242,24 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         useProxyForCalls = preferences.getBoolean("proxy_enabled_calls", false);
 
         updateRows(true);
+
+        new Thread(() -> {
+
+            File save = new File(getParentActivity().getFilesDir(), "proxy_list.json");
+
+            String serverList = new JSONArray(HttpUtil.get("https://raw.githubusercontent.com/NekogramX/ProxyList/master/index.json")).toStringPretty();
+
+            FileUtil.writeUtf8String(serverList, save);
+
+            getParentActivity().runOnUiThread(() -> {
+
+                SharedConfig.loadProxyList(true);
+
+                updateRows(true);
+
+            });
+
+        }).start();
 
         return true;
     }

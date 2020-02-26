@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -28,8 +29,11 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.json.JSONArray;
 import tw.nekomimi.nekogram.NekoConfig;
 
 public class SharedConfig {
@@ -737,7 +741,13 @@ public class SharedConfig {
     }
 
     public static void loadProxyList() {
-        if (proxyListLoaded) {
+
+        loadProxyList(false);
+
+    }
+
+    public static void loadProxyList(boolean force) {
+        if (proxyListLoaded && !force) {
             return;
         }
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
@@ -750,10 +760,33 @@ public class SharedConfig {
         proxyListLoaded = true;
         proxyList.clear();
         currentProxy = null;
+
         String list = preferences.getString("proxy_list", null);
         ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
         internalProxy.isInternal = true;
         proxyList.add(internalProxy);
+
+        File proxyListFile = new File(ApplicationLoader.applicationContext.getFilesDir(), "proxy_list.json");
+
+        if (proxyListFile.isFile()) {
+
+            List<String> serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile)).toList(String.class);
+
+            for (String config : serverList) {
+
+                try {
+
+                    ProxyInfo info = parseProxyInfo(config);
+
+                    proxyList.add(info);
+
+                } catch (InvalidProxyException ignored) {
+                }
+
+            }
+
+        }
+
         if (!TextUtils.isEmpty(list)) {
             byte[] bytes = Base64.decode(list, Base64.DEFAULT);
             SerializedData data = new SerializedData(bytes);
@@ -776,6 +809,34 @@ public class SharedConfig {
         } else {
             currentProxy = internalProxy;
         }
+    }
+
+    public static ProxyInfo parseProxyInfo(String url) throws InvalidProxyException {
+
+        if (url.startsWith("tg:proxy") ||
+                url.startsWith("tg://proxy") ||
+                url.startsWith("tg:socks") ||
+                url.startsWith("tg://socks") ||
+                url.startsWith("https://t.me/proxy") ||
+                url.startsWith("https://t.me/socks")) {
+            url = url
+                    .replace("tg:proxy", "tg://telegram.org")
+                    .replace("tg://proxy", "tg://telegram.org")
+                    .replace("tg://socks", "tg://telegram.org")
+                    .replace("tg:socks", "tg://telegram.org");
+            Uri data = Uri.parse(url);
+            return new ProxyInfo(data.getQueryParameter("server"),
+                    Utilities.parseInt(data.getQueryParameter("port")),
+                    data.getQueryParameter("user"),
+                    data.getQueryParameter("pass"),
+                    data.getQueryParameter("secret"));
+        }
+
+        throw new InvalidProxyException();
+
+    }
+
+    public static class InvalidProxyException extends Exception {
     }
 
     public static void saveProxyList() {
