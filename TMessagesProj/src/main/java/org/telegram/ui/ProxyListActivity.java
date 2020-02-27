@@ -133,8 +133,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                         builder.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
                     } else {
                         builder.setMessage(currentInfo.descripton);
-                    }
-                    if (currentInfo.descripton != null) {
+
                         builder.setNegativeButton(LocaleController.getString("ShareFile", R.string.ShareFile), (it, x) -> {
 
                             StringBuilder params = new StringBuilder();
