@@ -189,7 +189,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                         });
                     }
-                    builder.setNegativeButton(LocaleController.getString("OK", R.string.OK), null);
+                    builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
                     builder.show();
                 } else {
                     presentFragment(new ProxySettingsActivity(currentInfo));
