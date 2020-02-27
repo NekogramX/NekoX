@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="NekoXProxy">Публичный прокси NekoX</string>
+    <string name="PublicPrefix">[Публичный ]</string>
+    <string name="NekoXProxyInfo">Загрузка открытого встроенного прокси NekoX может занять десятки секунд :)</string>
+</resources>

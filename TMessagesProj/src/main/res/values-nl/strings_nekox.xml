@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="NekoXProxy">NekoX Publieke Proxy</string>
+    <string name="PublicPrefix">[ Openbaar ]</string>
+    <string name="NekoXProxyInfo">Het kan tientallen seconden duren om de ingebouwde NekoX Public proxy :) te laden</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="NekoXProxy">NekoX veřejný proxy</string>
+    <string name="PublicPrefix">[ Veřejný]</string>
+    <string name="NekoXProxyInfo">Načítání veřejně vestavěného proxy serveru NekoX může trvat desítky sekund. :)</string>
+</resources>
