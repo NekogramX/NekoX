@@ -14450,7 +14450,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 canvas.drawBitmap(image, 0, 0, null);
                 if (image != null) {
                     FileOutputStream stream = new FileOutputStream(path + ".png");
-                    image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    outB.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     stream.close();
                     MediaController.saveFile(path + ".png", getParentActivity(), 0, null, null);
                 }
