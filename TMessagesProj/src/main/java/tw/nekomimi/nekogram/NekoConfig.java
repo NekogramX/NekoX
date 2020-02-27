@@ -58,7 +58,6 @@ public class NekoConfig {
         loadConfig();
     }
 
-
     public static void saveConfig() {
         synchronized (sync) {
             try {
