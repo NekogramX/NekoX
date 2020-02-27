@@ -106,7 +106,7 @@ public class ApplicationLoader extends Application {
 
         SharedConfig.loadProxyList();
 
-        SharedPreferences preferences = MessagesController.getGlobalMainSettings();
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
 
         if (!preferences.contains("proxy_enabled")) {
 
