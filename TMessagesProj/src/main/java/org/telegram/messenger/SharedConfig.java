@@ -825,6 +825,11 @@ public class SharedConfig {
                         data.readString(false),
                         data.readString(false));
                 proxyList.add(info);
+                if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+                    if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
+                        currentProxy = info;
+                    }
+                }
             }
             data.cleanup();
         }
