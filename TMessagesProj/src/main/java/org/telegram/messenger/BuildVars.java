@@ -15,7 +15,7 @@ public class BuildVars {
 
     public static boolean DEBUG_VERSION = false;
     public static boolean DEBUG_PRIVATE_VERSION = false;
-    public static boolean LOGS_ENABLED = true;
+    public static boolean LOGS_ENABLED = false;
     public static boolean USE_CLOUD_STRINGS = true;
     public static boolean CHECK_UPDATES = false;
     public static boolean TON_WALLET_STANDALONE = false;
