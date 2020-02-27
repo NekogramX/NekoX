@@ -524,16 +524,6 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
         if (currentStep == 0) {
             HashMap<String, String> languageMap = new HashMap<>();
             HashMap<String, String> countryMap = new HashMap<>();
-
-            if (NekoConfig.showTestBackend) {
-                countriesArray.add("Test Number");
-                countriesMap.put("Test Number","999");
-                codesMap.put("000","Test Number");
-                countryMap.put("TG","Test Number");
-                languageMap.put("TG","Test Number");
-                phoneFormatMap.put("999","XX X XXXX");
-            }
-
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(context.getResources().getAssets().open("countries.txt")));
                 String line;
