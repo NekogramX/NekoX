@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONArray;
 
 import tw.nekomimi.nekogram.NekoConfig;
@@ -137,6 +138,8 @@ public class SharedConfig {
         public boolean isInternal = false;
         public String descripton;
 
+        public ProxyInfo() {}
+
         public ProxyInfo(String a, int p, String u, String pw, String s) {
             address = a;
             port = p;
@@ -147,7 +150,7 @@ public class SharedConfig {
                 address = "";
             }
             if (password == null) {
-                password = "";
+                address = "";
             }
             if (username == null) {
                 username = "";
@@ -156,6 +159,33 @@ public class SharedConfig {
                 secret = "";
             }
         }
+    }
+
+    public static class VmessProxy extends ProxyInfo {
+
+        public String vmessLink;
+
+        public VmessProxy(String vmessLink) {
+
+            this(vmessLink,RandomUtil.randomInt(10000,32768));
+
+        }
+
+        public VmessProxy(String vmessLink,int port) {
+
+            address = "127.0.0.1";
+            username = "";
+            secret = "";
+            port = ;
+            address = "";
+
+        }
+
+        public static void startV2ray() {
+
+
+        }
+
     }
 
     public static LinkedList<ProxyInfo> proxyList = new LinkedList<>();
