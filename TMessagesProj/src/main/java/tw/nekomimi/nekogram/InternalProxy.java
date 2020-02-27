@@ -1,11 +1,16 @@
 package tw.nekomimi.nekogram;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpUtil;
-import com.google.android.exoplayer2.util.Log;
-import org.apache.commons.net.util.SubnetUtils;
 
+import com.google.android.exoplayer2.util.Log;
+
+import org.apache.commons.net.util.SubnetUtils;
+import org.telegram.messenger.ApplicationLoader;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -24,7 +29,21 @@ public class InternalProxy {
 
             ipv4AddressList = new LinkedList<>();
 
-            String v4Addresses = HttpUtil.get("https://www.cloudflare.com/ips-v4");
+            String v4Addresses;
+
+            File cacheFile = new File(ApplicationLoader.applicationContext.getCacheDir(), "cloudflare-ips-v4.txt");
+
+            if (!cacheFile.isFile() && System.currentTimeMillis() - cacheFile.lastModified() > 7 * 24 * 60 * 60 * 1000L) {
+
+                v4Addresses = HttpUtil.get("https://www.cloudflare.com/ips-v4");
+
+                FileUtil.writeUtf8String(v4Addresses,cacheFile);
+
+            } else {
+
+                v4Addresses = FileUtil.readUtf8String(cacheFile);
+
+            }
 
             for (String address : v4Addresses.split("\n")) {
 
