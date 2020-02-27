@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipInputStream;
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ZipUtil;
 import tw.nekomimi.nekogram.NekoConfig;
@@ -140,9 +141,23 @@ public class ApplicationLoader extends Application {
 
                 VmessLoader loader = new VmessLoader();
 
-                loader.initPublic();
+                while (true) {
 
-                VmessLoader.PUBLIC = loader;
+                    try {
+
+                        loader.initPublic();
+
+                        VmessLoader.PUBLIC = loader;
+
+                    } catch (Exception e) {
+
+                        FileLog.d("load v2ray failed: " + e.getMessage());
+
+                        ThreadUtil.sleep(5000L);
+
+                    }
+
+                }
 
             } catch (Exception e) {
 

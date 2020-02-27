@@ -1,11 +1,10 @@
 package tw.nekomimi.nekogram;
 
+import android.util.Log;
+
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.http.HttpUtil;
-
-import com.google.android.exoplayer2.util.Log;
 
 import org.apache.commons.net.util.SubnetUtils;
 import org.telegram.messenger.ApplicationLoader;
@@ -73,7 +72,7 @@ public class InternalProxy {
 
                 long end = System.currentTimeMillis();
 
-                HttpUtil.createGet("http://" + address).timeout(2000).execute();
+                HttpUtil.get("http://" + address,2000);
 
                 Log.d(TAG, "IP " + address + " " + (end - start) + "ms");
 

@@ -59,8 +59,8 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
+import tw.nekomimi.nekogram.HttpUtil;
 
 public class ProxyListActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
