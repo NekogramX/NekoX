@@ -1392,7 +1392,6 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 if (!useFrontSpeaker) {
                     if (BuildVars.LOGS_ENABLED) {
                         FileLog.d("start listen");
-                        FileLog.d("isVoice = " + playingMessageObject.isVoice() + " isRoundVideo = " + playingMessageObject.isRoundVideo());
                     }
                     if (proximityHasDifferentValues && proximityWakeLock != null && !proximityWakeLock.isHeld()) {
                         proximityWakeLock.acquire();
@@ -1411,7 +1410,6 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 if (!useFrontSpeaker && !NotificationsController.audioManager.isWiredHeadsetOn()) {
                     if (BuildVars.LOGS_ENABLED) {
                         FileLog.d("start listen by proximity only");
-                        FileLog.d("isVoice = " + playingMessageObject.isVoice() + " isRoundVideo = " + playingMessageObject.isRoundVideo());
                     }
                     if (proximityHasDifferentValues && proximityWakeLock != null && !proximityWakeLock.isHeld()) {
                         proximityWakeLock.acquire();
