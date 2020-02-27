@@ -36,7 +36,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
-
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.*;
 import org.telegram.tgnet.ConnectionsManager;
@@ -46,7 +45,6 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.*;
 import org.telegram.ui.Cells.CheckBoxCell;
 import org.telegram.ui.Components.*;
-
 import tw.nekomimi.nekogram.NekoConfig;
 
 import java.io.BufferedReader;
@@ -546,8 +544,7 @@ public class LoginActivity extends BaseFragment {
     }
 
     @Override
-    public void onRequestPermissionsResultFragment(int requestCode, String[] permissions,
-                                                   int[] grantResults) {
+    public void onRequestPermissionsResultFragment(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 6) {
             checkPermissions = false;
             if (currentViewNum == 0) {
@@ -606,8 +603,7 @@ public class LoginActivity extends BaseFragment {
         editor.commit();
     }
 
-    private void putBundleToEditor(Bundle bundle, SharedPreferences.Editor editor, String
-            prefix) {
+    private void putBundleToEditor(Bundle bundle, SharedPreferences.Editor editor, String prefix) {
         Set<String> keys = bundle.keySet();
         for (String key : keys) {
             Object obj = bundle.get(key);
@@ -1527,13 +1523,6 @@ public class LoginActivity extends BaseFragment {
             }
 
             HashMap<String, String> languageMap = new HashMap<>();
-            if (NekoConfig.showTestBackend) {
-                countriesArray.add("Test Number");
-                countriesMap.put("Test Number", "999");
-                codesMap.put("000", "Test Number");
-                languageMap.put("TG", "Test Number");
-                phoneFormatMap.put("999", "XX X XXXX");
-            }
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().getAssets().open("countries.txt")));
                 String line;

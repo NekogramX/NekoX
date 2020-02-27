@@ -45,8 +45,6 @@ import java.util.TimerTask;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import tw.nekomimi.nekogram.NekoConfig;
-
 public class CountrySelectActivity extends BaseFragment {
 
     public interface CountrySelectActivityDelegate {
@@ -205,21 +203,6 @@ public class CountrySelectActivity extends BaseFragment {
 
         public CountryAdapter(Context context) {
             mContext = context;
-
-            if (NekoConfig.showTestBackend) {
-                Country c = new Country();
-                c.name = "Test Number";
-                c.code = "999";
-                c.shortname = "TG";
-                String n = c.name.substring(0, 1).toUpperCase();
-                ArrayList<Country> arr = countries.get(n);
-                if (arr == null) {
-                    arr = new ArrayList<>();
-                    countries.put(n, arr);
-                    sortedCountries.add(n);
-                }
-                arr.add(c);
-            }
 
             try {
                 InputStream stream = ApplicationLoader.applicationContext.getResources().getAssets().open("countries.txt");

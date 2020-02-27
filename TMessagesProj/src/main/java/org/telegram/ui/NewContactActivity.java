@@ -66,8 +66,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import tw.nekomimi.nekogram.NekoConfig;
-
 import static android.widget.LinearLayout.HORIZONTAL;
 
 public class NewContactActivity extends BaseFragment implements AdapterView.OnItemSelectedListener {
@@ -537,13 +535,6 @@ public class NewContactActivity extends BaseFragment implements AdapterView.OnIt
         });
 
         HashMap<String, String> languageMap = new HashMap<>();
-        if (NekoConfig.showTestBackend) {
-            countriesArray.add("Test Number");
-            countriesMap.put("Test Number","999");
-            codesMap.put("000","Test Number");
-            languageMap.put("TG","Test Number");
-            phoneFormatMap.put("999","XX X XXXX");
-        }
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(context.getResources().getAssets().open("countries.txt")));
             String line;
