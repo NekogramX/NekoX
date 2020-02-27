@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="NekoXProxy">NekoX Public Proxy</string>
+    <string name="NekoXProxy">Proxy public NekoX</string>
     <string name="PublicPrefix">[ Public ]</string>
-    <string name="NekoXProxyInfo">It may take tens of seconds to load the NekoX Public built-in proxy :)</string>
+    <string name="NekoXProxyInfo">Cela peut prendre des dizaines de secondes pour charger le proxy public de NekoX :)</string>
 </resources>
