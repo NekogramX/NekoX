@@ -746,6 +746,13 @@ public class SharedConfig {
 
     public static void reloadProxyList() {
 
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+        String proxyAddress = preferences.getString("proxy_ip", "");
+        String proxyUsername = preferences.getString("proxy_user", "");
+        String proxyPassword = preferences.getString("proxy_pass", "");
+        String proxySecret = preferences.getString("proxy_secret", "");
+        int proxyPort = preferences.getInt("proxy_port", 1080);
+
         LinkedList<ProxyInfo> proxy = new LinkedList<>();
 
         ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
@@ -773,6 +780,16 @@ public class SharedConfig {
                     }
 
                     proxy.add(info);
+
+                    if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+
+                        if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
+
+                            currentProxy = info;
+
+                        }
+
+                    }
 
                 } catch (InvalidProxyException ignored) {
 
@@ -837,7 +854,10 @@ public class SharedConfig {
         reloadProxyList();
 
         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-            currentProxy = proxyList.get(0);
+            ProxyInfo internalProxy = proxyList.get(0);
+            if (proxyAddress.equals(internalProxy.address) && proxyPort == internalProxy.port && proxyUsername.equals(internalProxy.username) && proxyPassword.equals(internalProxy.password)) {
+                currentProxy = internalProxy;
+            }
         }
     }
 

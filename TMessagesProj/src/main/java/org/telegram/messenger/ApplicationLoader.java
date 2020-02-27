@@ -110,10 +110,6 @@ public class ApplicationLoader extends Application {
 
         if (!preferences.contains("proxy_enabled")) {
 
-            if (BuildVars.LOGS_ENABLED) {
-                FileLog.d("enable default proxy");
-            }
-
             SharedConfig.currentProxy = SharedConfig.proxyList.get(0);
 
             SharedPreferences.Editor editor = preferences.edit();
