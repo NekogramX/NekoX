@@ -104,9 +104,9 @@ public class ApplicationLoader extends Application {
 
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
 
-                Log.e("nekox", "load languages error", e);
+                FileLog.e("load languages error",e);
 
             }
 
