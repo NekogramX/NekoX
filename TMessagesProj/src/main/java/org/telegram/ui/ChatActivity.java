@@ -37,9 +37,12 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.*;
+
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.*;
+
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.MediaController;
 import org.telegram.messenger.*;
@@ -56,6 +59,7 @@ import org.telegram.ui.Cells.*;
 import org.telegram.ui.Components.Size;
 import org.telegram.ui.Components.*;
 import org.telegram.ui.Components.voip.VoIPHelper;
+
 import tw.nekomimi.nekogram.MessageDetailsActivity;
 import tw.nekomimi.nekogram.MessageHelper;
 import tw.nekomimi.nekogram.NekoConfig;
@@ -8020,7 +8024,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
                     long lastGroupId = 0;
                     while (h < maxH) {
-                        if (i < chatAdapter.messagesStartRow || i > chatAdapter.messagesEndRow) break;
+                        if (i < chatAdapter.messagesStartRow || i > chatAdapter.messagesEndRow)
+                            break;
                         if (scrollDirection == RecyclerAnimationScrollHelper.SCROLL_DIRECTION_DOWN) {
                             if (position > i) break;
                         } else {
@@ -14439,6 +14444,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         if (!TextUtils.isEmpty(path)) {
             try {
                 Bitmap image = BitmapFactory.decodeFile(path);
+                Bitmap outB = image.copy(Bitmap.Config.ARGB_8888, true);
+                Canvas canvas = new Canvas(outB);
+                canvas.drawColor(Color.WHITE);
+                canvas.drawBitmap(image, 0, 0, null);
                 if (image != null) {
                     FileOutputStream stream = new FileOutputStream(path + ".png");
                     image.compress(Bitmap.CompressFormat.PNG, 100, stream);
