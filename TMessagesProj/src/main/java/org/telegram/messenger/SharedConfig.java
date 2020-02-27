@@ -151,7 +151,7 @@ public class SharedConfig {
                 address = "";
             }
             if (password == null) {
-                address = "";
+                password = "";
             }
             if (username == null) {
                 username = "";
