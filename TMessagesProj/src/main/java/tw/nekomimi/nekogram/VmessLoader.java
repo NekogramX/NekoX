@@ -2,6 +2,8 @@ package tw.nekomimi.nekogram;
 
 import android.content.Context;
 
+import org.telegram.messenger.ApplicationLoader;
+
 import cn.hutool.core.codec.Base64;
 import libv2ray.Libv2ray;
 import libv2ray.V2RayPoint;
@@ -13,10 +15,10 @@ public class VmessLoader {
 
     private V2RayPoint point;
 
-    public VmessLoader(Context ctx) {
+    public VmessLoader() {
 
         point = Libv2ray.newV2RayPoint(new EmptyCallback());
-        point.setPackageName(ctx.getPackageName());
+        point.setPackageName(ApplicationLoader.applicationContext.getPackageName());
 
     }
 

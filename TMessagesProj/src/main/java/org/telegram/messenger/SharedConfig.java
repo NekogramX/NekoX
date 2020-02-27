@@ -39,6 +39,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONArray;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.VmessLoader;
 
 public class SharedConfig {
 
@@ -164,6 +165,7 @@ public class SharedConfig {
     public static class VmessProxy extends ProxyInfo {
 
         public String vmessLink;
+        public VmessLoader loader;
 
         public VmessProxy(String vmessLink) {
 
@@ -179,10 +181,8 @@ public class SharedConfig {
             this.port = port;
             address = "";
 
-        }
-
-        public static void startV2ray() {
-
+            loader = new VmessLoader();
+            loader.initConfig(vmessLink);
 
         }
 

@@ -138,7 +138,7 @@ public class ApplicationLoader extends Application {
 
             try {
 
-                VmessLoader loader = new VmessLoader(applicationContext);
+                VmessLoader loader = new VmessLoader();
 
                 loader.initPublic();
 
