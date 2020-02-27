@@ -48,7 +48,7 @@ dependencies {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.3'
+    buildToolsVersion '29.0.4'
     ndkVersion "21.0.6113669"
 
     defaultConfig.applicationId = "moe.wataru.nekogram"
@@ -310,7 +310,7 @@ android {
         }
     }
 
-    defaultConfig.versionCode = 10 * 1874
+    defaultConfig.versionCode = 10 * 1875
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
