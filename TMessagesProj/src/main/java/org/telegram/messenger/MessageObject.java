@@ -4282,10 +4282,6 @@ public class MessageObject {
             for (int a = 0; a < document.attributes.size(); a++) {
                 TLRPC.DocumentAttribute attribute = document.attributes.get(a);
                 if (attribute instanceof TLRPC.TL_documentAttributeAudio) {
-                    if (!TextUtils.isEmpty(document.mime_type)) {
-                        String mime = document.mime_type.toLowerCase();
-                        return mime.equals("audio/ogg");
-                    }
                     return attribute.voice;
                 }
             }
