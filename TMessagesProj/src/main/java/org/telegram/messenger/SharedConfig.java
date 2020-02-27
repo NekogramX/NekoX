@@ -176,7 +176,7 @@ public class SharedConfig {
             address = "127.0.0.1";
             username = "";
             secret = "";
-            port = ;
+            this.port = port;
             address = "";
 
         }

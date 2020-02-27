@@ -94,7 +94,15 @@ public class ApplicationLoader extends Application {
 
             try {
 
-                ZipUtil.unzip(new ZipInputStream(applicationContext.getAssets().open("languages.zip")), applicationContext.getFilesDir());
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+
+                    ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir(),CharsetUtil.CHARSET_UTF_8);
+
+                } else {
+
+                    ZipUtil.unzip(new ZipInputStream(applicationContext.getAssets().open("languages.zip")), applicationContext.getFilesDir());
+
+                }
 
             } catch (IOException e) {
 
