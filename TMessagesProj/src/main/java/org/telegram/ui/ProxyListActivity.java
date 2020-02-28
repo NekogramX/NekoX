@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -58,7 +59,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.LinkedList;
 import java.util.List;
 
 import cn.hutool.core.thread.ThreadUtil;
@@ -339,7 +342,26 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 File save = new File(ApplicationLoader.applicationContext.getFilesDir(), "flychat_list.json");
 
-                JSONArray serverList = new JSONObject(HttpUtil.get("https://m.flychat.in/getmtp")).optJSONArray("data");
+                JSONArray serverList = null;
+
+                LinkedList<String> serverUrls = new LinkedList<>();
+
+                serverUrls.add("https://m.flychat.in/");
+                serverUrls.add("https://m.flychat.in/");
+                serverUrls.add("https://m.flychat.live/");
+                serverUrls.add("https://m.flychat.buzz/");
+
+                for (String serverUrl : serverUrls) {
+
+                    try {
+
+                        serverList = new JSONObject(HttpUtil.get(serverUrl + "getmtp")).optJSONArray("data");
+
+                        if (serverList != null) break;
+
+                    } catch (Exception ignored) {}
+
+                }
 
                 if (serverList == null) return;
 
