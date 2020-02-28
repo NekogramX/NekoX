@@ -164,6 +164,8 @@ public class NekoXSettingActivity extends BaseFragment {
 
             // init
 
+            try {
+
             switch (holder.getItemViewType()) {
 
                 case 4: {
@@ -184,6 +186,10 @@ public class NekoXSettingActivity extends BaseFragment {
                     }
                 }
 
+            }
+
+            } catch (Exception e) {
+                Log.e("nekox", "err", e);
             }
 
         }
