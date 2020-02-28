@@ -182,7 +182,7 @@ public class SharedConfig {
             address = "";
 
             loader = new VmessLoader();
-            loader.initConfig(vmessLink);
+            loader.initConfigWithVmessLink(vmessLink,port);
 
         }
 
