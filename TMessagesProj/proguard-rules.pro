@@ -8,7 +8,7 @@
 -keep class com.google.android.exoplayer2.ext.** { *; }
 -keep class com.google.android.exoplayer2.util.** { *; }
 -keep class com.google.android.exoplayer2.metadata.** { *; }
--keep class package com.v2ray.ang.dto.** { *; }
+-keep class com.v2ray.ang.dto.** { *; }
 -dontwarn com.coremedia.**
 -dontwarn org.telegram.**
 -dontwarn com.google.android.exoplayer2.ext.**
