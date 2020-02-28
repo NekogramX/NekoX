@@ -328,7 +328,11 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                     SharedConfig.reloadProxyList();
 
-                    updateRows(true);
+                    if (getParentActivity() != null) {
+
+                       getParentActivity().runOnUiThread(() -> updateRows(true));
+
+                    }
 
                 }
 
@@ -376,7 +380,11 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 SharedConfig.reloadProxyList();
 
-                updateRows(true);
+                if (getParentActivity() != null) {
+
+                    getParentActivity().runOnUiThread(() -> updateRows(true));
+
+                }
 
             } catch (Exception e) {
 

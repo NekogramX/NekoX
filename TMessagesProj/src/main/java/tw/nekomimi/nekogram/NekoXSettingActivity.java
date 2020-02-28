@@ -206,7 +206,7 @@ public class NekoXSettingActivity extends BaseFragment {
         @Override
         public boolean isEnabled(RecyclerView.ViewHolder holder) {
             int position = holder.getAdapterPosition();
-            return position == disableFlagSecureRow || position == disableScreenshotDetectionRow;
+            return position == developerSettingsRow || position == disableFlagSecureRow || position == disableScreenshotDetectionRow;
         }
 
         @Override

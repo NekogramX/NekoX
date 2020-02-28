@@ -849,7 +849,7 @@ public class SharedConfig {
 
             try {
 
-                JSONArray serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile));
+                JSONArray serverList = new JSONArray(FileUtil.readUtf8String(flyChatListFile));
 
                 for (int index = 0; index < serverList.length(); index++) {
 
