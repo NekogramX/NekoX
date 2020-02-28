@@ -17041,7 +17041,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     public static boolean isClickableLink(String str) {
-        return str.startsWith("https://") || str.startsWith("@") || str.startsWith("#") || str.startsWith("$");
+        return str.startsWith("https://") || str.startsWith("vmess://") || str.startsWith("ss://") || str.startsWith("@") || str.startsWith("#") || str.startsWith("$");
     }
 
     @Override

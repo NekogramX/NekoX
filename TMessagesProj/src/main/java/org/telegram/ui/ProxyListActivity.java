@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.DownloadController;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessagesController;
@@ -312,7 +313,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
             while (true) try {
 
-                File save = new File(getParentActivity().getFilesDir(), "proxy_list.json");
+                File save = new File(ApplicationLoader.applicationContext.getFilesDir(), "proxy_list.json");
 
                 String serverList = new JSONArray(HttpUtil.get("https://nekogramx.github.io/ProxyList/proxy_list.json")).toString();
 

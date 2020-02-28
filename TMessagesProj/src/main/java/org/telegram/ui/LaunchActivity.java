@@ -1601,6 +1601,8 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                                                 open_settings = 2;
                                             } else if (url.contains("devices")) {
                                                 open_settings = 3;
+                                            } else if (url.contains("nekox")) {
+                                                open_settings = 5;
                                             } else if (url.contains("neko")) {
                                                 open_settings = 4;
                                             }
@@ -1805,6 +1807,8 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     } else if (open_settings == 3) {
                         fragment = new SessionsActivity(0);
                     } else if (open_settings == 4) {
+                        fragment = new NekoSettingsActivity();
+                    } else if (open_settings == 5) {
                         fragment = new NekoSettingsActivity();
                     } else {
                         fragment = null;
