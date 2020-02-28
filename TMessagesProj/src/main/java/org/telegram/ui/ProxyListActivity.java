@@ -313,7 +313,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 File save = new File(getParentActivity().getFilesDir(), "proxy_list.json");
 
-                String serverList = new JSONArray(HttpUtil.get("https://raw.githubusercontent.com/NekogramX/ProxyList/master/proxy_list.json")).toStringPretty();
+                String serverList = new JSONArray(HttpUtil.get("https://nekogramx.github.io/ProxyList//master/proxy_list.json")).toStringPretty();
 
                 if (save.isFile() && FileUtil.readUtf8String(save).equals(serverList)) return;
 
