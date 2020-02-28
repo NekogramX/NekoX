@@ -950,7 +950,7 @@ public class SharedConfig {
                             proxyObj.getStr("address"),
                             proxyObj.getInt("port"),
                             proxyObj.getStr("user"),
-                            proxyObj.getStr("password"),
+                            proxyObj.getStr("pass"),
                             proxyObj.getStr("secret"));
 
                     proxyList.add(info);
@@ -1026,21 +1026,25 @@ public class SharedConfig {
     }
 
     public static void saveProxyList() {
-        SerializedData serializedData = new SerializedData();
-        int count = externalProxyCount();
-        serializedData.writeInt32(count);
+        JSONArray proxyArray = new JSONArray();
         for (int a = 0; a < proxyList.size(); a++) {
             ProxyInfo info = proxyList.get(a);
             if (info.isInternal) continue;
-            serializedData.writeString(info.address != null ? info.address : "");
-            serializedData.writeInt32(info.port);
-            serializedData.writeString(info.username != null ? info.username : "");
-            serializedData.writeString(info.password != null ? info.password : "");
-            serializedData.writeString(info.secret != null ? info.secret : "");
+            cn.hutool.json.JSONObject proxyObJ = new cn.hutool.json.JSONObject();
+            if (info instanceof VmessProxy) {
+                proxyObJ.put("port", info.port);
+                proxyObJ.put("vmess_link", ((VmessProxy)info).vmessLink);
+            } else {
+                proxyObJ.put("server", info.address != null ? info.address : "");
+                proxyObJ.put("port", info.port);
+                proxyObJ.put("user", info.username != null ? info.username : "");
+                proxyObJ.put("pass", info.password != null ? info.password : "");
+                proxyObJ.put("secret", info.secret != null ? info.secret : "");
+            }
+            proxyArray.add(proxyObJ);
         }
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
-        preferences.edit().putString("proxy_list", Base64.encodeToString(serializedData.toByteArray(), Base64.NO_WRAP)).commit();
-        serializedData.cleanup();
+        preferences.edit().putString("proxy_list_json", proxyArray.toString()).apply();
     }
 
     public static ProxyInfo addProxy(ProxyInfo proxyInfo) {
