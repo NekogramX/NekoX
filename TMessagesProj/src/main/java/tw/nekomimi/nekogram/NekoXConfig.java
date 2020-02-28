@@ -29,7 +29,7 @@ public class NekoXConfig {
 
     public static void toggleDeveloperMode() {
 
-        preferences.edit().putBoolean("disable_chat_action", developerMode = !disableChatAction).apply();
+        preferences.edit().putBoolean("develoepr_mode", developerMode = !developerMode).apply();
 
     }
 
