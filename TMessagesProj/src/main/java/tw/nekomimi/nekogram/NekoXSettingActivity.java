@@ -192,9 +192,9 @@ public class NekoXSettingActivity extends BaseFragment {
                     TextCheckCell textCell = (TextCheckCell) holder.itemView;
                     textCell.setEnabled(true, null);
                     if (position == disableFlagSecureRow) {
-                        textCell.setTextAndCheck(LocaleController.getString("DisableFlagSecure", R.string.DisableFlagSecure), NekoXConfig.disableFlagSecure, false);
+                        textCell.setTextAndCheck(LocaleController.getString("DisableFlagSecure", R.string.DisableFlagSecure), NekoXConfig.disableFlagSecure, true);
                     } else if (position == disableScreenshotDetectionRow) {
-                        textCell.setTextAndCheck(LocaleController.getString("DisableScreenshotDetection", R.string.DisableScreenshotDetection), NekoXConfig.disableScreenshotDetection, false);
+                        textCell.setTextAndCheck(LocaleController.getString("DisableScreenshotDetection", R.string.DisableScreenshotDetection), NekoXConfig.disableScreenshotDetection, true);
 
                     }
                 }
