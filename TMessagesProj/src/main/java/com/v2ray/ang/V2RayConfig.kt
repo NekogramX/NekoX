@@ -4,7 +4,7 @@ package com.v2ray.ang
  *
  * App Config Const
  */
-object AppConfig {
+object V2RayConfig {
     const val ANG_PACKAGE = "com.v2ray.ang"
     const val ANG_CONFIG = "ang_config"
     const val PREF_CURR_CONFIG = "pref_v2ray_config"

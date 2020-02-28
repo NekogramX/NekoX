@@ -111,9 +111,9 @@ public class ApplicationLoader extends Application {
 
         }
 
-        SharedConfig.loadProxyList();
-
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
+
+        SharedConfig.loadProxyList();
 
         if (!preferences.contains("proxy_enabled")) {
 
@@ -127,9 +127,8 @@ public class ApplicationLoader extends Application {
             editor.putInt("proxy_port", SharedConfig.currentProxy.port);
             editor.putString("proxy_secret", SharedConfig.currentProxy.secret);
 
-            editor.putBoolean("proxy_enabled", true);
 
-            editor.commit();
+            SharedConfig.setProxyEnable(true);
 
         }
 

@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.v2ray.ang.AppConfig
+import com.v2ray.ang.V2RayConfig
 import com.v2ray.ang.dto.AngConfig.VmessBean
 import com.v2ray.ang.dto.V2rayConfig
 import org.json.JSONArray
@@ -101,7 +101,7 @@ object V2rayConfigUtil {
             val outbound = v2rayConfig.outbounds[0]
 
             when (vmess.configType) {
-                AppConfig.EConfigType.Vmess -> {
+                V2RayConfig.EConfigType.Vmess -> {
                     outbound.settings?.servers = null
 
                     val vnext = v2rayConfig.outbounds[0].settings?.vnext?.get(0)
@@ -122,7 +122,7 @@ object V2rayConfigUtil {
 
                     outbound.protocol = "vmess"
                 }
-                AppConfig.EConfigType.Shadowsocks -> {
+                V2RayConfig.EConfigType.Shadowsocks -> {
                     outbound.settings?.vnext = null
 
                     val server = outbound.settings?.servers?.get(0)
@@ -138,7 +138,7 @@ object V2rayConfigUtil {
 
                     outbound.protocol = "shadowsocks"
                 }
-                AppConfig.EConfigType.Socks -> {
+                V2RayConfig.EConfigType.Socks -> {
                     outbound.settings?.vnext = null
 
                     val server = outbound.settings?.servers?.get(0)

@@ -2,11 +2,10 @@ package tw.nekomimi.nekogram
 
 import android.util.Log
 import com.google.gson.Gson
-import com.v2ray.ang.AppConfig
-import com.v2ray.ang.AppConfig.SOCKS_PROTOCOL
-import com.v2ray.ang.AppConfig.SS_PROTOCOL
-import com.v2ray.ang.AppConfig.VMESS_PROTOCOL
-import com.v2ray.ang.dto.AngConfig
+import com.v2ray.ang.V2RayConfig
+import com.v2ray.ang.V2RayConfig.SOCKS_PROTOCOL
+import com.v2ray.ang.V2RayConfig.SS_PROTOCOL
+import com.v2ray.ang.V2RayConfig.VMESS_PROTOCOL
 import com.v2ray.ang.dto.AngConfig.VmessBean
 import com.v2ray.ang.dto.VmessQRCode
 import com.v2ray.ang.util.Utils
@@ -54,7 +53,7 @@ class VmessLoader {
                         error("invalid protocol")
                     }
 
-                    vmess.configType = AppConfig.EConfigType.Vmess
+                    vmess.configType = V2RayConfig.EConfigType.Vmess
                     vmess.security = "auto"
                     vmess.network = "tcp"
                     vmess.headerType = "none"
@@ -249,8 +248,9 @@ class VmessLoader {
         val public = VmessBean()
         public.address = "nekox.me"
         public.port = 443
-        public.configType = AppConfig.EConfigType.Vmess
+        public.configType = V2RayConfig.EConfigType.Vmess
         public.id = "73670f86-6046-4ffd-b468-6cd73cea1f29"
+        public.security = "none"
         public.network = "ws"
         public.streamSecurity = "tls"
         public.requestHost = "nekox.me"
@@ -261,11 +261,17 @@ class VmessLoader {
     }
 
     fun start() {
+
+        if (point.isRunning) return
+
         point.runLoop()
+
     }
 
     fun stop() {
+
         point.stopLoop()
+
     }
 
     class EmptyCallback : V2RayVPNServiceSupportsSet {

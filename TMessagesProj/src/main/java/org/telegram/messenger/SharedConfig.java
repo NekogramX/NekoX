@@ -21,18 +21,18 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.v2ray.ang.V2RayConfig;
+
 import org.json.JSONObject;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.SerializedData;
 
 import java.io.File;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -139,7 +139,8 @@ public class SharedConfig {
         public boolean isInternal = false;
         public String descripton;
 
-        public ProxyInfo() {}
+        public ProxyInfo() {
+        }
 
         public ProxyInfo(String a, int p, String u, String pw, String s) {
             address = a;
@@ -169,11 +170,13 @@ public class SharedConfig {
 
         public VmessProxy(String vmessLink) {
 
-            this(vmessLink,RandomUtil.randomInt(10000,65536));
+            this(vmessLink, RandomUtil.randomInt(10000, 65536));
 
         }
 
-        public VmessProxy(String vmessLink,int port) {
+        public VmessProxy(String vmessLink, int port) {
+
+            this.vmessLink = vmessLink;
 
             address = "127.0.0.1";
             username = "";
@@ -182,7 +185,7 @@ public class SharedConfig {
             address = "";
 
             loader = new VmessLoader();
-            loader.initConfig(loader.parseVmessLink(vmessLink,port),port);
+            loader.initConfig(loader.parseVmessLink(vmessLink, port), port);
 
         }
 
@@ -782,6 +785,7 @@ public class SharedConfig {
         String proxyPassword = preferences.getString("proxy_pass", "");
         String proxySecret = preferences.getString("proxy_secret", "");
         int proxyPort = preferences.getInt("proxy_port", 1080);
+        String vmessLink = preferences.getString("vmess_link", "");
 
         LinkedList<ProxyInfo> proxy = new LinkedList<>();
 
@@ -813,7 +817,8 @@ public class SharedConfig {
 
                     if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
-                        if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
+                        if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password) ||
+                                (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink)))) {
 
                             currentProxy = info;
 
@@ -839,7 +844,72 @@ public class SharedConfig {
 
         }
 
-        proxyList.addAll(0,proxy);
+        proxyList.addAll(0, proxy);
+
+    }
+
+    public static boolean proxyEnabled = false;
+
+    static {
+
+        loadProxyList();
+
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+
+        proxyEnabled = preferences.getBoolean("proxy_enabled", false);
+
+    }
+
+    public static void setProxyEnable(boolean enable) {
+
+        proxyEnabled = enable;
+
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+
+        preferences.edit().putBoolean("proxy_enabled", enable).apply();
+
+        if (enable && currentProxy instanceof VmessProxy) {
+
+            VmessProxy vmess = (VmessProxy) currentProxy;
+
+            vmess.loader.start();
+
+        } else if (!enable && currentProxy instanceof VmessProxy) {
+
+            VmessProxy vmess = (VmessProxy) currentProxy;
+
+            vmess.loader.stop();
+
+        }
+
+        ConnectionsManager.setProxySettings(enable, SharedConfig.currentProxy.address, SharedConfig.currentProxy.port, SharedConfig.currentProxy.username, SharedConfig.currentProxy.password, SharedConfig.currentProxy.secret);
+
+    }
+
+    public static void setCurrentProxy(ProxyInfo info) {
+
+        currentProxy = info;
+
+        SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
+
+        editor.putString("proxy_ip", info.address);
+        editor.putString("proxy_pass", info.password);
+        editor.putString("proxy_user", info.username);
+        editor.putInt("proxy_port", info.port);
+        editor.putString("proxy_secret", info.secret);
+
+        if (info instanceof VmessProxy) {
+
+            VmessProxy vmess = (VmessProxy) info;
+
+            editor.putString("vmess_link", vmess.vmessLink);
+
+        }
+
+        editor.apply();
+
+        setProxyEnable(true);
+
 
     }
 
@@ -853,45 +923,81 @@ public class SharedConfig {
         String proxyPassword = preferences.getString("proxy_pass", "");
         String proxySecret = preferences.getString("proxy_secret", "");
         int proxyPort = preferences.getInt("proxy_port", 1080);
+        String vmessLink = preferences.getString("vmess_link", "");
 
         proxyListLoaded = true;
         proxyList.clear();
         currentProxy = null;
 
-        String list = preferences.getString("proxy_list", null);
+        String list = preferences.getString("proxy_list_json", null);
 
         if (!TextUtils.isEmpty(list)) {
-            byte[] bytes = Base64.decode(list, Base64.DEFAULT);
-            SerializedData data = new SerializedData(bytes);
-            int count = data.readInt32(false);
-            for (int a = 0; a < count; a++) {
-                ProxyInfo info = new ProxyInfo(
-                        data.readString(false),
-                        data.readInt32(false),
-                        data.readString(false),
-                        data.readString(false),
-                        data.readString(false));
-                proxyList.add(info);
+
+            JSONArray proxyList = new JSONArray(list);
+
+            for (int a = 0; a < proxyList.size(); a++) {
+                cn.hutool.json.JSONObject proxyObj = proxyList.getJSONObject(a);
+
+                ProxyInfo info;
+
+                if (proxyObj.containsKey("vmessLink")) {
+
+                    info = new VmessProxy(proxyObj.getStr("vmessLink"), proxyObj.getInt("port"));
+
+                } else {
+
+                    info = new ProxyInfo(
+                            proxyObj.getStr("address"),
+                            proxyObj.getInt("port"),
+                            proxyObj.getStr("user"),
+                            proxyObj.getStr("password"),
+                            proxyObj.getStr("secret"));
+
+                    proxyList.add(info);
+
+                }
+
                 if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-                    if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
+
+                    if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink))) {
+
                         currentProxy = info;
+
+                        ((VmessProxy) currentProxy).loader.start();
+
+                    } else if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
+
+                        currentProxy = info;
+
                     }
                 }
             }
-            data.cleanup();
+
         }
 
         reloadProxyList();
 
         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+
             ProxyInfo internalProxy = proxyList.get(0);
+
             if (proxyAddress.equals(internalProxy.address) && proxyPort == internalProxy.port && proxyUsername.equals(internalProxy.username) && proxyPassword.equals(internalProxy.password)) {
+
                 currentProxy = internalProxy;
+
             }
+
         }
+
     }
 
     public static ProxyInfo parseProxyInfo(String url) throws InvalidProxyException {
+
+        if (url.startsWith(V2RayConfig.VMESS_PROTOCOL) || url.startsWith("ss://")) {
+
+            return new VmessProxy(url);
+
+        }
 
         if (url.startsWith("tg:proxy") ||
                 url.startsWith("tg://proxy") ||
@@ -961,12 +1067,13 @@ public class SharedConfig {
             editor.putString("proxy_pass", "");
             editor.putString("proxy_user", "");
             editor.putString("proxy_secret", "");
+            editor.remove("vmess_link");
             editor.putInt("proxy_port", 1080);
             editor.putBoolean("proxy_enabled", false);
             editor.putBoolean("proxy_enabled_calls", false);
             editor.commit();
             if (enabled) {
-                ConnectionsManager.setProxySettings(false, "", 0, "", "", "");
+                setProxyEnable(false);
             }
         }
         proxyList.remove(proxyInfo);
