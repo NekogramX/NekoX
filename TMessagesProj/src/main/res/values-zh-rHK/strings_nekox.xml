@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="NekoXProxy">NekoX 公共代理</string>
+    <string name="PublicPrefix">[ 公共 ]</string>
+    <string name="NekoXProxyInfo">這可能需要幾十秒的時間來加載 NekoX 公共代理 :)</string>
+
+    <string name="DisableChatAction">不要發送我的數據如狀態</string>
+
+
+</resources>

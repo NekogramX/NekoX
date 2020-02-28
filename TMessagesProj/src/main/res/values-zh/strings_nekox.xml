@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="NekoXProxy">NekoX Public Proxy</string>
-    <string name="PublicPrefix">[ Public ]</string>
-    <string name="NekoXProxyInfo">It may take tens of seconds to load the NekoX Public built-in proxy :)</string>
+
+    <string name="NekoXProxy">NekoX 公共代理</string>
+    <string name="PublicPrefix">[ 公共 ]</string>
+    <string name="NekoXProxyInfo">这可能需要几十秒的时间来加载 NekoX 公共代理 :)</string>
+
+    <string name="DisableChatAction">不要发送我的输入状态</string>
+
 </resources>
