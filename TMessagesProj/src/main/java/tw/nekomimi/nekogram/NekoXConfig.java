@@ -41,14 +41,18 @@ public class NekoXConfig {
 
     public static void toggleDisableScreenshotDetection() {
 
-        preferences.edit().putBoolean("disable_flag_secure", disableFlagSecure = !disableFlagSecure).apply();
+        preferences.edit().putBoolean("disable_screenshot_detection", disableScreenshotDetection = !disableScreenshotDetection).apply();
 
     }
 
     static {
 
         disableChatAction = preferences.getBoolean("disable_chat_action", false);
+
+        developerMode = preferences.getBoolean("develoepr_mode",false);
+
         disableFlagSecure = preferences.getBoolean("disable_flag_secure", false);
+        disableScreenshotDetection = preferences.getBoolean("disable_screenshot_detection",false);
 
     }
 
