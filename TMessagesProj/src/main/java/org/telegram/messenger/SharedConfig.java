@@ -788,10 +788,6 @@ public class SharedConfig {
 
         LinkedList<ProxyInfo> proxy = new LinkedList<>();
 
-        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
-        internalProxy.isInternal = true;
-        proxy.add(internalProxy);
-
         File proxyListFile = new File(ApplicationLoader.applicationContext.getFilesDir(), "proxy_list.json");
 
         if (proxyListFile.isFile()) {
@@ -901,7 +897,7 @@ public class SharedConfig {
 
         }
 
-        proxyList.addAll(0, proxy);
+        proxyList.addAll(proxy);
 
     }
 
@@ -992,6 +988,10 @@ public class SharedConfig {
         proxyList.clear();
         currentProxy = null;
 
+        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
+        internalProxy.isInternal = true;
+        proxyList.add(internalProxy);
+
         String list = preferences.getString("proxy_list_json", null);
 
         if (!TextUtils.isEmpty(list)) {
@@ -1046,8 +1046,6 @@ public class SharedConfig {
         reloadProxyList();
 
         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-
-            ProxyInfo internalProxy = proxyList.get(0);
 
             if (proxyAddress.equals(internalProxy.address) && proxyPort == internalProxy.port && proxyUsername.equals(internalProxy.username) && proxyPassword.equals(internalProxy.password)) {
 
