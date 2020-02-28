@@ -322,19 +322,19 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 String serverList = new JSONArray(HttpUtil.get("https://nekogramx.github.io/ProxyList/proxy_list.json")).toString();
 
-                if (save.isFile() && FileUtil.readUtf8String(save).equals(serverList)) return;
+                if (!save.isFile() || !FileUtil.readUtf8String(save).equals(serverList)) {
 
-                FileUtil.writeUtf8String(serverList, save);
+                    FileUtil.writeUtf8String(serverList, save);
 
-                SharedConfig.reloadProxyList();
+                    SharedConfig.reloadProxyList();
 
-                updateRows(true);
+                    updateRows(true);
+
+                }
 
             } catch (Exception e) {
 
                 Log.w("nekox", "update proxy list failed", e);
-
-                ThreadUtil.sleep(10 * 1000L);
 
             }
 
