@@ -3,6 +3,7 @@ package tw.nekomimi.nekogram;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,7 +125,7 @@ public class NekoXSettingActivity extends BaseFragment {
     @Override
     public ThemeDescription[] getThemeDescriptions() {
         return new ThemeDescription[]{
-                new ThemeDescription(listView, ThemeDescription.FLAG_CELLBACKGROUNDCOLOR, new Class[]{EmptyCell.class, TextSettingsCell.class, TextCheckCell.class, HeaderCell.class, TextDetailSettingsCell.class, NotificationsCheckCell.class}, null, null, null, Theme.key_windowBackgroundWhite),
+                new ThemeDescription(listView, ThemeDescription.FLAG_CELLBACKGROUNDCOLOR, new Class[]{TextCheckCell.class, HeaderCell.class}, null, null, null, Theme.key_windowBackgroundWhite),
                 new ThemeDescription(fragmentView, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_windowBackgroundGray),
 
                 new ThemeDescription(actionBar, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_avatar_backgroundActionBarBlue),
@@ -195,38 +196,44 @@ public class NekoXSettingActivity extends BaseFragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = null;
-            switch (viewType) {
-                case 1:
-                    view = new ShadowSectionCell(mContext);
-                    break;
-                case 2:
-                    view = new TextSettingsCell(mContext);
-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
-                    break;
-                case 3:
-                    view = new TextCheckCell(mContext);
-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
-                    break;
-                case 4:
-                    view = new HeaderCell(mContext);
-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
-                    break;
-                case 5:
-                    view = new NotificationsCheckCell(mContext);
-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
-                    break;
-                case 6:
-                    view = new TextDetailSettingsCell(mContext);
-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
-                    break;
-                case 7:
-                    view = new TextInfoPrivacyCell(mContext);
-                    view.setBackgroundDrawable(Theme.getThemedDrawable(mContext, R.drawable.greydivider, Theme.key_windowBackgroundGrayShadow));
-                    break;
+            try {
+                View view = null;
+                switch (viewType) {
+                    case 1:
+                        view = new ShadowSectionCell(mContext);
+                        break;
+                    case 2:
+                        view = new TextSettingsCell(mContext);
+                        view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                        break;
+                    case 3:
+                        view = new TextCheckCell(mContext);
+                        view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                        break;
+                    case 4:
+                        view = new HeaderCell(mContext);
+                        view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                        break;
+                    case 5:
+                        view = new NotificationsCheckCell(mContext);
+                        view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                        break;
+                    case 6:
+                        view = new TextDetailSettingsCell(mContext);
+                        view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                        break;
+                    case 7:
+                        view = new TextInfoPrivacyCell(mContext);
+                        view.setBackgroundDrawable(Theme.getThemedDrawable(mContext, R.drawable.greydivider, Theme.key_windowBackgroundGrayShadow));
+                        break;
+                }
+                view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+
+                return new RecyclerListView.Holder(view);
+            } catch (Exception e) {
+                Log.e("nekox", "err", e);
+                return null;
             }
-            view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-            return new RecyclerListView.Holder(view);
         }
 
         @Override
