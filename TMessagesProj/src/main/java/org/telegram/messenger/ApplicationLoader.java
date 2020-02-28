@@ -9,7 +9,6 @@
 package org.telegram.messenger;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
@@ -38,7 +37,6 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.Components.ForegroundDetector;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.zip.ZipInputStream;
 
 import cn.hutool.core.thread.ThreadUtil;
@@ -97,7 +95,7 @@ public class ApplicationLoader extends Application {
 
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
 
-                    ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir(),CharsetUtil.CHARSET_UTF_8);
+                    ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
 
                 } else {
 
@@ -107,7 +105,7 @@ public class ApplicationLoader extends Application {
 
             } catch (Exception e) {
 
-                FileLog.e("load languages error",e);
+                FileLog.e("load languages error", e);
 
             }
 
@@ -145,9 +143,9 @@ public class ApplicationLoader extends Application {
 
                     try {
 
-                        loader.initPublic();
+                        loader.initPublic(11210);
 
-                        VmessLoader.PUBLIC = loader;
+                        loader.start();
 
                     } catch (Exception e) {
 
