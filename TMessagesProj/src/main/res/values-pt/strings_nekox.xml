@@ -3,4 +3,11 @@
     <string name="NekoXProxy">Proxy Público NekoX</string>
     <string name="PublicPrefix">[ Público ]</string>
     <string name="NekoXProxyInfo">Pode demorar dezenas de segundos para carregar o proxy interno NekoX :)</string>
+    <string name="DisableChatAction">Don\'t send my input status</string>
+    <string name="SendFakeScreenshot">Send Fake Screenshot</string>
+    <string name="EnableDeveloperMode">Enable Developer Mode</string>
+    <string name="DisableDeveloperMode">Disable Developer Mode</string>
+    <string name="DeveloperSettings">Developer Settings</string>
+    <string name="DisableFlagSecure">Disable Flag Secure</string>
+    <string name="DisableScreenshotDetection">Disable Screenshot Detection</string>
 </resources>
