@@ -2881,7 +2881,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             ApplicationLoader.mainInterfacePausedStageQueueTime = 0;
         });
         onPasscodePause();
-        actionBarLayout.onPause();
+        if (actionBarLayout != null) {
+            actionBarLayout.onPause();
+        }
         if (AndroidUtilities.isTablet()) {
             rightActionBarLayout.onPause();
             layersActionBarLayout.onPause();
