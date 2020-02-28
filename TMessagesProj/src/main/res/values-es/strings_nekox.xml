@@ -3,5 +3,5 @@
     <string name="NekoXProxy">Proxy público NekoX</string>
     <string name="PublicPrefix">[ Público ]</string>
     <string name="NekoXProxyInfo">Puede tardar decenas de segundos en cargar el proxy público NekoX :)</string>
-    <string name="DisableChatAction">Don\'t send my chat action</string>
+    <string name="DisableChatAction">Don\'t send my input status</string>
 </resources>
