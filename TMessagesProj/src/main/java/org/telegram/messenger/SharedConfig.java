@@ -990,7 +990,8 @@ public class SharedConfig {
 
                 JSONArray proxyArray = new JSONArray(list);
 
-                for (int a = 0; a < proxyList.size(); a++) {
+                for (int a = 0; a < proxyArray.length(); a++) {
+
                     JSONObject proxyObj = proxyArray.getJSONObject(a);
 
                     ProxyInfo info;
@@ -1008,9 +1009,9 @@ public class SharedConfig {
                                 proxyObj.getString("pass"),
                                 proxyObj.getString("secret"));
 
-                        proxyList.add(info);
-
                     }
+
+                    proxyList.add(info);
 
                     if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
