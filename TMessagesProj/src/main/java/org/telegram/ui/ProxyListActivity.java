@@ -59,6 +59,7 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.util.List;
 
+import cn.hutool.core.thread.ThreadUtil;
 import tw.nekomimi.nekogram.FileUtil;
 import tw.nekomimi.nekogram.HttpUtil;
 
@@ -309,11 +310,11 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
         new Thread(() -> {
 
-            try {
+            while (true) try {
 
                 File save = new File(getParentActivity().getFilesDir(), "proxy_list.json");
 
-                String serverList = new JSONArray(HttpUtil.get("https://nekogramx.github.io/ProxyList/master/proxy_list.json")).toString();
+                String serverList = new JSONArray(HttpUtil.get("https://nekogramx.github.io/ProxyList/proxy_list.json")).toString();
 
                 if (save.isFile() && FileUtil.readUtf8String(save).equals(serverList)) return;
 
@@ -323,9 +324,13 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 updateRows(true);
 
+                return;
+
             } catch (Exception e) {
 
                 Log.w("nekox", "update proxy list failed", e);
+
+                ThreadUtil.sleep(5 * 1000L);
 
             }
 

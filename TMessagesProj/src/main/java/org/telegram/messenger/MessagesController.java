@@ -55,6 +55,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import tw.nekomimi.nekogram.FilterPopup;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 
 public class MessagesController extends BaseController implements NotificationCenter.NotificationCenterDelegate {
 
@@ -4028,6 +4029,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void sendTyping(final long dialog_id, final int action, int classGuid) {
+        if (NekoXConfig.disableChatAction) return;
         if (dialog_id == 0) {
             return;
         }

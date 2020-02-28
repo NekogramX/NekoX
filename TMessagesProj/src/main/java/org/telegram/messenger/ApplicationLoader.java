@@ -145,6 +145,8 @@ public class ApplicationLoader extends Application {
 
                         loader.start();
 
+                        return;
+
                     } catch (Exception e) {
 
                         FileLog.d("load v2ray failed: " + e.getMessage());
