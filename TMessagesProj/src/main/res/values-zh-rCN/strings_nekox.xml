@@ -5,4 +5,7 @@
     <string name="PublicPrefix">[ 公共 ]</string>
     <string name="NekoXProxyInfo">这可能需要几十秒的时间来加载 NekoX 公共代理 :)</string>
 
+    <string name="DisableChatAction">不要发送我的输入状态</string>
+
+
 </resources>
