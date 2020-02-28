@@ -76,6 +76,9 @@ public class InternalProxy {
 
                 HttpURLConnection httpConnection = (HttpURLConnection) new URL("http://" + address).openConnection();
 
+                httpConnection.setConnectTimeout(1000);
+                httpConnection.setReadTimeout(1000);
+
                 httpConnection.getResponseCode();
 
                 Log.d(TAG, "IP " + address + " " + (end - start) + "ms");
