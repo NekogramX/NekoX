@@ -387,10 +387,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 TextCheckCell textCheckCell = (TextCheckCell) view;
                 textCheckCell.setChecked(useProxySettings);
 
-                SharedConfig.setProxyEnable(useProxySettings);
-
                 NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
-                NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+                SharedConfig.setProxyEnable(useProxySettings);
                 NotificationCenter.getGlobalInstance().addObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
 
                 for (int a = proxyStartRow; a < proxyEndRow; a++) {
@@ -453,8 +451,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialog, which) -> {
                     SharedConfig.deleteProxy(info);
                     if (SharedConfig.currentProxy == null) {
-                        useProxyForCalls = false;
-                        useProxySettings = false;
+\                        SharedConfig.setProxyEnable(false);
                     }
                     NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
                     NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
