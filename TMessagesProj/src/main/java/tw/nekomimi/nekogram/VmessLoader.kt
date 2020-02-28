@@ -243,7 +243,7 @@ class VmessLoader {
     fun initPublic(port: Int) {
 
         val public = VmessBean()
-        public.address = "naekox.me"
+        public.address = "nekox.me"
         public.port = 443
         public.configType = AppConfig.EConfigType.Vmess
         public.id = "73670f86-6046-4ffd-b468-6cd73cea1f29"
