@@ -865,17 +865,19 @@ public class SharedConfig {
                     info.isInternal = true;
                     info.descripton = "來自閉源釣魚軟件 FlyChat :)";
 
-                    if (!StringsKt.isBlank(info.secret)) {
+                    if (StringsKt.isBlank(info.secret)) {
 
-                        proxy.add(info);
+                        info.secret = "eedc4484ea28bac866577326e76460754d6d6963726f736f66742e636f6d";
 
-                        if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+                    }
 
-                            if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password))) {
+                    proxy.add(info);
 
-                                currentProxy = info;
+                    if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
-                            }
+                        if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password))) {
+
+                            currentProxy = info;
 
                         }
 
@@ -885,7 +887,7 @@ public class SharedConfig {
 
             } catch (JSONException e) {
 
-                FileLog.e("invalid flychat config",e);
+                FileLog.e("invalid flychat config", e);
 
             }
 
