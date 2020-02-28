@@ -192,20 +192,6 @@ public class SharedConfig {
 
     public static LinkedList<ProxyInfo> proxyList = new LinkedList<>();
 
-    public static int externalProxyCount() {
-
-        int count = 0;
-
-        for (ProxyInfo info : proxyList) {
-
-            if (!info.isInternal) count++;
-
-        }
-
-        return count;
-
-    }
-
     private static boolean proxyListLoaded;
     public static ProxyInfo currentProxy;
 
@@ -895,7 +881,7 @@ public class SharedConfig {
 
             while (iter.hasNext()) {
 
-                if (iter.next().isInternal) iter.remove();
+                if (iter.next().descripton != null) iter.remove();
 
             }
 
