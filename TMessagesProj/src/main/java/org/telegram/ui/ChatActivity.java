@@ -620,7 +620,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int add_shortcut = 24;
     private final static int show_pinned = 25;
 
-    private final static int fake_screenshot = 26;
+    private final static int fake_screenshot = 27;
 
     private final static int bot_help = 30;
     private final static int bot_settings = 31;
