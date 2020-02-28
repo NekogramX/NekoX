@@ -889,15 +889,19 @@ public class SharedConfig {
 
         }
 
-        Iterator<ProxyInfo> iter = proxyList.iterator();
+        synchronized (proxyList) {
 
-        while (iter.hasNext()) {
+            Iterator<ProxyInfo> iter = proxyList.iterator();
 
-            if (iter.next().isInternal) iter.remove();
+            while (iter.hasNext()) {
+
+                if (iter.next().isInternal) iter.remove();
+
+            }
+
+            proxyList.addAll(proxy);
 
         }
-
-        proxyList.addAll(proxy);
 
     }
 
