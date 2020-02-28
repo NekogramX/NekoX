@@ -20,4 +20,4 @@
 -dontwarn com.googlecode.mp4parser.**
 # Use -keep to explicitly keep any other classes shrinking would remove
 # -dontoptimize
-# -dontobfuscate
+-dontobfuscate
