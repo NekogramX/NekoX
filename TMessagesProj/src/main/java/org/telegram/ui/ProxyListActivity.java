@@ -347,7 +347,6 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 LinkedList<String> serverUrls = new LinkedList<>();
 
                 serverUrls.add("https://m.flychat.in/");
-                serverUrls.add("https://m.flychat.in/");
                 serverUrls.add("https://m.flychat.live/");
                 serverUrls.add("https://m.flychat.buzz/");
 
@@ -359,7 +358,11 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                         if (serverList != null) break;
 
-                    } catch (Exception ignored) {}
+                    } catch (Exception e) {
+
+                        Log.w("nekox", "update plychat list failed at " + serverUrl, e);
+
+                    }
 
                 }
 
@@ -377,9 +380,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
             } catch (Exception e) {
 
-                Log.w("nekox", "update proxy list failed", e);
-
-                ThreadUtil.sleep(5 * 1000L);
+                Log.w("nekox", "update plychat list failed", e);
 
             }
 
