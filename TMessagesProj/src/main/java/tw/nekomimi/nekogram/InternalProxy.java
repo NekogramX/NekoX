@@ -73,7 +73,7 @@ public class InternalProxy {
                 server.close();
 
                 long end = System.currentTimeMillis();
-
+                
                 HttpURLConnection httpConnection = (HttpURLConnection) new URL("http://" + address).openConnection();
 
                 httpConnection.setConnectTimeout(1000);
