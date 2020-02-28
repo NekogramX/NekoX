@@ -774,6 +774,10 @@ public class SharedConfig {
 
         LinkedList<ProxyInfo> proxy = new LinkedList<>();
 
+        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
+        internalProxy.isInternal = true;
+        proxy.add(internalProxy);
+
         File proxyListFile = new File(ApplicationLoader.applicationContext.getFilesDir(), "proxy_list.json");
 
         if (proxyListFile.isFile()) {
@@ -881,11 +885,11 @@ public class SharedConfig {
 
             while (iter.hasNext()) {
 
-                if (iter.next().descripton != null) iter.remove();
+                if (iter.next().isInternal) iter.remove();
 
             }
 
-            proxyList.addAll(proxy);
+            proxyList.addAll(0,proxy);
 
         }
 
@@ -978,20 +982,16 @@ public class SharedConfig {
         proxyList.clear();
         currentProxy = null;
 
-        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
-        internalProxy.isInternal = true;
-        proxyList.add(internalProxy);
-
         String list = preferences.getString("proxy_list_json", null);
 
         if (!TextUtils.isEmpty(list)) {
 
             try {
 
-                JSONArray proxyList = new JSONArray(list);
+                JSONArray proxyArray = new JSONArray(list);
 
-                for (int a = 0; a < proxyList.length(); a++) {
-                    JSONObject proxyObj = proxyList.getJSONObject(a);
+                for (int a = 0; a < proxyList.size(); a++) {
+                    JSONObject proxyObj = proxyArray.getJSONObject(a);
 
                     ProxyInfo info;
 
@@ -1008,7 +1008,7 @@ public class SharedConfig {
                                 proxyObj.getString("pass"),
                                 proxyObj.getString("secret"));
 
-                        proxyList.put(info);
+                        proxyList.add(info);
 
                     }
 
@@ -1038,11 +1038,13 @@ public class SharedConfig {
 
         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
-            if (proxyAddress.equals(internalProxy.address) && proxyPort == internalProxy.port && proxyUsername.equals(internalProxy.username) && proxyPassword.equals(internalProxy.password)) {
+            ProxyInfo internalProxy = proxyList.get(0);
+
+           // if (proxyAddress.equals(internalProxy.address) && proxyPort == internalProxy.port && proxyUsername.equals(internalProxy.username) && proxyPassword.equals(internalProxy.password)) {
 
                 currentProxy = internalProxy;
 
-            }
+           // }
 
         }
 
