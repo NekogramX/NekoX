@@ -574,8 +574,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     private boolean drawName;
     private boolean drawNameLayout;
 
-    //private StaticLayout[] forwardedNameLayout = new StaticLayout[2];
-    private StaticLayout[] forwardedNameLayout = new StaticLayout[1];
+    private StaticLayout[] forwardedNameLayout = new StaticLayout[2];
     private int forwardedNameWidth;
     private boolean drawForwardedName;
     private int forwardNameX;
@@ -1740,13 +1739,13 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     if (isAvatarVisible && avatarImage.isInsideImage(x, y + getTop())) {
                         avatarPressed = true;
                         result = true;
-                    /*} else if (drawForwardedName && forwardedNameLayout[0] != null && x >= forwardNameX && x <= forwardNameX + forwardedNameWidth && y >= forwardNameY && y <= forwardNameY + AndroidUtilities.dp(32)) {
+                    } else if (drawForwardedName && forwardedNameLayout[0] != null && x >= forwardNameX && x <= forwardNameX + forwardedNameWidth && y >= forwardNameY && y <= forwardNameY + AndroidUtilities.dp(32)) {
                         if (viaWidth != 0 && x >= forwardNameX + viaNameWidth + AndroidUtilities.dp(4)) {
                             forwardBotPressed = true;
                         } else {
                             forwardNamePressed = true;
                         }
-                        result = true;*/
+                        result = true;
                     } else if (drawNameLayout && nameLayout != null && viaWidth != 0 && x >= nameX + viaNameWidth && x <= nameX + viaNameWidth + viaWidth && y >= nameY - AndroidUtilities.dp(4) && y <= nameY + AndroidUtilities.dp(20)) {
                         forwardBotPressed = true;
                         result = true;
@@ -1826,11 +1825,11 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
                         forwardBotPressed = false;
                     } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                       /* if (drawForwardedName && forwardedNameLayout[0] != null) {
+                        if (drawForwardedName && forwardedNameLayout[0] != null) {
                             if (!(x >= forwardNameX && x <= forwardNameX + forwardedNameWidth && y >= forwardNameY && y <= forwardNameY + AndroidUtilities.dp(32))) {
                                 forwardBotPressed = false;
                             }
-                        } else {*/
+                        } else {
                             if (!(x >= nameX + viaNameWidth && x <= nameX + viaNameWidth + viaWidth && y >= nameY - AndroidUtilities.dp(4) && y <= nameY + AndroidUtilities.dp(20))) {
                                 forwardBotPressed = false;
                             }
@@ -5051,9 +5050,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 if (hasLinkPreview || hasGamePreview || hasInvoicePreview) {
                     tl = tr = bl = br = minRad;
                 }
-                /*if (forwardedNameLayout[0] != null || replyNameLayout != null) {
+                if (forwardedNameLayout[0] != null || replyNameLayout != null) {
                     tl = tr = minRad;
-                }*/
+                }
                 if (captionLayout != null) {
                     bl = br = minRad;
                 }
@@ -8112,7 +8111,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         currentForwardChannel = null;
         currentForwardName = null;
         forwardedNameLayout[0] = null;
-        //forwardedNameLayout[1] = null;
+        forwardedNameLayout[1] = null;
         forwardedNameWidth = 0;
         if (drawForwardedName && messageObject.needDrawForwarded() && (currentPosition == null || currentPosition.minY == 0)) {
             if (messageObject.messageOwner.fwd_from.channel_id != 0) {
@@ -8166,12 +8165,12 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 lastLine = stringBuilder;
                 lastLine = TextUtils.ellipsize(lastLine, Theme.chat_forwardNamePaint, forwardedNameWidth, TextUtils.TruncateAt.END);
                 try {
+                    forwardedNameLayout[1] = new StaticLayout(lastLine, Theme.chat_forwardNamePaint, forwardedNameWidth + AndroidUtilities.dp(2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+                    lastLine = TextUtils.ellipsize(AndroidUtilities.replaceTags(LocaleController.getString("ForwardedMessage", R.string.ForwardedMessage)), Theme.chat_forwardNamePaint, forwardedNameWidth, TextUtils.TruncateAt.END);
                     forwardedNameLayout[0] = new StaticLayout(lastLine, Theme.chat_forwardNamePaint, forwardedNameWidth + AndroidUtilities.dp(2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-                    //lastLine = TextUtils.ellipsize(AndroidUtilities.replaceTags(LocaleController.getString("ForwardedMessage", R.string.ForwardedMessage)), Theme.chat_forwardNamePaint, forwardedNameWidth, TextUtils.TruncateAt.END);
-                    //forwardedNameLayout[0] = new StaticLayout(lastLine, Theme.chat_forwardNamePaint, forwardedNameWidth + AndroidUtilities.dp(2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-                    forwardedNameWidth = /*Math.max((int) Math.ceil(*/(int) forwardedNameLayout[0].getLineWidth(0)/*), (int) Math.ceil(forwardedNameLayout[1].getLineWidth(0)))*/;
+                    forwardedNameWidth = Math.max((int) Math.ceil(forwardedNameLayout[0].getLineWidth(0)), (int) Math.ceil(forwardedNameLayout[1].getLineWidth(0)));
                     forwardNameOffsetX[0] = forwardedNameLayout[0].getLineLeft(0);
-                    //forwardNameOffsetX[1] = forwardedNameLayout[1].getLineLeft(0);
+                    forwardNameOffsetX[1] = forwardedNameLayout[1].getLineLeft(0);
                     if (messageObject.type != 5) {
                         namesOffset += AndroidUtilities.dp(36);
                     }
