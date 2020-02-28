@@ -2,7 +2,7 @@
 <resources>
     <string name="NekoXProxy">NekoX 公共代理</string>
     <string name="PublicPrefix">[ 公共 ]</string>
-    <string name="NekoXProxyInfo">這可能需要數十秒來加載 NekoX 公共內置代理 :)</string>
+    <string name="NekoXProxyInfo">这可能需要数十秒来加载 NekoX 公共内置代理 :)</string>
     <string name="DisableChatAction">Don\'t send my input status</string>
     <string name="SendFakeScreenshot">Send Fake Screenshot</string>
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
