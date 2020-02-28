@@ -11,8 +11,10 @@ import org.telegram.messenger.ApplicationLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -72,7 +74,9 @@ public class InternalProxy {
 
                 long end = System.currentTimeMillis();
 
-                HttpUtil.get("http://" + address,2000);
+                HttpURLConnection httpConnection = (HttpURLConnection) new URL("http://" + address).openConnection();
+
+                httpConnection.getResponseCode();
 
                 Log.d(TAG, "IP " + address + " " + (end - start) + "ms");
 
