@@ -869,7 +869,7 @@ public class SharedConfig {
 
                         info.secret = "eedc4484ea28bac866577326e76460754d6d6963726f736f66742e636f6d";
 
-                    }
+                    } else continue;
 
                     proxy.add(info);
 
