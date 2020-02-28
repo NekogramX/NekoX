@@ -956,7 +956,7 @@ public class SharedConfig {
 
                         info = new ProxyInfo(
                                 proxyObj.getString("address"),
-                                proxyObj.getInt("port"),
+                                proxyObj.optInt("port",1080),
                                 proxyObj.getString("user"),
                                 proxyObj.getString("pass"),
                                 proxyObj.getString("secret"));
