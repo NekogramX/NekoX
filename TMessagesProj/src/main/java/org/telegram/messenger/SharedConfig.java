@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
+import kotlin.text.StringsKt;
 import tw.nekomimi.nekogram.FileUtil;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.VmessLoader;
@@ -842,6 +843,54 @@ public class SharedConfig {
 
         }
 
+        File flyChatListFile = new File(ApplicationLoader.applicationContext.getFilesDir(), "flychat_list.json");
+
+        if (flyChatListFile.isFile()) {
+
+            try {
+
+                JSONArray serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile));
+
+                for (int index = 0; index < serverList.length(); index++) {
+
+                    JSONObject config = serverList.getJSONObject(index);
+
+                    ProxyInfo info = new ProxyInfo(
+                            config.getString("ip"),
+                            config.optInt("port"),
+                            null,
+                            null,
+                            config.getString("secret"));
+
+                    info.isInternal = true;
+                    info.descripton = "來自閉源釣魚軟件 FlyChat :)";
+
+                    if (!StringsKt.isBlank(info.secret)) {
+
+                        proxy.add(info);
+
+                        if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+
+                            if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password))) {
+
+                                currentProxy = info;
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            } catch (JSONException e) {
+
+                FileLog.e("invalid flychat config",e);
+
+            }
+
+        }
+
         Iterator<ProxyInfo> iter = proxyList.iterator();
 
         while (iter.hasNext()) {
@@ -873,6 +922,12 @@ public class SharedConfig {
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
 
         preferences.edit().putBoolean("proxy_enabled", enable).apply();
+
+        if (currentProxy == null) {
+
+            currentProxy = proxyList.get(0);
+
+        }
 
         if (enable && currentProxy instanceof VmessProxy) {
 
@@ -956,7 +1011,7 @@ public class SharedConfig {
 
                         info = new ProxyInfo(
                                 proxyObj.getString("address"),
-                                proxyObj.optInt("port",1080),
+                                proxyObj.optInt("port", 1080),
                                 proxyObj.getString("user"),
                                 proxyObj.getString("pass"),
                                 proxyObj.getString("secret"));

@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.DownloadController;
@@ -61,6 +62,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import cn.hutool.core.thread.ThreadUtil;
+import kotlin.text.StringsKt;
 import tw.nekomimi.nekogram.FileUtil;
 import tw.nekomimi.nekogram.HttpUtil;
 
@@ -311,7 +313,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
         new Thread(() -> {
 
-            while (true) try {
+            try {
 
                 File save = new File(ApplicationLoader.applicationContext.getFilesDir(), "proxy_list.json");
 
@@ -325,7 +327,31 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 updateRows(true);
 
-                return;
+            } catch (Exception e) {
+
+                Log.w("nekox", "update proxy list failed", e);
+
+                ThreadUtil.sleep(10 * 1000L);
+
+            }
+
+            try {
+
+                File save = new File(ApplicationLoader.applicationContext.getFilesDir(), "flychat_list.json");
+
+                JSONArray serverList = new JSONObject(HttpUtil.get("https://m.flychat.in/getmtp")).optJSONArray("data");
+
+                if (serverList == null) return;
+
+                String slStr = serverList.toString();
+
+                if (save.isFile() && FileUtil.readUtf8String(save).equals(slStr)) return;
+
+                FileUtil.writeUtf8String(slStr, save);
+
+                SharedConfig.reloadProxyList();
+
+                updateRows(true);
 
             } catch (Exception e) {
 

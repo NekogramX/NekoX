@@ -98,6 +98,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private FrameLayout bottomOverlay;
     protected ChatActivityEnterView chatActivityEnterView;
     private View timeItem2;
+    private ActionBarMenuSubItem fakeScreenshotItem;
     private ActionBarMenuItem attachItem;
     private ActionBarMenuItem headerItem;
     private ActionBarMenuItem editTextItem;
@@ -618,6 +619,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int edit = 23;
     private final static int add_shortcut = 24;
     private final static int show_pinned = 25;
+
+    private final static int fake_screenshot = 26;
 
     private final static int bot_help = 30;
     private final static int bot_settings = 31;
@@ -1395,6 +1398,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     SharedPreferences preferences = MessagesController.getNotificationsSettings(currentAccount);
                     preferences.edit().putInt("pin_" + dialog_id, 0).commit();
                     updatePinnedMessageView(true);
+                } else if (id == fake_screenshot) {
+                    ArrayList<Long> list = new ArrayList<>();
+                    for (int index = 0;index < 1;index ++) list.add(System.currentTimeMillis());
+                    MediaController.getInstance().checkScreenshots(list);
                 }
             }
         });
@@ -1587,6 +1594,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
             if (currentEncryptedChat != null) {
                 timeItem2 = headerItem.addSubItem(chat_enc_timer, R.drawable.msg_timer, LocaleController.getString("SetTimer", R.string.SetTimer));
+                fakeScreenshotItem = headerItem.addSubItem(fake_screenshot, R.drawable.msg_fave, LocaleController.getString("SendFakeScreenshot", R.string.SendFakeScreenshot));
             }
 
             boolean allowShowPinned;

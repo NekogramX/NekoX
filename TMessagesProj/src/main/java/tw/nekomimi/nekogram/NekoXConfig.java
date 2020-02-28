@@ -29,7 +29,7 @@ public class NekoXConfig {
 
     public static void toggleDeveloperMode() {
 
-        preferences.edit().putBoolean("develoepr_mode", developerMode = !developerMode).apply();
+        preferences.edit().putBoolean("developer_mode", developerMode = !developerMode).apply();
 
     }
 
@@ -49,7 +49,7 @@ public class NekoXConfig {
 
         disableChatAction = preferences.getBoolean("disable_chat_action", false);
 
-        developerMode = preferences.getBoolean("develoepr_mode",false);
+        developerMode = preferences.getBoolean("developer_mode",false);
 
         disableFlagSecure = preferences.getBoolean("disable_flag_secure", false);
         disableScreenshotDetection = preferences.getBoolean("disable_screenshot_detection",false);
