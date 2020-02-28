@@ -451,7 +451,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialog, which) -> {
                     SharedConfig.deleteProxy(info);
                     if (SharedConfig.currentProxy == null) {
-\                        SharedConfig.setProxyEnable(false);
+                        SharedConfig.setProxyEnable(false);
                     }
                     NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
                     NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
