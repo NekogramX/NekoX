@@ -995,14 +995,14 @@ public class SharedConfig {
 
                     ProxyInfo info;
 
-                    if (!proxyObj.isNull("vmessLink")) {
+                    if (!proxyObj.isNull("vmess_link")) {
 
-                        info = new VmessProxy(proxyObj.getString("vmessLink"), proxyObj.getInt("port"));
+                        info = new VmessProxy(proxyObj.getString("vmess_link"), proxyObj.getInt("port"));
 
                     } else {
 
                         info = new ProxyInfo(
-                                proxyObj.getString("address"),
+                                proxyObj.getString("server"),
                                 proxyObj.optInt("port", 1080),
                                 proxyObj.getString("user"),
                                 proxyObj.getString("pass"),
