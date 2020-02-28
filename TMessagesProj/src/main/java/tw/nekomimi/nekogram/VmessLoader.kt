@@ -240,7 +240,7 @@ class VmessLoader {
         point.forwardIpv6 = true
 
         Log.d("nekox",point.configureFileContent)
-        Log.d("nekox","domainName: " + + point.domainName)
+        Log.d("nekox","domainName: " + point.domainName)
 
     }
 
