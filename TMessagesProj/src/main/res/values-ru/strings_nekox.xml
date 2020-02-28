@@ -3,5 +3,5 @@
     <string name="NekoXProxy">Публичный прокси NekoX</string>
     <string name="PublicPrefix">[Публичный ]</string>
     <string name="NekoXProxyInfo">Загрузка открытого встроенного прокси NekoX может занять десятки секунд :)</string>
-    <string name="DisableChatAction">Don\'t send my chat action</string>
+    <string name="DisableChatAction">Don\'t send my input status</string>
 </resources>
