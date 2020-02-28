@@ -1,5 +1,6 @@
 package tw.nekomimi.nekogram
 
+import android.util.Log
 import com.google.gson.Gson
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.AppConfig.SOCKS_PROTOCOL
@@ -237,6 +238,9 @@ class VmessLoader {
         point.domainName = V2rayConfigUtil.currDomain
         point.enableLocalDNS = false
         point.forwardIpv6 = true
+
+        Log.d("nekox",point.configureFileContent)
+        Log.d("nekox","domainName: " + + point.domainName)
 
     }
 
