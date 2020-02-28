@@ -137,6 +137,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 
 public class PaymentFormActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
@@ -261,7 +262,9 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
 
     private interface PaymentFormActivityDelegate {
         boolean didSelectNewCard(String tokenJson, String card, boolean saveCard, TLRPC.TL_inputPaymentCredentialsAndroidPay androidPay);
+
         void onFragmentDestroyed();
+
         void currentPasswordUpdated(TLRPC.TL_account_password password);
     }
 
@@ -409,7 +412,9 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
         if (Build.VERSION.SDK_INT >= 23) {
             try {
                 if ((currentStep == 2 || currentStep == 6) && !paymentForm.invoice.test) {
-                    getParentActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+                    if (NekoXConfig.disableFlagSecure) {
+                        getParentActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+                    }
                 } else if (SharedConfig.passcodeHash.length() == 0 || SharedConfig.allowScreenCapture) {
                     getParentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
                 }
@@ -2337,9 +2342,9 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
         if (androidPayPublicKey != null) {
             androidPayContainer.setBackgroundColor(androidPayBackgroundColor);
             walletFragmentStyle = new WalletFragmentStyle()
-                .setBuyButtonText(WalletFragmentStyle.BuyButtonText.BUY_WITH)
-                .setBuyButtonAppearance(androidPayBlackTheme ? WalletFragmentStyle.BuyButtonAppearance.ANDROID_PAY_LIGHT_WITH_BORDER : WalletFragmentStyle.BuyButtonAppearance.ANDROID_PAY_DARK)
-                .setBuyButtonWidth(WalletFragmentStyle.Dimension.MATCH_PARENT);
+                    .setBuyButtonText(WalletFragmentStyle.BuyButtonText.BUY_WITH)
+                    .setBuyButtonAppearance(androidPayBlackTheme ? WalletFragmentStyle.BuyButtonAppearance.ANDROID_PAY_LIGHT_WITH_BORDER : WalletFragmentStyle.BuyButtonAppearance.ANDROID_PAY_DARK)
+                    .setBuyButtonWidth(WalletFragmentStyle.Dimension.MATCH_PARENT);
         } else {
             walletFragmentStyle = new WalletFragmentStyle()
                     .setBuyButtonText(WalletFragmentStyle.BuyButtonText.LOGO_ONLY)

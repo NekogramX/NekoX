@@ -118,6 +118,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import tw.nekomimi.nekogram.NekoSettingsActivity;
+import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.NekoXSettingActivity;
 
 public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate, NotificationCenter.NotificationCenterDelegate, DialogsActivity.DialogsActivityDelegate {
@@ -1810,7 +1811,11 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     } else if (open_settings == 4) {
                         fragment = new NekoSettingsActivity();
                     } else if (open_settings == 5) {
-                        fragment = new NekoXSettingActivity();
+                        if (NekoXConfig.developerMode) {
+                            fragment = new NekoXSettingActivity();
+                        } else {
+                            fragment = new NekoSettingsActivity();
+                        }
                     } else {
                         fragment = null;
                     }

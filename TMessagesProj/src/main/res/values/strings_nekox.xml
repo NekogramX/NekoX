@@ -7,4 +7,11 @@
 
     <string name="DisableChatAction">Don\'t send my input status</string>
 
+    <string name="EnableDeveloperMode">Enable Developer Mode</string>
+    <string name="DisableDeveloperMode">Enable Developer Mode</string>
+    <string name="DeveloperSettings">Developer Settings</string>
+
+    <string name="DisableFlagSecure">Disable Flag Secure</string>
+    <string name="DisableScreenshotDetection">Disable Screenshot Detection</string>
+
 </resources>

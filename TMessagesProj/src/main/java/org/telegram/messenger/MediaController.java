@@ -85,6 +85,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tw.nekomimi.nekogram.NekoXConfig;
+
 public class MediaController implements AudioManager.OnAudioFocusChangeListener, NotificationCenter.NotificationCenterDelegate, SensorEventListener {
 
     private native int startRecord(String path);
@@ -1096,7 +1098,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 }
             }
         }
-        if (send) {
+        if (send && !NekoXConfig.disableScreenshotDetection) {
             if (lastSecretChat != null) {
                 SecretChatHelper.getInstance(lastChatAccount).sendScreenshotMessage(lastSecretChat, lastChatVisibleMessages, null);
             } else {

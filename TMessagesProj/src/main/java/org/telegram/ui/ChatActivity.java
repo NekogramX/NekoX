@@ -63,6 +63,7 @@ import org.telegram.ui.Components.voip.VoIPHelper;
 import tw.nekomimi.nekogram.MessageDetailsActivity;
 import tw.nekomimi.nekogram.MessageHelper;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.translator.TranslateBottomSheet;
 import tw.nekomimi.nekogram.translator.Translator;
 
@@ -5076,7 +5077,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         chatScrollHelper.setAnimationCallback(chatScrollHelperCallback);
 
         try {
-            if (currentEncryptedChat != null && Build.VERSION.SDK_INT >= 23 && (SharedConfig.passcodeHash.length() == 0 || SharedConfig.allowScreenCapture)) {
+            if (currentEncryptedChat != null && Build.VERSION.SDK_INT >= 23 && (SharedConfig.passcodeHash.length() == 0 || SharedConfig.allowScreenCapture) && !NekoXConfig.disableFlagSecure) {
                 AndroidUtilities.setFlagSecure(this, true);
             }
         } catch (Throwable e) {
