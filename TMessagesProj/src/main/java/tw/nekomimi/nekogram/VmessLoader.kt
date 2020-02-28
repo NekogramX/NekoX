@@ -25,7 +25,7 @@ class VmessLoader {
         point.packageName = ApplicationLoader.applicationContext.packageName
     }
 
-    fun initConfigWithVmessLink(server: String, port: Int): VmessBean {
+    fun parseVmessLink(server: String, port: Int): VmessBean {
 
         try {
             if (server.isBlank()) error("empty link")
