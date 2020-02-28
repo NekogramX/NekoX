@@ -3,4 +3,5 @@
     <string name="NekoXProxy">NekoX Public Proxy</string>
     <string name="PublicPrefix">[ Offentlig ]</string>
     <string name="NekoXProxyInfo">Det kan ta tiotals sekunder att ladda NekoX Public inbyggd proxy :)</string>
+    <string name="DisableChatAction">Don\'t send my chat action</string>
 </resources>
