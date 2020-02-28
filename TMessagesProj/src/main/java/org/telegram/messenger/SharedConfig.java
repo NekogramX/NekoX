@@ -1029,6 +1029,7 @@ public class SharedConfig {
 
                 }
             } catch (JSONException e) {
+                Log.e("nekox","load proxy error",e);
             }
 
         }
