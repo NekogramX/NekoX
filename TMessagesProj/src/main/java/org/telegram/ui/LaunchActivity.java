@@ -3737,7 +3737,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
 
     @Override
     public void onBackPressed() {
-        if (passcodeView.getVisibility() == View.VISIBLE) {
+        if (passcodeView != null && passcodeView.getVisibility() == View.VISIBLE) {
             finish();
             return;
         }
