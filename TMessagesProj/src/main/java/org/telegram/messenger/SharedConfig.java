@@ -169,7 +169,7 @@ public class SharedConfig {
 
         public VmessProxy(String vmessLink) {
 
-            this(vmessLink,RandomUtil.randomInt(10000,32768));
+            this(vmessLink,RandomUtil.randomInt(10000,65536));
 
         }
 
