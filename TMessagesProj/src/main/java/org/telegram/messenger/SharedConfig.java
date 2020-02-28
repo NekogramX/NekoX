@@ -23,21 +23,19 @@ import android.util.SparseArray;
 
 import com.v2ray.ang.V2RayConfig;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.tgnet.ConnectionsManager;
-import org.telegram.tgnet.SerializedData;
 
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Random;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.json.JSONArray;
-
+import tw.nekomimi.nekogram.FileUtil;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.VmessLoader;
 
@@ -170,7 +168,7 @@ public class SharedConfig {
 
         public VmessProxy(String vmessLink) {
 
-            this(vmessLink, RandomUtil.randomInt(10000, 65536));
+            this(vmessLink, new Random(System.currentTimeMillis()).nextInt(55536) + 10000);
 
         }
 
@@ -797,41 +795,49 @@ public class SharedConfig {
 
         if (proxyListFile.isFile()) {
 
-            List<cn.hutool.json.JSONObject> serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile)).toList(cn.hutool.json.JSONObject.class);
+            try {
 
-            for (cn.hutool.json.JSONObject config : serverList) {
+                JSONArray serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile));
 
-                try {
+                for (int index = 0; index < serverList.length(); index++) {
 
-                    ProxyInfo info = parseProxyInfo(config.getStr("proxy"));
+                    JSONObject config = serverList.getJSONObject(index);
 
-                    info.isInternal = true;
+                    try {
 
-                    if (config.containsKey("desc")) {
+                        ProxyInfo info = parseProxyInfo(config.getString("proxy"));
 
-                        info.descripton = config.getStr("desc");
+                        info.isInternal = true;
 
-                    }
+                        if (!config.isNull("desc")) {
 
-                    proxy.add(info);
-
-                    if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-
-                        if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password) ||
-                                (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink)))) {
-
-                            currentProxy = info;
+                            info.descripton = config.getString("desc");
 
                         }
 
+                        proxy.add(info);
+
+                        if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+
+                            if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password) ||
+                                    (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink)))) {
+
+                                currentProxy = info;
+
+                            }
+
+                        }
+
+                    } catch (InvalidProxyException ignored) {
+
+                        Log.w("nekox", "invalid config: " + config);
+
                     }
 
-                } catch (InvalidProxyException ignored) {
-
-                    Log.w("nekox", "invalid config: " + config);
 
                 }
 
+            } catch (JSONException e) {
             }
 
         }
@@ -933,44 +939,49 @@ public class SharedConfig {
 
         if (!TextUtils.isEmpty(list)) {
 
-            JSONArray proxyList = new JSONArray(list);
+            try {
 
-            for (int a = 0; a < proxyList.size(); a++) {
-                cn.hutool.json.JSONObject proxyObj = proxyList.getJSONObject(a);
+                JSONArray proxyList = new JSONArray(list);
 
-                ProxyInfo info;
+                for (int a = 0; a < proxyList.length(); a++) {
+                    JSONObject proxyObj = proxyList.getJSONObject(a);
 
-                if (proxyObj.containsKey("vmessLink")) {
+                    ProxyInfo info;
 
-                    info = new VmessProxy(proxyObj.getStr("vmessLink"), proxyObj.getInt("port"));
+                    if (!proxyObj.isNull("vmessLink")) {
 
-                } else {
+                        info = new VmessProxy(proxyObj.getString("vmessLink"), proxyObj.getInt("port"));
 
-                    info = new ProxyInfo(
-                            proxyObj.getStr("address"),
-                            proxyObj.getInt("port"),
-                            proxyObj.getStr("user"),
-                            proxyObj.getStr("pass"),
-                            proxyObj.getStr("secret"));
+                    } else {
 
-                    proxyList.add(info);
+                        info = new ProxyInfo(
+                                proxyObj.getString("address"),
+                                proxyObj.getInt("port"),
+                                proxyObj.getString("user"),
+                                proxyObj.getString("pass"),
+                                proxyObj.getString("secret"));
 
-                }
-
-                if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-
-                    if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink))) {
-
-                        currentProxy = info;
-
-                        ((VmessProxy) currentProxy).loader.start();
-
-                    } else if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
-
-                        currentProxy = info;
+                        proxyList.put(info);
 
                     }
+
+                    if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+
+                        if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink))) {
+
+                            currentProxy = info;
+
+                            ((VmessProxy) currentProxy).loader.start();
+
+                        } else if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
+
+                            currentProxy = info;
+
+                        }
+                    }
+
                 }
+            } catch (JSONException e) {
             }
 
         }
@@ -1030,18 +1041,22 @@ public class SharedConfig {
         for (int a = 0; a < proxyList.size(); a++) {
             ProxyInfo info = proxyList.get(a);
             if (info.isInternal) continue;
-            cn.hutool.json.JSONObject proxyObJ = new cn.hutool.json.JSONObject();
-            if (info instanceof VmessProxy) {
-                proxyObJ.put("port", info.port);
-                proxyObJ.put("vmess_link", ((VmessProxy)info).vmessLink);
-            } else {
-                proxyObJ.put("server", info.address != null ? info.address : "");
-                proxyObJ.put("port", info.port);
-                proxyObJ.put("user", info.username != null ? info.username : "");
-                proxyObJ.put("pass", info.password != null ? info.password : "");
-                proxyObJ.put("secret", info.secret != null ? info.secret : "");
+            JSONObject proxyObJ = new JSONObject();
+            try {
+                if (info instanceof VmessProxy) {
+                    proxyObJ.put("port", info.port);
+                    proxyObJ.put("vmess_link", ((VmessProxy) info).vmessLink);
+                } else {
+                    proxyObJ.put("server", info.address != null ? info.address : "");
+                    proxyObJ.put("port", info.port);
+                    proxyObJ.put("user", info.username != null ? info.username : "");
+                    proxyObJ.put("pass", info.password != null ? info.password : "");
+                    proxyObJ.put("secret", info.secret != null ? info.secret : "");
+                }
+            } catch (JSONException e) {
+                FileLog.e(e);
             }
-            proxyArray.add(proxyObJ);
+            proxyArray.put(proxyObJ);
         }
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
         preferences.edit().putString("proxy_list_json", proxyArray.toString()).apply();

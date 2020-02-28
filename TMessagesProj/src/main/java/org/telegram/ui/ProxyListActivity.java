@@ -28,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.DownloadController;
 import org.telegram.messenger.LocaleController;
@@ -58,8 +59,7 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.util.List;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.json.JSONArray;
+import tw.nekomimi.nekogram.FileUtil;
 import tw.nekomimi.nekogram.HttpUtil;
 
 public class ProxyListActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
@@ -313,7 +313,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 File save = new File(getParentActivity().getFilesDir(), "proxy_list.json");
 
-                String serverList = new JSONArray(HttpUtil.get("https://nekogramx.github.io/ProxyList/master/proxy_list.json")).toStringPretty();
+                String serverList = new JSONArray(HttpUtil.get("https://nekogramx.github.io/ProxyList/master/proxy_list.json")).toString();
 
                 if (save.isFile() && FileUtil.readUtf8String(save).equals(serverList)) return;
 
