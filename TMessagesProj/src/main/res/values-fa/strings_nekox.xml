@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="NekoXProxy">NekoX Public Proxy</string>
-    <string name="PublicPrefix">[ Public ]</string>
+    <string name="NekoXProxy">پروکسی عمومی نکوX</string>
+    <string name="PublicPrefix">(عمومی)</string>
     <string name="NekoXProxyInfo">It may take tens of seconds to load the NekoX Public built-in proxy :)</string>
     <string name="DisableChatAction">Don\'t send my input status</string>
     <string name="FakeScreenshot">Pretend screenshot</string>
-    <string name="EnableDeveloperMode">Enable Developer Mode</string>
-    <string name="DisableDeveloperMode">Disable Developer Mode</string>
-    <string name="DeveloperSettings">Developer Settings</string>
-    <string name="DisableFlagSecure">Disable Flag Secure</string>
-    <string name="DisableScreenshotDetection">Disable Screenshot Detection</string>
+    <string name="EnableDeveloperMode">فعالسازی توسعه دهنده</string>
+    <string name="DisableDeveloperMode">غیرفعال‌سازی مد توسعه دهنده</string>
+    <string name="DeveloperSettings">تنظیمات توسعه دهنده</string>
+    <string name="DisableFlagSecure">غیرفعال‌سازی پرچم امنیتی</string>
+    <string name="DisableScreenshotDetection">عدم شناسایی اسکرین‌شات</string>
 </resources>
