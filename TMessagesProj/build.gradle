@@ -19,8 +19,6 @@ configurations.all {
 
 dependencies {
 
-    implementation 'cn.hutool:hutool-http:4.6.14'
-
     implementation 'androidx.core:core:1.1.0-beta01'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0'

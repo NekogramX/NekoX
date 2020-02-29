@@ -1,6 +1,5 @@
 package tw.nekomimi.nekogram
 
-import cn.hutool.http.HttpUtil
 import okhttp3.OkHttpClient
 import okhttp3.Request
 

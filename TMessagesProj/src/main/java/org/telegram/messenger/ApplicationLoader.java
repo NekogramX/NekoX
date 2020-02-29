@@ -26,7 +26,6 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -37,13 +36,10 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.Components.ForegroundDetector;
 
 import java.io.File;
-import java.util.zip.ZipInputStream;
 
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ZipUtil;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.VmessLoader;
+import tw.nekomimi.nekogram.ZipUtil;
 
 public class ApplicationLoader extends Application {
 
@@ -79,7 +75,7 @@ public class ApplicationLoader extends Application {
         } catch (Exception e) {
             FileLog.e(e);
         }
-        return new File("/data/data/org.telegram.messenger/files");
+        return new File("/data/data/moe.wataru.nekogram/files");
     }
 
     public static void postInitApplication() {
@@ -93,15 +89,7 @@ public class ApplicationLoader extends Application {
 
             try {
 
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-
-                    ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir(), CharsetUtil.CHARSET_UTF_8);
-
-                } else {
-
-                    ZipUtil.unzip(new ZipInputStream(applicationContext.getAssets().open("languages.zip")), applicationContext.getFilesDir());
-
-                }
+                ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir());
 
             } catch (Exception e) {
 
@@ -133,33 +121,28 @@ public class ApplicationLoader extends Application {
 
         new Thread(() -> {
 
-            try {
+            VmessLoader loader = new VmessLoader();
 
-                VmessLoader loader = new VmessLoader();
+            while (true) {
 
-                while (true) {
+                try {
+
+                    loader.initPublic(11210);
+
+                    loader.start();
+
+                    return;
+
+                } catch (Exception e) {
+
+                    FileLog.d("load v2ray failed: " + e.getMessage());
 
                     try {
-
-                        loader.initPublic(11210);
-
-                        loader.start();
-
-                        return;
-
-                    } catch (Exception e) {
-
-                        FileLog.d("load v2ray failed: " + e.getMessage());
-
-                        ThreadUtil.sleep(5000L);
-
+                        Thread.sleep(10000L);
+                    } catch (InterruptedException ignored) {
                     }
 
                 }
-
-            } catch (Exception e) {
-
-                Log.e("nekox", "V2RAY ERROR", e);
 
             }
 

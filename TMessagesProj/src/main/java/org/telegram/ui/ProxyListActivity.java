@@ -64,7 +64,6 @@ import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
-import cn.hutool.core.thread.ThreadUtil;
 import kotlin.text.StringsKt;
 import tw.nekomimi.nekogram.FileUtil;
 import tw.nekomimi.nekogram.HttpUtil;
