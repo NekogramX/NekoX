@@ -23,7 +23,11 @@ object ZipUtil {
 
                 } else {
 
-                    zip.copyTo(entryFile.outputStream())
+                    entryFile.outputStream().use {
+
+                        zip.copyTo(it)
+
+                    }
 
                 }
 
