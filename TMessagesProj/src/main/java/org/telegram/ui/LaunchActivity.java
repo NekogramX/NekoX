@@ -3752,19 +3752,19 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         } else if (drawerLayoutContainer.isDrawerOpened()) {
             drawerLayoutContainer.closeDrawer(false);
         } else if (AndroidUtilities.isTablet()) {
-            if (layersActionBarLayout.getVisibility() == View.VISIBLE) {
+            if (layersActionBarLayout != null && layersActionBarLayout.getVisibility() == View.VISIBLE) {
                 layersActionBarLayout.onBackPressed();
             } else {
                 boolean cancel = false;
-                if (rightActionBarLayout.getVisibility() == View.VISIBLE && !rightActionBarLayout.fragmentsStack.isEmpty()) {
+                if (rightActionBarLayout != null && rightActionBarLayout.getVisibility() == View.VISIBLE && !rightActionBarLayout.fragmentsStack.isEmpty()) {
                     BaseFragment lastFragment = rightActionBarLayout.fragmentsStack.get(rightActionBarLayout.fragmentsStack.size() - 1);
                     cancel = !lastFragment.onBackPressed();
                 }
-                if (!cancel) {
+                if (actionBarLayout != null && !cancel) {
                     actionBarLayout.onBackPressed();
                 }
             }
-        } else {
+        } else if (actionBarLayout != null) {
             actionBarLayout.onBackPressed();
         }
     }
@@ -3902,14 +3902,16 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             ArticleViewer.getInstance().close(false, true);
         }
         if (AndroidUtilities.isTablet()) {
-            drawerLayoutContainer.setAllowOpenDrawer(!(fragment instanceof LoginActivity || fragment instanceof CountrySelectActivity) && layersActionBarLayout.getVisibility() != View.VISIBLE, true);
+            drawerLayoutContainer.setAllowOpenDrawer(!(fragment instanceof LoginActivity || fragment instanceof CountrySelectActivity) && (layersActionBarLayout == null || layersActionBarLayout.getVisibility() != View.VISIBLE), true);
             if (fragment instanceof DialogsActivity) {
                 DialogsActivity dialogsActivity = (DialogsActivity) fragment;
                 if (dialogsActivity.isMainDialogList() && layout != actionBarLayout) {
                     actionBarLayout.removeAllFragments();
                     actionBarLayout.presentFragment(fragment, removeLast, forceWithoutAnimation, false, false);
-                    layersActionBarLayout.removeAllFragments();
-                    layersActionBarLayout.setVisibility(View.GONE);
+                    if (layersActionBarLayout != null) {
+                        layersActionBarLayout.removeAllFragments();
+                        layersActionBarLayout.setVisibility(View.GONE);
+                    }
                     drawerLayoutContainer.setAllowOpenDrawer(true, false);
                     if (!tabletFullSize) {
                         shadowTabletSide.setVisibility(View.VISIBLE);
@@ -3921,6 +3923,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                 }
             }
             if (fragment instanceof ChatActivity && !((ChatActivity) fragment).isInScheduleMode()) {
+                if (layersActionBarLayout == null) return false;
                 if (!tabletFullSize && layout == rightActionBarLayout || tabletFullSize && layout == actionBarLayout) {
                     boolean result = !(tabletFullSize && layout == actionBarLayout && actionBarLayout.fragmentsStack.size() == 1);
                     if (!layersActionBarLayout.fragmentsStack.isEmpty()) {
