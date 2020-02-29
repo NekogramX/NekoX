@@ -4,7 +4,7 @@
     <string name="PublicPrefix">[ Öffentlich ]</string>
     <string name="NekoXProxyInfo">Es kann zehn Sekunden dauern, um den NekoX Public Integrierten Proxy zu laden :)</string>
     <string name="DisableChatAction">Don\'t send my input status</string>
-    <string name="SendFakeScreenshot">Send Fake Screenshot</string>
+    <string name="FakeScreenshot">Pretend screenshot</string>
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>
     <string name="DeveloperSettings">Developer Settings</string>
