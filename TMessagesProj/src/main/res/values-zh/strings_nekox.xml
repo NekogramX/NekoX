@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="NekoXProxy">NekoX Public Proxy</string>
-    <string name="PublicPrefix">[ Public ]</string>
-    <string name="NekoXProxyInfo">It may take tens of seconds to load the NekoX Public built-in proxy :)</string>
-    <string name="DisableChatAction">Don\'t send my input status</string>
-    <string name="FakeScreenshot">Pretend screenshot</string>
+    <string name="NekoXProxy">NekoX 公共代理</string>
+    <string name="PublicPrefix">[ 公共 ]</string>
+    <string name="NekoXProxyInfo">可能需要数十秒才能加载 NekoX 公共内置代理 :)</string>
+    <string name="DisableChatAction">不要发送我的输入状态</string>
+    <string name="FakeScreenshot">假装截图</string>
     <string name="SaveCacheToSdcard">Save cache to sdcard*</string>
-    <string name="EnableDeveloperMode">Enable Developer Mode</string>
-    <string name="DisableDeveloperMode">Disable Developer Mode</string>
-    <string name="DeveloperSettings">Developer Settings</string>
-    <string name="DisableFlagSecure">Disable Flag Secure</string>
-    <string name="DisableScreenshotDetection">Disable Screenshot Detection</string>
+    <string name="EnableDeveloperMode">启用开发者模式</string>
+    <string name="DisableDeveloperMode">禁用开发者模式</string>
+    <string name="DeveloperSettings">开发者设置</string>
+    <string name="DisableFlagSecure">禁用安全标记</string>
+    <string name="DisableScreenshotDetection">禁用截屏检测</string>
     <string name="LoginSettings">Login Settings</string>
     <string name="ShowTestBackend">Show Test Backend</string>
     <string name="ShowBotLogin">Show Bot Login</string>
