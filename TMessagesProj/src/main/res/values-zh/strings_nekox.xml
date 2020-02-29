@@ -2,12 +2,12 @@
 <resources>
     <string name="NekoXProxy">NekoX 公共代理</string>
     <string name="PublicPrefix">[ 公共 ]</string>
-    <string name="NekoXProxyInfo">可能需要数十秒才能加载 NekoX 公共内置代理 :)</string>
-    <string name="DisableChatAction">不要发送我的输入状态</string>
-    <string name="FakeScreenshot">假装截图</string>
-    <string name="EnableDeveloperMode">启用开发者模式</string>
-    <string name="DisableDeveloperMode">禁用开发者模式</string>
-    <string name="DeveloperSettings">开发者设置</string>
-    <string name="DisableFlagSecure">禁用安全标记</string>
-    <string name="DisableScreenshotDetection">禁用截屏检测</string>
+    <string name="NekoXProxyInfo">可能需要數十秒才能加載 NekoX 公共內置代理 :)</string>
+    <string name="DisableChatAction">不要發送我的輸入狀態</string>
+    <string name="FakeScreenshot">假裝截圖</string>
+    <string name="EnableDeveloperMode">啟用開發人員模式</string>
+    <string name="DisableDeveloperMode">禁用開發人員模式</string>
+    <string name="DeveloperSettings">開發人員設定</string>
+    <string name="DisableFlagSecure">禁用安全標記</string>
+    <string name="DisableScreenshotDetection">禁用截屏檢測</string>
 </resources>
