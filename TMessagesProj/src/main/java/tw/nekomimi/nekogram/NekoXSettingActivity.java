@@ -273,7 +273,7 @@ public class NekoXSettingActivity extends BaseFragment {
 
         @Override
         public int getItemViewType(int position) {
-            if (position == developerSettingsRow) {
+            if (position == developerSettingsRow || position == loginSettingsRow) {
                 return 4;
             } else if (position == disableFlagSecureRow || position == disableScreenshotDetectionRow ||
                     position == showTestBackendRow || position == showBotLoginRow) {
