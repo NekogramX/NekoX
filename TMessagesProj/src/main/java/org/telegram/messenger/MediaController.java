@@ -1107,6 +1107,10 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
         }
     }
 
+    public ArrayList<Long> getLastVisibleMessageIds() {
+        return lastChatVisibleMessages;
+    }
+
     public void setLastVisibleMessageIds(int account, long enterTime, long leaveTime, TLRPC.User user, TLRPC.EncryptedChat encryptedChat, ArrayList<Long> visibleMessages, int visibleMessage) {
         lastChatEnterTime = enterTime;
         lastChatLeaveTime = leaveTime;

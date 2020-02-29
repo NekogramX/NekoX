@@ -1399,9 +1399,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     preferences.edit().putInt("pin_" + dialog_id, 0).commit();
                     updatePinnedMessageView(true);
                 } else if (id == fake_screenshot) {
-                    ArrayList<Long> list = new ArrayList<>();
-                    for (int index = 0;index < 1;index ++) list.add(System.currentTimeMillis());
-                    MediaController.getInstance().checkScreenshots(list);
+                    getSecretChatHelper().sendScreenshotMessage(currentEncryptedChat, getMediaController().getLastVisibleMessageIds(),null);
                 }
             }
         });
@@ -1594,7 +1592,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
             if (currentEncryptedChat != null) {
                 timeItem2 = headerItem.addSubItem(chat_enc_timer, R.drawable.msg_timer, LocaleController.getString("SetTimer", R.string.SetTimer));
-                fakeScreenshotItem = headerItem.addSubItem(fake_screenshot, R.drawable.msg_fave, LocaleController.getString("SendFakeScreenshot", R.string.SendFakeScreenshot));
+                fakeScreenshotItem = headerItem.addSubItem(fake_screenshot, R.drawable.msg_fave, LocaleController.getString("FakeScreenshot", R.string.FakeScreenshot));
             }
 
             boolean allowShowPinned;
@@ -7001,7 +6999,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             AlertsCreator.showSendMediaAlert(getSendMessagesHelper().sendMessage(arrayList, did == 0 ? dialog_id : did, notify, scheduleDate), this);
         } else {
             for (MessageObject object : arrayList) {
-                getSendMessagesHelper().processForwardFromMyName(object,  did == 0 ? dialog_id : did, true);
+                getSendMessagesHelper().processForwardFromMyName(object, did == 0 ? dialog_id : did, true);
             }
         }
     }
