@@ -7,5 +7,13 @@
 
     <string name="DisableChatAction">不要发送我的输入状态</string>
 
+    <string name="FakeScreenshot">假装截屏</string>
+
+    <string name="EnableDeveloperMode">启用开发者模式</string>
+    <string name="DisableDeveloperMode">禁用开发者模式</string>
+    <string name="DeveloperSettings">开发者设置</string>
+
+    <string name="DisableFlagSecure">禁用安全标记</string>
+    <string name="DisableScreenshotDetection">禁用截屏检测</string>
 
 </resources>
