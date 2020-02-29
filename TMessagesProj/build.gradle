@@ -240,24 +240,15 @@ android {
                 manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
             }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 4
-            }
         }
         arm64 {
             ndk {
                 abiFilters "arm64-v8a"
             }
-            ext {
-                abiVersionCode = 5
-            }
         }
         x64 {
             ndk {
                 abiFilters "x86_64"
-            }
-            ext {
-                abiVersionCode = 6
             }
         }
         arm64_SDK23 {
@@ -274,9 +265,6 @@ android {
                 manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
             }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 7
-            }
         }
         x64_SDK23 {
             ndk {
@@ -289,9 +277,6 @@ android {
                 manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
             }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 8
-            }
         }
         afat {
             sourceSets.debug {
@@ -303,34 +288,14 @@ android {
             sourceSets.release {
                 manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
             }
-            ext {
-                abiVersionCode = 9
-            }
         }
     }
 
-    defaultConfig.versionCode = 10 * 1882
+    defaultConfig.versionCode = 10 * 1883
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "NekogramX-${defaultConfig.versionName}-${defaultConfig.versionCode / 10}-${variant.productFlavors.get(0).name}-${buildType.name}.apk"
-            output.getProcessManifestProvider().get().doLast {
-                def abiVersion = variant.productFlavors.get(0).abiVersionCode
-
-                def outputDir = manifestOutputDirectory
-                File directory
-                if (outputDir instanceof File) {
-                    directory = outputDir
-                } else {
-                    directory = outputDir.get().asFile
-                }
-
-                String manifestPath = directory.toString() + "/AndroidManifest.xml"
-                def manifestContent = file(manifestPath).getText()
-
-                manifestContent = manifestContent.replace(String.format('android:versionCode="%d"', defaultConfig.versionCode), String.format('android:versionCode="%s"', defaultConfig.versionCode + abiVersion))
-                file(manifestPath).write(manifestContent)
-            }
+            outputFileName = "NekogramX-${defaultConfig.versionName}-${defaultConfig.versionCode}-${variant.productFlavors.get(0).name}-${buildType.name}.apk"
         }
     }
 
@@ -344,7 +309,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionName "5.15.0.13"
+        versionName "5.15.0.14"
 
         vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
 
