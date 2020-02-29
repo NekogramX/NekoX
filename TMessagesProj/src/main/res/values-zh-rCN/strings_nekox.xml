@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="NekoXProxy">NekoX 公共代理</string>
     <string name="PublicPrefix">[ 公共 ]</string>
     <string name="NekoXProxyInfo">这可能需要几十秒的时间来加载 NekoX 公共代理 :)</string>
-
     <string name="DisableChatAction">不要发送我的输入状态</string>
-
     <string name="FakeScreenshot">假装截屏</string>
-
+    <string name="SaveCacheToSdcard">保存缓存到内部存储*</string>
     <string name="EnableDeveloperMode">启用开发者模式</string>
     <string name="DisableDeveloperMode">禁用开发者模式</string>
     <string name="DeveloperSettings">开发者设置</string>
-
     <string name="DisableFlagSecure">禁用安全标记</string>
     <string name="DisableScreenshotDetection">禁用截屏检测</string>
-
+    <string name="LoginSettings">登录设置</string>
+    <string name="ShowTestBackend">显示连接到测试后端</string>
+    <string name="ShowBotLogin">显示机器人秘钥登录</string>
 </resources>
