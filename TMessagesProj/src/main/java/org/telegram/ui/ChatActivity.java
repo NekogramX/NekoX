@@ -3992,7 +3992,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             chatActivityEnterView.replaceWithText(start, len, "@" + user.username + " ", false);
                         } else {
                             String name = UserObject.getFirstName(user, false);
-                            Spannable spannable = new SpannableString(name + " ");
+                            Spannable spannable = new SpannableString("@" + name + " ");
                             spannable.setSpan(new URLSpanUserMention("" + user.id, 3), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             chatActivityEnterView.replaceWithText(start, len, spannable, false);
                         }
