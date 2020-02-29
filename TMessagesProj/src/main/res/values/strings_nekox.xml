@@ -6,8 +6,8 @@
     <string name="NekoXProxyInfo">It may take tens of seconds to load the NekoX Public built-in proxy :)</string>
 
     <string name="DisableChatAction">Don\'t send my input status</string>
-
     <string name="FakeScreenshot">Pretend screenshot</string>
+    <string name="SaveCacheToSdcard">Save cache to sdcard*</string>
 
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>
@@ -15,5 +15,10 @@
 
     <string name="DisableFlagSecure">Disable Flag Secure</string>
     <string name="DisableScreenshotDetection">Disable Screenshot Detection</string>
+
+    <string name="LoginSettings">Login Settings</string>
+    <string name="ShowTestBackend">Show Test Backend</string>
+    <string name="ShowBotLogin">Show Bot Login</string>
+
 
 </resources>

@@ -21,6 +21,23 @@ public class NekoXConfig {
     public static boolean disableFlagSecure;
     public static boolean disableScreenshotDetection;
 
+    public static boolean showTestBackend;
+    public static boolean showBotLogin;
+
+    static {
+
+        disableChatAction = preferences.getBoolean("disable_chat_action", false);
+
+        developerMode = preferences.getBoolean("developer_mode",false);
+
+        disableFlagSecure = preferences.getBoolean("disable_flag_secure", false);
+        disableScreenshotDetection = preferences.getBoolean("disable_screenshot_detection",false);
+
+        showTestBackend = preferences.getBoolean("show_test_backend",false);
+        showBotLogin = preferences.getBoolean("show_bot_login",false);
+
+    }
+
     public static void toggleDisableChatAction() {
 
         preferences.edit().putBoolean("disable_chat_action", disableChatAction = !disableChatAction).apply();
@@ -45,15 +62,17 @@ public class NekoXConfig {
 
     }
 
-    static {
+    public static void toggleShowTestBackend() {
 
-        disableChatAction = preferences.getBoolean("disable_chat_action", false);
-
-        developerMode = preferences.getBoolean("developer_mode",false);
-
-        disableFlagSecure = preferences.getBoolean("disable_flag_secure", false);
-        disableScreenshotDetection = preferences.getBoolean("disable_screenshot_detection",false);
+        preferences.edit().putBoolean("show_test_backend", showTestBackend = !showTestBackend).apply();
 
     }
+
+    public static void toggleShowBotLogin() {
+
+        preferences.edit().putBoolean("show_bot_login", showBotLogin = !showBotLogin).apply();
+
+    }
+
 
 }

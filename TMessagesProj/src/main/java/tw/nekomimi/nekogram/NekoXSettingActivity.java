@@ -40,6 +40,10 @@ public class NekoXSettingActivity extends BaseFragment {
     private int disableFlagSecureRow;
     private int disableScreenshotDetectionRow;
 
+    private int loginSettingsRow;
+    private int showTestBackendRow;
+    private int showBotLoginRow;
+
     @Override
     public boolean onFragmentCreate() {
         super.onFragmentCreate();
@@ -96,6 +100,16 @@ public class NekoXSettingActivity extends BaseFragment {
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(NekoXConfig.disableScreenshotDetection);
                 }
+            } else if (position == showTestBackendRow) {
+                NekoXConfig.toggleShowTestBackend();
+                if (view instanceof TextCheckCell) {
+                    ((TextCheckCell) view).setChecked(NekoXConfig.showTestBackend);
+                }
+            }  else if (position == showBotLoginRow) {
+                NekoXConfig.toggleShowBotLogin();
+                if (view instanceof TextCheckCell) {
+                    ((TextCheckCell) view).setChecked(NekoXConfig.showBotLogin);
+                }
             }
 
         });
@@ -116,6 +130,11 @@ public class NekoXSettingActivity extends BaseFragment {
         developerSettingsRow = rowCount++;
         disableFlagSecureRow = rowCount++;
         disableScreenshotDetectionRow = rowCount++;
+
+        loginSettingsRow = rowCount++;
+        showTestBackendRow = rowCount++;
+        showBotLoginRow = rowCount++;
+
         if (listAdapter != null) {
             listAdapter.notifyDataSetChanged();
         }
@@ -185,6 +204,8 @@ public class NekoXSettingActivity extends BaseFragment {
                     HeaderCell headerCell = (HeaderCell) holder.itemView;
                     if (position == developerSettingsRow) {
                         headerCell.setText(LocaleController.getString("DeveloperSettings", R.string.DeveloperSettings));
+                    } else if (position == loginSettingsRow) {
+                        headerCell.setText(LocaleController.getString("LoginSettings", R.string.LoginSettings));
                     }
                     break;
                 }
@@ -195,8 +216,11 @@ public class NekoXSettingActivity extends BaseFragment {
                     if (position == disableFlagSecureRow) {
                         textCell.setTextAndCheck(LocaleController.getString("DisableFlagSecure", R.string.DisableFlagSecure), NekoXConfig.disableFlagSecure, true);
                     } else if (position == disableScreenshotDetectionRow) {
-                        textCell.setTextAndCheck(LocaleController.getString("DisableScreenshotDetection", R.string.DisableScreenshotDetection), NekoXConfig.disableScreenshotDetection, true);
-
+                        textCell.setTextAndCheck(LocaleController.getString("DisableScreenshotDetection", R.string.DisableScreenshotDetection), NekoXConfig.disableScreenshotDetection, false);
+                    } else if (position == showTestBackendRow) {
+                        textCell.setTextAndCheck(LocaleController.getString("ShowTestBackend", R.string.ShowTestBackend), NekoXConfig.showTestBackend, true);
+                    } else if (position == showBotLoginRow) {
+                        textCell.setTextAndCheck(LocaleController.getString("ShowBotLogin", R.string.ShowBotLogin), NekoXConfig.showBotLogin, false);
                     }
                     break;
                 }
@@ -208,7 +232,7 @@ public class NekoXSettingActivity extends BaseFragment {
         @Override
         public boolean isEnabled(RecyclerView.ViewHolder holder) {
             int position = holder.getAdapterPosition();
-            return position == developerSettingsRow || position == disableFlagSecureRow || position == disableScreenshotDetectionRow;
+            return position == disableFlagSecureRow || position == disableScreenshotDetectionRow || position == showTestBackendRow || position == showBotLoginRow;
         }
 
         @Override
@@ -251,7 +275,8 @@ public class NekoXSettingActivity extends BaseFragment {
         public int getItemViewType(int position) {
             if (position == developerSettingsRow) {
                 return 4;
-            } else if (position == disableFlagSecureRow || position == disableScreenshotDetectionRow) {
+            } else if (position == disableFlagSecureRow || position == disableScreenshotDetectionRow ||
+                    position == showTestBackendRow || position == showBotLoginRow) {
                 return 3;
             }
             return 6;

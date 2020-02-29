@@ -81,7 +81,7 @@ public class NekoSettingsActivity extends BaseFragment {
     private int useSystemEmojiRow;
     private int ignoreBlockedRow;
     private int hideProxySponsorChannelRow;
-    private int saveCacheToPrivateDirectoryRow;
+    private int saveCacheToSdcardRow;
     private int pauseMusicOnRecordRow;
     private int disablePhotoSideActionRow;
     private int mapPreviewRow;
@@ -208,10 +208,10 @@ public class NekoSettingsActivity extends BaseFragment {
                         MessagesController.getInstance(a).checkProxyInfo(true);
                     }
                 }
-            } else if (position == saveCacheToPrivateDirectoryRow) {
-                NekoConfig.toggleSaveCacheToPrivateDirectory();
+            } else if (position == saveCacheToSdcardRow) {
+                NekoConfig.toggleSaveCacheToSdcard();
                 if (view instanceof TextCheckCell) {
-                    ((TextCheckCell) view).setChecked(NekoConfig.saveCacheToPrivateDirectory);
+                    ((TextCheckCell) view).setChecked(NekoConfig.saveCacheToSdcard);
                 }
             } else if (position == useSystemEmojiRow) {
                 SharedConfig.useSystemEmoji = !SharedConfig.useSystemEmoji;
@@ -526,9 +526,6 @@ public class NekoSettingsActivity extends BaseFragment {
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(NekoConfig.openFilterByFab);
                 }
-            } else if (position == connection2Row) {
-                NekoConfig.toggleShowHiddenFeature();
-                updateRows();
             }
 
         });
@@ -560,7 +557,7 @@ public class NekoSettingsActivity extends BaseFragment {
         useSystemEmojiRow = rowCount++;
         ignoreBlockedRow = rowCount++;
         hideProxySponsorChannelRow = rowCount++;
-        saveCacheToPrivateDirectoryRow = NekoConfig.showHiddenFeature && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? rowCount++ : -1;
+        saveCacheToSdcardRow = rowCount++;
         pauseMusicOnRecordRow = rowCount++;
         disablePhotoSideActionRow = rowCount++;
         mapPreviewRow = rowCount++;
@@ -584,7 +581,7 @@ public class NekoSettingsActivity extends BaseFragment {
         disableFilteringRow = rowCount++;
         unlimitedFavedStickersRow = rowCount++;
         unlimitedPinnedDialogsRow = rowCount++;
-        deleteAccountRow = NekoConfig.showHiddenFeature ? rowCount++ : -1;
+        deleteAccountRow = rowCount++;
         experiment2Row = rowCount++;
         if (listAdapter != null) {
             listAdapter.notifyDataSetChanged();
@@ -1033,8 +1030,8 @@ public class NekoSettingsActivity extends BaseFragment {
                         textCell.setTextAndCheck(LocaleController.getString("TransparentStatusBar", R.string.TransparentStatusBar), NekoConfig.transparentStatusBar, true);
                     } else if (position == hideProxySponsorChannelRow) {
                         textCell.setTextAndCheck(LocaleController.getString("HideProxySponsorChannel", R.string.HideProxySponsorChannel), NekoConfig.hideProxySponsorChannel, true);
-                    } else if (position == saveCacheToPrivateDirectoryRow) {
-                        textCell.setTextAndCheck(LocaleController.getString("SaveCacheToPrivateDirectory", R.string.SaveCacheToPrivateDirectory), NekoConfig.saveCacheToPrivateDirectory, true);
+                    } else if (position == saveCacheToSdcardRow) {
+                        textCell.setTextAndCheck(LocaleController.getString("saveCacheToSdcard", R.string.SaveCacheToPrivateDirectory), NekoConfig.saveCacheToSdcard, true);
                     } else if (position == useSystemEmojiRow) {
                         textCell.setTextAndCheck(LocaleController.getString("EmojiUseDefault", R.string.EmojiUseDefault), SharedConfig.useSystemEmoji, true);
                     } else if (position == typefaceRow) {
@@ -1099,12 +1096,12 @@ public class NekoSettingsActivity extends BaseFragment {
                     position == useSystemEmojiRow || position == ipv6Row || position == typefaceRow || position == nameOrderRow ||
                     position == forceTabletRow || position == mapPreviewRow || position == newYearRow ||
                     position == actionBarDecorationRow || position == eventTypeRow || position == transparentStatusBarRow ||
-                    position == hideProxySponsorChannelRow || position == saveCacheToPrivateDirectoryRow ||
+                    position == hideProxySponsorChannelRow || position == saveCacheToSdcardRow ||
                     position == disableFilteringRow || position == stickerSizeRow ||
                     position == unlimitedFavedStickersRow || position == messageMenuRow || position == deleteAccountRow ||
                     position == translationProviderRow || position == smoothKeyboardRow || position == pauseMusicOnRecordRow ||
                     position == disablePhotoSideActionRow || position == unlimitedPinnedDialogsRow || position == openArchiveOnPullRow ||
-                    position == openFilterByActionBarRow || position == openFilterByFabRow || position == connection2Row;
+                    position == openFilterByActionBarRow || position == openFilterByFabRow;
         }
 
         @Override
@@ -1154,7 +1151,7 @@ public class NekoSettingsActivity extends BaseFragment {
                     position == transparentStatusBarRow || position == hideProxySponsorChannelRow ||
                     position == ignoreBlockedRow || position == useSystemEmojiRow || position == typefaceRow ||
                     position == forceTabletRow || position == newYearRow ||
-                    position == saveCacheToPrivateDirectoryRow || position == unlimitedFavedStickersRow ||
+                    position == saveCacheToSdcardRow || position == unlimitedFavedStickersRow ||
                     position == disableFilteringRow || position == smoothKeyboardRow || position == pauseMusicOnRecordRow ||
                     position == disablePhotoSideActionRow || position == unlimitedPinnedDialogsRow || position == openArchiveOnPullRow ||
                     position == openFilterByActionBarRow || position == openFilterByFabRow) {

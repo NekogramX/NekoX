@@ -19,7 +19,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -589,10 +588,10 @@ public class AndroidUtilities {
         if (pathString.matches(Pattern.quote(new File(ApplicationLoader.applicationContext.getCacheDir(), "voip_logs").getAbsolutePath()) + "/\\d+\\.log")) {
             return false;
         }
-        if (NekoConfig.saveCacheToPrivateDirectory && pathString.startsWith(new File(ApplicationLoader.applicationContext.getCacheDir(), "sdcard").getAbsolutePath())) {
+        if (NekoConfig.saveCacheToSdcard && pathString.startsWith(new File(ApplicationLoader.applicationContext.getCacheDir(), "sdcard").getAbsolutePath())) {
             return false;
         }
-        if (NekoConfig.saveCacheToPrivateDirectory && pathString.startsWith(new File(ApplicationLoader.applicationContext.getFilesDir(), "Telegram").getAbsolutePath())) {
+        if (NekoConfig.saveCacheToSdcard && pathString.startsWith(new File(ApplicationLoader.applicationContext.getFilesDir(), "Telegram").getAbsolutePath())) {
             return false;
         }
         int tries = 0;
@@ -1304,7 +1303,7 @@ public class AndroidUtilities {
         } catch (Exception e) {
             FileLog.e(e);
         }
-        if (!NekoConfig.saveCacheToPrivateDirectory && (state == null || state.startsWith(Environment.MEDIA_MOUNTED))) {
+        if (!NekoConfig.saveCacheToSdcard && (state == null || state.startsWith(Environment.MEDIA_MOUNTED))) {
             try {
                 File file = ApplicationLoader.applicationContext.getExternalCacheDir();
                 if (file != null) {
@@ -1317,7 +1316,7 @@ public class AndroidUtilities {
         try {
             File file = ApplicationLoader.applicationContext.getCacheDir();
             if (file != null) {
-                if (NekoConfig.saveCacheToPrivateDirectory) {
+                if (NekoConfig.saveCacheToSdcard) {
                     file = new File(file, "sdcard");
                     file.mkdirs();
                 }

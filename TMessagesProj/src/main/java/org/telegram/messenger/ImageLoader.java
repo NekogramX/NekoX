@@ -1780,8 +1780,8 @@ public class ImageLoader {
         }
 
         try {
-            if (NekoConfig.saveCacheToPrivateDirectory || Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                if (NekoConfig.saveCacheToPrivateDirectory) {
+            if (NekoConfig.saveCacheToSdcard || Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                if (NekoConfig.saveCacheToSdcard) {
                     telegramPath = ApplicationLoader.applicationContext.getExternalFilesDir("Telegram");
                 } else {
                     telegramPath = new File(Environment.getExternalStorageDirectory(), "Telegram");

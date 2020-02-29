@@ -46,6 +46,7 @@ import org.telegram.ui.ActionBar.*;
 import org.telegram.ui.Cells.CheckBoxCell;
 import org.telegram.ui.Components.*;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -302,7 +303,7 @@ public class LoginActivity extends BaseFragment {
 
         menu.addItem(3, R.drawable.ic_translate);
 
-        if (NekoConfig.showTestBackend) {
+        if (NekoXConfig.showBotLogin) {
 
             menu.addItem(4, R.drawable.list_bot);
 
@@ -1487,7 +1488,7 @@ public class LoginActivity extends BaseFragment {
                 });
             }
 
-            if (NekoConfig.showHiddenFeature) {
+            if (NekoXConfig.showTestBackend) {
                 testBackendCell = new CheckBoxCell(context, 2);
                 testBackendCell.setText(LocaleController.getString("TestBackend", R.string.TestBackend), "", ConnectionsManager.native_isTestBackend(currentAccount) != 0, false);
                 addView(testBackendCell, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.MATCH_PARENT, Gravity.LEFT | Gravity.TOP, 0, 0, 0, 0));
