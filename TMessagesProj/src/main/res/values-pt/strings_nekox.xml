@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="NekoXProxy">NekoX Public Proxy</string>
-    <string name="PublicPrefix">[ Public ]</string>
-    <string name="NekoXProxyInfo">It may take tens of seconds to load the NekoX Public built-in proxy :)</string>
+    <string name="NekoXProxy">Proxy Público NekoX</string>
+    <string name="PublicPrefix">[ Público ]</string>
+    <string name="NekoXProxyInfo">Pode demorar dezenas de segundos para carregar o proxy interno NekoX :)</string>
     <string name="DisableChatAction">Don\'t send my input status</string>
     <string name="FakeScreenshot">Pretend screenshot</string>
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
