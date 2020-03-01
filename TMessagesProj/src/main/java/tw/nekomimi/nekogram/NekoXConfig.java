@@ -9,7 +9,7 @@ import org.telegram.messenger.MessagesController;
 
 public class NekoXConfig {
 
-    public static int[] DEVELOPER_IDS = {896711046};
+    public static int[] DEVELOPER_IDS = {896711046,899300686,339984997};
 
     private static SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("nekox_config", Context.MODE_PRIVATE);
 
