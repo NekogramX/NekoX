@@ -1237,7 +1237,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         });
                     } else {
                         messageTextView.setText(AndroidUtilities.replaceTags(LocaleController.getString("DeleteAllInChatAlert", R.string.DeleteAllInChatAlert)));
-                        builder.setPositiveButton(LocaleController.getString("DeleteAll", R.string.DeleteAll), (dialogInterface, i) -> {
+                        builder.setPositiveButton(LocaleController.getString("DeleteAllInChat", R.string.DeleteAllInChat), (dialogInterface, i) -> {
                             MessageHelper.getInstance(currentAccount).deleteUserChannelHistoryWithSearch(dialog_id, null);
                         });
                     }
@@ -1638,9 +1638,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
             if (ChatObject.isChannel(currentChat) && currentChat.megagroup) {
                 headerItem.addSubItem(delete_history, R.drawable.msg_delete, LocaleController.getString("DeleteAllFromSelf", R.string.DeleteAllFromSelf));
-                if (ChatObject.canUserDoAction(currentChat,ChatObject.ACTION_DELETE_MESSAGES)) {
-                    headerItem.addSubItem(delete_all, R.drawable.msg_delete, LocaleController.getString("DeleteAllInChat", R.string.DeleteAllInChat));
-                }
+
+            }
+
+            if (ChatObject.isChannel(currentChat) && ChatObject.canUserDoAction(currentChat,ChatObject.ACTION_DELETE_MESSAGES)) {
+                headerItem.addSubItem(delete_all, R.drawable.msg_delete, LocaleController.getString("DeleteAllInChat", R.string.DeleteAllInChat));
             }
 
             if (ChatObject.isChannel(currentChat)) {
