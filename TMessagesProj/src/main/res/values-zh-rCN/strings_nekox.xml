@@ -6,6 +6,8 @@
     <string name="DisableChatAction">不要发送我的输入状态</string>
     <string name="FakeScreenshot">假装截屏</string>
     <string name="SaveCacheToSdcard">保存缓存到内部存储*</string>
+    <string name="DeleteAll">Delete all in caht</string>
+    <string name="DeleteAllAlert">Warning! This will **delete all messages** in this chat for **all** participants.</string>
     <string name="EnableDeveloperMode">启用开发者模式</string>
     <string name="DisableDeveloperMode">禁用开发者模式</string>
     <string name="DeveloperSettings">开发者设置</string>
