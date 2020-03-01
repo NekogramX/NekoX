@@ -103,45 +103,4 @@ public class MessageHelper extends BaseController {
         }), ConnectionsManager.RequestFlagFailOnServerErrors);
     }
 
-    public void deleteChannelHistoryWithSearch(final long dialog_id, TLRPC.Chat chat) {
-        final TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
-        req.peer = getMessagesController().getInputPeer((int) dialog_id);
-        if (req.peer == null) {
-            return;
-        }
-        req.limit = 100;
-        req.q = "";
-        req.add_offset = -100;
-        req.offset_id = 0;
-        req.filter = new TLRPC.TL_inputMessagesFilterEmpty();
-        final int currentReqId = ++lastReqId;
-        getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-            if (error == null) {
-                if (currentReqId == lastReqId) {
-                    if (response != null) {
-                        TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
-                        int size = res.messages.size();
-                        if (size == 0) {
-                            return;
-                        }
-
-                        HashSet<Integer> ids = new HashSet<>();
-                        for (int a = 0; a < res.messages.size(); a++) {
-                            TLRPC.Message message = res.messages.get(a);
-                            ids.add(message.from_id);
-                        }
-
-                        for (int userId : ids) {
-                            getMessagesController().deleteUserChannelHistory(chat,getMessagesController().getUser(userId),0);
-                        }
-
-                        deleteChannelHistoryWithSearch(dialog_id,chat);
-                    }
-                }
-            } else {
-                Toast.makeText(ApplicationLoader.applicationContext, error.code + ": " + error.text, Toast.LENGTH_SHORT).show();
-            }
-        }), ConnectionsManager.RequestFlagFailOnServerErrors);
-    }
-
 }

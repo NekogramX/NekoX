@@ -1238,7 +1238,16 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     } else {
                         messageTextView.setText(AndroidUtilities.replaceTags(LocaleController.getString("DeleteAllInChatAlert", R.string.DeleteAllInChatAlert)));
                         builder.setPositiveButton(LocaleController.getString("DeleteAllInChat", R.string.DeleteAllInChat), (dialogInterface, i) -> {
-                            MessageHelper.getInstance(currentAccount).deleteChannelHistoryWithSearch(dialog_id, currentChat);
+                            TLRPC.TL_messages_deleteHistory req = new TLRPC.TL_messages_deleteHistory();
+                            req.peer = getMessagesController().getInputPeer(currentChat.id);
+                            req.max_id = Integer.MAX_VALUE;
+                            req.just_clear = false;
+                            req.revoke = true;
+                            getConnectionsManager().sendRequest(req, (response, error) -> {
+                               if (error != null) {
+                                   Toast.makeText(ApplicationLoader.applicationContext, error.code + ": " + error.text, Toast.LENGTH_SHORT).show();
+                               }
+                            }, ConnectionsManager.RequestFlagInvokeAfter);
                         });
                     }
 
