@@ -104,10 +104,6 @@ public class MessageHelper extends BaseController {
     }
 
     public void deleteChannelHistoryWithSearch(final long dialog_id, TLRPC.Chat chat) {
-        deleteChannelHistoryWithSearch(dialog_id,chat, 0);
-    }
-
-    public void deleteChannelHistoryWithSearch(final long dialog_id, TLRPC.Chat chat, final int offset_id) {
         final TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
         req.peer = getMessagesController().getInputPeer((int) dialog_id);
         if (req.peer == null) {
@@ -115,12 +111,12 @@ public class MessageHelper extends BaseController {
         }
         req.limit = 100;
         req.q = "";
-        req.offset_id = offset_id;
+        req.add_offset = -100;
+        req.offset_id = 0;
         req.filter = new TLRPC.TL_inputMessagesFilterEmpty();
         final int currentReqId = ++lastReqId;
         getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
             if (error == null) {
-                int lastMessageId = offset_id;
                 if (currentReqId == lastReqId) {
                     if (response != null) {
                         TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
@@ -128,22 +124,18 @@ public class MessageHelper extends BaseController {
                         if (size == 0) {
                             return;
                         }
+
                         HashSet<Integer> ids = new HashSet<>();
                         for (int a = 0; a < res.messages.size(); a++) {
                             TLRPC.Message message = res.messages.get(a);
                             ids.add(message.from_id);
-                            if (message.id > lastMessageId) {
-                                lastMessageId = message.id;
-                            }
                         }
 
                         for (int userId : ids) {
-
                             getMessagesController().deleteUserChannelHistory(chat,getMessagesController().getUser(userId),0);
-
                         }
 
-                        deleteChannelHistoryWithSearch(dialog_id,chat, lastMessageId);
+                        deleteChannelHistoryWithSearch(dialog_id,chat);
                     }
                 }
             } else {
