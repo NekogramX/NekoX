@@ -13838,11 +13838,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             }
                             TLRPC.Document document = selectedObject.getDocument();
                             if (!getMediaDataController().isStickerInFavorites(document)) {
-                                if (MessageObject.isStickerHasSet(document)) {
+                                //if (MessageObject.isStickerHasSet(document)) {
                                     items.add(LocaleController.getString("AddToFavorites", R.string.AddToFavorites));
                                     options.add(20);
                                     icons.add(R.drawable.msg_fave);
-                                }
+                                //}
                             } else {
                                 items.add(LocaleController.getString("DeleteFromFavorites", R.string.DeleteFromFavorites));
                                 options.add(21);
