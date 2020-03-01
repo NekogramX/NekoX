@@ -1222,7 +1222,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     if (id == delete_history) {
                         textView.setText(LocaleController.getString("DeleteAllFromSelf", R.string.DeleteAllFromSelf));
                     } else {
-                        textView.setText(LocaleController.getString("DeleteAll", R.string.DeleteAll));
+                        textView.setText(LocaleController.getString("DeleteAllInChat", R.string.DeleteAllInChat));
                     }
                     frameLayout.addView(textView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, (LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP, (LocaleController.isRTL ? 21 : 76), 11, (LocaleController.isRTL ? 76 : 21), 0));
                     frameLayout.addView(messageTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, (LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP, 24, 57, 24, 9));
@@ -1236,7 +1236,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             }
                         });
                     } else {
-                        messageTextView.setText(AndroidUtilities.replaceTags(LocaleController.getString("DeleteAllAlert", R.string.DeleteAllAlert)));
+                        messageTextView.setText(AndroidUtilities.replaceTags(LocaleController.getString("DeleteAllInChatAlert", R.string.DeleteAllInChatAlert)));
                         builder.setPositiveButton(LocaleController.getString("DeleteAll", R.string.DeleteAll), (dialogInterface, i) -> {
                             MessageHelper.getInstance(currentAccount).deleteUserChannelHistoryWithSearch(dialog_id, null);
                         });
@@ -1639,7 +1639,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             if (ChatObject.isChannel(currentChat) && currentChat.megagroup) {
                 headerItem.addSubItem(delete_history, R.drawable.msg_delete, LocaleController.getString("DeleteAllFromSelf", R.string.DeleteAllFromSelf));
                 if (ChatObject.canUserDoAction(currentChat,ChatObject.ACTION_DELETE_MESSAGES)) {
-                    headerItem.addSubItem(delete_all, R.drawable.msg_delete, LocaleController.getString("DeleteAll", R.string.DeleteAll));
+                    headerItem.addSubItem(delete_all, R.drawable.msg_delete, LocaleController.getString("DeleteAllInChat", R.string.DeleteAllInChat));
                 }
             }
 

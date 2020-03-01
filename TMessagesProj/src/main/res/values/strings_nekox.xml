@@ -9,8 +9,8 @@
     <string name="FakeScreenshot">Pretend screenshot</string>
     <string name="SaveCacheToSdcard">Save cache to sdcard*</string>
 
-    <string name="DeleteAll">Delete all in caht</string>
-    <string name="DeleteAllAlert">Warning! This will **delete all messages** in this chat for **all** participants.</string>
+    <string name="DeleteAllInChat">Delete all in caht</string>
+    <string name="DeleteAllInChatAlert">Warning! This will **delete all messages** in this chat for **all** participants.</string>
 
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>
