@@ -90,7 +90,7 @@ public class NekoConfig {
                 editor.putBoolean("openArchiveOnPull", openArchiveOnPull);
                 editor.putBoolean("openFilterByActionBar", openFilterByActionBar);
                 editor.putBoolean("openFilterByFab", openFilterByFab);
-               // editor.putBoolean("showHiddenFeature", showHiddenFeature);
+                // editor.putBoolean("showHiddenFeature", showHiddenFeature);
                 editor.putFloat("stickerSize", stickerSize);
                 editor.putInt("typeface", typeface);
                 editor.putInt("nameOrder", nameOrder);
@@ -417,7 +417,6 @@ public class NekoConfig {
         editor.commit();
     } */
 
-}
     public static void toggleHideKeyboardOnChatScroll() {
         hideKeyboardOnChatScroll = !hideKeyboardOnChatScroll;
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("nekoconfig", Activity.MODE_PRIVATE);
@@ -425,3 +424,5 @@ public class NekoConfig {
         editor.putBoolean("hideKeyboardOnChatScroll", hideKeyboardOnChatScroll);
         editor.commit();
     }
+
+}
