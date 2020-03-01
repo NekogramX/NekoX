@@ -1195,7 +1195,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         return;
                     }
                     showDialog(AlertsCreator.createTTLAlert(getParentActivity(), currentEncryptedChat).create());
-                } else if (id == delete_history) {
+                } else if (id == delete_history || id == delete_all) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     TextView messageTextView = new TextView(context);
                     messageTextView.setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
@@ -1219,17 +1219,29 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     textView.setSingleLine(true);
                     textView.setGravity((LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
                     textView.setEllipsize(TextUtils.TruncateAt.END);
-                    textView.setText(LocaleController.getString("DeleteAllFromSelf", R.string.DeleteAllFromSelf));
+                    if (id == delete_history) {
+                        textView.setText(LocaleController.getString("DeleteAllFromSelf", R.string.DeleteAllFromSelf));
+                    } else {
+                        textView.setText(LocaleController.getString("DeleteAll", R.string.DeleteAll));
+                    }
                     frameLayout.addView(textView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, (LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP, (LocaleController.isRTL ? 21 : 76), 11, (LocaleController.isRTL ? 76 : 21), 0));
                     frameLayout.addView(messageTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, (LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.TOP, 24, 57, 24, 9));
-                    messageTextView.setText(AndroidUtilities.replaceTags(LocaleController.getString("DeleteAllFromSelfAlert", R.string.DeleteAllFromSelfAlert)));
-                    builder.setPositiveButton(LocaleController.getString("DeleteAll", R.string.DeleteAll), (dialogInterface, i) -> {
-                        if (ChatObject.canUserDoAction(currentChat,ChatObject.ACTION_DELETE_MESSAGES)) {
-                            getMessagesController().deleteUserChannelHistory(currentChat, UserConfig.getInstance(currentAccount).getCurrentUser(),0);
-                        } else {
-                            MessageHelper.getInstance(currentAccount).deleteUserChannelHistoryWithSearch(dialog_id, UserConfig.getInstance(currentAccount).getCurrentUser());
-                        }
-                    });
+                    if (id == delete_history) {
+                        messageTextView.setText(AndroidUtilities.replaceTags(LocaleController.getString("DeleteAllFromSelfAlert", R.string.DeleteAllFromSelfAlert)));
+                        builder.setPositiveButton(LocaleController.getString("DeleteAll", R.string.DeleteAll), (dialogInterface, i) -> {
+                            if (ChatObject.canUserDoAction(currentChat,ChatObject.ACTION_DELETE_MESSAGES)) {
+                                getMessagesController().deleteUserChannelHistory(currentChat, UserConfig.getInstance(currentAccount).getCurrentUser(),0);
+                            } else {
+                                MessageHelper.getInstance(currentAccount).deleteUserChannelHistoryWithSearch(dialog_id, UserConfig.getInstance(currentAccount).getCurrentUser());
+                            }
+                        });
+                    } else {
+                        messageTextView.setText(AndroidUtilities.replaceTags(LocaleController.getString("DeleteAllAlert", R.string.DeleteAllAlert)));
+                        builder.setPositiveButton(LocaleController.getString("DeleteAll", R.string.DeleteAll), (dialogInterface, i) -> {
+                            MessageHelper.getInstance(currentAccount).deleteUserChannelHistoryWithSearch(dialog_id, null);
+                        });
+                    }
+
                     builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
                     AlertDialog alertDialog = builder.create();
                     showDialog(alertDialog);
@@ -1626,6 +1638,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
             if (ChatObject.isChannel(currentChat) && currentChat.megagroup) {
                 headerItem.addSubItem(delete_history, R.drawable.msg_delete, LocaleController.getString("DeleteAllFromSelf", R.string.DeleteAllFromSelf));
+                if (ChatObject.canUserDoAction(currentChat,ChatObject.ACTION_DELETE_MESSAGES)) {
+                    headerItem.addSubItem(delete_all, R.drawable.msg_delete, LocaleController.getString("DeleteAll", R.string.DeleteAll));
+                }
             }
 
             if (ChatObject.isChannel(currentChat)) {
