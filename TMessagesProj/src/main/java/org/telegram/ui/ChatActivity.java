@@ -621,6 +621,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int show_pinned = 25;
 
     private final static int fake_screenshot = 27;
+    private final static int delete_all = 28;
 
     private final static int bot_help = 30;
     private final static int bot_settings = 31;
@@ -13803,7 +13804,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                 icons.add(R.drawable.msg_sticker);
                                 TLRPC.Document document = selectedObject.getDocument();
                                 if (!getMediaDataController().isStickerInFavorites(document)) {
-                                    if (getMediaDataController().canAddStickerToFavorites() && MessageObject.isStickerHasSet(document)) {
+                                    if (getMediaDataController().canAddStickerToFavorites()/* && MessageObject.isStickerHasSet(document)*/) {
                                         items.add(LocaleController.getString("AddToFavorites", R.string.AddToFavorites));
                                         options.add(20);
                                         icons.add(R.drawable.msg_fave);
