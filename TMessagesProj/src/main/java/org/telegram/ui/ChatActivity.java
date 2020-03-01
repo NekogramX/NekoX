@@ -1239,7 +1239,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         messageTextView.setText(AndroidUtilities.replaceTags(LocaleController.getString("DeleteAllInChatAlert", R.string.DeleteAllInChatAlert)));
                         builder.setPositiveButton(LocaleController.getString("DeleteAllInChat", R.string.DeleteAllInChat), (dialogInterface, i) -> {
                             TLRPC.TL_messages_deleteHistory req = new TLRPC.TL_messages_deleteHistory();
-                            req.peer = getMessagesController().getInputPeer(currentChat.id);
+                            req.peer = getMessagesController().getInputPeer((int) dialog_id);
                             req.max_id = Integer.MAX_VALUE;
                             req.just_clear = false;
                             req.revoke = true;
