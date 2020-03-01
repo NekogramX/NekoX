@@ -39,7 +39,7 @@ import java.io.File;
 
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.VmessLoader;
-import tw.nekomimi.nekogram.ZipUtil;
+import tw.nekomimi.nekogram.translator.ZipUtil;
 
 public class ApplicationLoader extends Application {
 

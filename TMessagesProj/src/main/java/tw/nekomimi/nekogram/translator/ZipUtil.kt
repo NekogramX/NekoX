@@ -1,4 +1,4 @@
-package tw.nekomimi.nekogram
+package tw.nekomimi.nekogram.translator
 
 import java.io.File
 import java.io.InputStream

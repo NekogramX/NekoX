@@ -1,4 +1,4 @@
-package tw.nekomimi.nekogram
+package tw.nekomimi.nekogram.utils
 
 import java.io.File
 

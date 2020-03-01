@@ -36,7 +36,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import kotlin.text.StringsKt;
-import tw.nekomimi.nekogram.FileUtil;
+import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.VmessLoader;
 

@@ -1,4 +1,4 @@
-package tw.nekomimi.nekogram
+package tw.nekomimi.nekogram.utils
 
 import okhttp3.OkHttpClient
 import okhttp3.Request

@@ -16,7 +16,6 @@ import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -59,14 +57,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
-import kotlin.text.StringsKt;
-import tw.nekomimi.nekogram.FileUtil;
-import tw.nekomimi.nekogram.HttpUtil;
+import tw.nekomimi.nekogram.utils.FileUtil;
+import tw.nekomimi.nekogram.utils.HttpUtil;
 
 public class ProxyListActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
