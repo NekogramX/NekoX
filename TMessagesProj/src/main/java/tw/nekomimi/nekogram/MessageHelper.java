@@ -1,6 +1,10 @@
 package tw.nekomimi.nekogram;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BaseController;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.UserConfig;
@@ -114,7 +118,6 @@ public class MessageHelper extends BaseController {
         req.offset_id = offset_id;
         req.filter = new TLRPC.TL_inputMessagesFilterEmpty();
         final int currentReqId = ++lastReqId;
-        TLRPC.InputChannel channel = getMessagesController().getInputChannel((int) dialog_id);
         getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
             if (error == null) {
                 int lastMessageId = offset_id;
@@ -143,6 +146,8 @@ public class MessageHelper extends BaseController {
                         deleteChannelHistoryWithSearch(dialog_id,chat, lastMessageId);
                     }
                 }
+            } else {
+                Toast.makeText(ApplicationLoader.applicationContext, error.code + ": " + error.text, Toast.LENGTH_SHORT).show();
             }
         }), ConnectionsManager.RequestFlagFailOnServerErrors);
     }
