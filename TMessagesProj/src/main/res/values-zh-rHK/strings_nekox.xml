@@ -6,6 +6,8 @@
     <string name="DisableChatAction">不要發送我的輸入狀態</string>
     <string name="FakeScreenshot">假裝截屏</string>
     <string name="SaveCacheToSdcard">Save cache to sdcard*</string>
+    <string name="NotificationsUnread">Unread</string>
+    <string name="NotificationsUnmutedAndUnread">Unmuted &amp; Unread</string>
     <string name="DeleteAllInChat">Delete all in caht</string>
     <string name="DeleteAllInChatAlert">Warning! This will **delete all messages** in this chat for **all** participants.</string>
     <string name="EnableDeveloperMode">啓用開發人員模式</string>
