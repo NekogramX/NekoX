@@ -8,6 +8,14 @@
     <string name="SaveCacheToSdcard">保存緩存到存儲卡*</string>
     <string name="NotificationsUnread">未讀</string>
     <string name="NotificationsUnmutedAndUnread">未讀且可通知</string>
+    <string name="DialogsSettings">對話設定</string>
+    <string name="SortByUnread">未讀優先排序</string>
+    <string name="SortByUnmuted">可通知優先排序</string>
+    <string name="SortByUser">用戶優先排序</string>
+    <string name="SortByContacts">聯繫人優先排序</string>
+    <string name="SortBySendTime">以最後消息時間排序</string>
+    <string name="DisableUndo">禁用五秒內後悔</string>
+    <string name="FilterMenu">分類菜單</string>
     <string name="DeleteAllInChat">刪除群組所有消息</string>
     <string name="DeleteAllInChatAlert">警告！這將**刪除此聊天中所有用戶**的**所有消息**。</string>
     <string name="EnableDeveloperMode">啓用開發人員模式</string>
