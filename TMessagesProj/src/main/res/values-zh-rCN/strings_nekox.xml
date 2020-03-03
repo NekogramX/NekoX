@@ -13,7 +13,6 @@
     <string name="SortByUnmuted">可通知优先排序</string>
     <string name="SortByUser">用户优先排序</string>
     <string name="SortByContacts">联系人优先排序</string>
-    <string name="SortBySendTime">以最后消息时间排序</string>
     <string name="DisableUndo">禁用五秒内后悔</string>
     <string name="FilterMenu">分类菜单</string>
     <string name="DeleteAllInChat">删除群组所有消息</string>
