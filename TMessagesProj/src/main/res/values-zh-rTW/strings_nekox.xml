@@ -9,10 +9,14 @@
     <string name="NotificationsUnread">未讀</string>
     <string name="NotificationsUnmutedAndUnread">未讀且可通知</string>
     <string name="DialogsSettings">對話設定</string>
+    <string name="SortMenu">排序設定</string>
     <string name="SortByUnread">未讀優先排序</string>
     <string name="SortByUnmuted">可通知優先排序</string>
     <string name="SortByUser">用戶優先排序</string>
     <string name="SortByContacts">聯繫人優先排序</string>
+    <string name="NekoXPushService">NekoX 通知服務</string>
+    <string name="EnablePushAlert">請啓用 \"NekoX 通知服務\"</string>
+    <string name="DisablePushAlert">請禁用 \"NekoX 通知服務\"</string>
     <string name="DisableUndo">禁用五秒內後悔</string>
     <string name="FilterMenu">分類菜單</string>
     <string name="DeleteAllInChat">刪除群組所有消息</string>
