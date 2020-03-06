@@ -22,7 +22,7 @@
     <string name="FilterMenu">分類菜單</string>
     <string name="DeleteAllInChat">刪除群組所有消息</string>
     <string name="DeleteAllInChatAlert">警告！這將**刪除此聊天中所有用戶**的**所有消息**。</string>
-    <string name="UnblockAllWarn">您確定要解除屏蔽所有用戶與機器人嗎?</string>
+    <string name="UnblockAll">解除所有</string>
     <string name="EnableDeveloperMode">啓用開發人員模式</string>
     <string name="DisableDeveloperMode">禁用開發人員模式</string>
     <string name="DeveloperSettings">開發人員設定</string>
