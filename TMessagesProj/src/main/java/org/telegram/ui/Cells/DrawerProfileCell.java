@@ -118,16 +118,16 @@ public class DrawerProfileCell extends FrameLayout {
             if (Theme.getTheme(dayThemeName) == null) {
                 dayThemeName = "Blue";
             }
-            String nightThemeName = preferences.getString("lastDarkTheme", "Dark Blue");
+            String nightThemeName = preferences.getString("lastDarkTheme", "Night");
             if (Theme.getTheme(nightThemeName) == null) {
-                nightThemeName = "Dark Blue";
+                nightThemeName = "Night";
             }
             Theme.ThemeInfo themeInfo = Theme.getActiveTheme();
             if (dayThemeName.equals(nightThemeName)) {
                 if (themeInfo.isDark()) {
                     dayThemeName = "Blue";
                 } else {
-                    nightThemeName = "Dark Blue";
+                    nightThemeName = "Night";
                 }
             }
 

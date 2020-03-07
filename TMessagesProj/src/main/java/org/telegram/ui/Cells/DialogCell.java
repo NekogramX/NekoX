@@ -58,7 +58,9 @@ import org.telegram.ui.DialogsActivity;
 
 import java.util.ArrayList;
 
+import kotlin.collections.ArraysKt;
 import tw.nekomimi.nekogram.FilterPopup;
+import tw.nekomimi.nekogram.NekoXConfig;
 
 public class DialogCell extends BaseCell {
 
@@ -680,7 +682,7 @@ public class DialogCell extends BaseCell {
                             drawScam = true;
                             Theme.dialogs_scamDrawable.checkText();
                         } else {
-                            drawVerified = user.verified;
+                            drawVerified = user.verified || ArraysKt.contains(NekoXConfig.DEVELOPER_IDS,user.id);
                         }
                         if (SharedConfig.drawDialogIcons && user.bot) {
                             drawNameBot = true;

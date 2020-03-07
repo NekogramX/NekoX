@@ -6,9 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
 import org.telegram.messenger.FileLog;
+import org.telegram.messenger.SharedConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
@@ -122,7 +125,13 @@ public class GoogleWebTranslator extends Translator {
             ByteArrayOutputStream outbuf;
             InputStream httpConnectionStream;
             URL downloadUrl = new URL(url);
-            URLConnection httpConnection = downloadUrl.openConnection();
+            URLConnection httpConnection;
+            if (NekoConfig.translationProvider != 2 && SharedConfig.proxyEnabled && SharedConfig.currentProxy != null && SharedConfig.currentProxy.secret == null) {
+                Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress(SharedConfig.currentProxy.address, SharedConfig.currentProxy.port));
+                httpConnection = downloadUrl.openConnection(proxy);
+            } else {
+                httpConnection = downloadUrl.openConnection();
+            }
             httpConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 10_0 like Mac OS X) AppleWebKit/602.1.38 (KHTML, like Gecko) Version/10.0 Mobile/14A5297c Safari/602.1");
             httpConnection.setConnectTimeout(1000);
             httpConnection.setReadTimeout(2000);

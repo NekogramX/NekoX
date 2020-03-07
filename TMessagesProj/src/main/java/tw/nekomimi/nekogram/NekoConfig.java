@@ -14,14 +14,14 @@ public class NekoConfig {
 
     private static final Object sync = new Object();
     public static boolean useIPv6 = false;
-    public static boolean showHiddenFeature = false;
+    //public static boolean showHiddenFeature = false;
 
     public static boolean openFilterByActionBar = true;
     public static boolean openFilterByFab = false;
 
     public static boolean ignoreBlocked = false;
     public static boolean hideProxySponsorChannel = false;
-    public static boolean saveCacheToPrivateDirectory = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+    public static boolean saveCacheToSdcard = false;
     public static boolean disablePhotoSideAction = true;
     public static boolean hideKeyboardOnChatScroll = false;
     public static int mapPreviewProvider = 0;
@@ -71,7 +71,7 @@ public class NekoConfig {
                 editor.putBoolean("transparentStatusBar", transparentStatusBar);
                 editor.putBoolean("residentNotification", residentNotification);
                 editor.putBoolean("hideProxySponsorChannel", hideProxySponsorChannel);
-                editor.putBoolean("saveCacheToPrivateDirectory", saveCacheToPrivateDirectory);
+                editor.putBoolean("saveCacheToSdcard", saveCacheToSdcard);
                 editor.putBoolean("showAddToSavedMessages", showAddToSavedMessages);
                 editor.putBoolean("showReport", showReport);
                 editor.putBoolean("showPrPr", showPrPr);
@@ -90,7 +90,7 @@ public class NekoConfig {
                 editor.putBoolean("openArchiveOnPull", openArchiveOnPull);
                 editor.putBoolean("openFilterByActionBar", openFilterByActionBar);
                 editor.putBoolean("openFilterByFab", openFilterByFab);
-                editor.putBoolean("showHiddenFeature", showHiddenFeature);
+                // editor.putBoolean("showHiddenFeature", showHiddenFeature);
                 editor.putFloat("stickerSize", stickerSize);
                 editor.putInt("typeface", typeface);
                 editor.putInt("nameOrder", nameOrder);
@@ -122,7 +122,7 @@ public class NekoConfig {
             transparentStatusBar = preferences.getBoolean("transparentStatusBar", false);
             residentNotification = preferences.getBoolean("residentNotification", false);
             hideProxySponsorChannel = preferences.getBoolean("hideProxySponsorChannel", false);
-            saveCacheToPrivateDirectory = preferences.getBoolean("saveCacheToPrivateDirectory", Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
+            saveCacheToSdcard = preferences.getBoolean("saveCacheToSdcard", Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
             showAddToSavedMessages = preferences.getBoolean("showAddToSavedMessages", true);
             showReport = preferences.getBoolean("showReport", false);
             showPrPr = preferences.getBoolean("showPrPr", false);
@@ -144,7 +144,7 @@ public class NekoConfig {
             openArchiveOnPull = preferences.getBoolean("openArchiveOnPull", false);
             openFilterByActionBar = preferences.getBoolean("openFilterByActionBar", true);
             openFilterByFab = preferences.getBoolean("openFilterByFab", false);
-            showHiddenFeature = preferences.getBoolean("showHiddenFeature", false);
+            //showHiddenFeature = preferences.getBoolean("showHiddenFeature", false);
             hideKeyboardOnChatScroll = preferences.getBoolean("hideKeyboardOnChatScroll", false);
             configLoaded = true;
         }
@@ -305,11 +305,11 @@ public class NekoConfig {
         editor.commit();
     }
 
-    public static void toggleSaveCacheToPrivateDirectory() {
-        saveCacheToPrivateDirectory = !saveCacheToPrivateDirectory;
+    public static void toggleSaveCacheToSdcard() {
+        saveCacheToSdcard = !saveCacheToSdcard;
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("nekoconfig", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("saveCacheToPrivateDirectory", saveCacheToPrivateDirectory);
+        editor.putBoolean("saveCacheToSdcard", saveCacheToSdcard);
         editor.commit();
     }
 
@@ -409,13 +409,13 @@ public class NekoConfig {
         editor.commit();
     }
 
-    public static void toggleShowHiddenFeature() {
+    /*public static void toggleShowHiddenFeature() {
         showHiddenFeature = !showHiddenFeature;
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("nekoconfig", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("showHiddenFeature", showHiddenFeature);
         editor.commit();
-    }
+    } */
 
     public static void toggleHideKeyboardOnChatScroll() {
         hideKeyboardOnChatScroll = !hideKeyboardOnChatScroll;
@@ -424,4 +424,5 @@ public class NekoConfig {
         editor.putBoolean("hideKeyboardOnChatScroll", hideKeyboardOnChatScroll);
         editor.commit();
     }
+
 }

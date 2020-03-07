@@ -12,24 +12,34 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.util.SparseArray;
 
+import com.v2ray.ang.V2RayConfig;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.tgnet.ConnectionsManager;
-import org.telegram.tgnet.SerializedData;
 
 import java.io.File;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Random;
 
+import kotlin.text.StringsKt;
+import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.VmessLoader;
+import tw.nekomimi.nekogram.utils.ProxyUtil;
 
 public class SharedConfig {
 
@@ -97,9 +107,9 @@ public class SharedConfig {
     public static int repeatMode;
     public static boolean allowBigEmoji;
     public static boolean useSystemEmoji;
-    public static int fontSize = 16;
+    public static int fontSize = 12;
     public static int bubbleRadius = 10;
-    public static int ivFontSize = 16;
+    public static int ivFontSize = 12;
     private static int devicePerformanceClass;
 
     public static boolean drawDialogIcons;
@@ -126,6 +136,12 @@ public class SharedConfig {
         public boolean available;
         public long availableCheckTime;
 
+        public boolean isInternal = false;
+        public String descripton;
+
+        public ProxyInfo() {
+        }
+
         public ProxyInfo(String a, int p, String u, String pw, String s) {
             address = a;
             port = p;
@@ -147,7 +163,36 @@ public class SharedConfig {
         }
     }
 
-    public static ArrayList<ProxyInfo> proxyList = new ArrayList<>();
+    public static class VmessProxy extends ProxyInfo {
+
+        public String vmessLink;
+        public VmessLoader loader;
+
+        public VmessProxy(String vmessLink) {
+
+            this(vmessLink, new Random(System.currentTimeMillis()).nextInt(55536) + 10000);
+
+        }
+
+        public VmessProxy(String vmessLink, int port) {
+
+            this.vmessLink = vmessLink;
+
+            address = "127.0.0.1";
+            username = "";
+            secret = "";
+            this.port = port;
+            address = "";
+
+            loader = new VmessLoader();
+            loader.initConfig(loader.parseVmessLink(vmessLink, port), port);
+
+        }
+
+    }
+
+    public static LinkedList<ProxyInfo> proxyList = new LinkedList<>();
+
     private static boolean proxyListLoaded;
     public static ProxyInfo currentProxy;
 
@@ -718,6 +763,210 @@ public class SharedConfig {
         LocaleController.resetImperialSystemType();
     }
 
+    public static void reloadProxyList() {
+
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+        String proxyAddress = preferences.getString("proxy_ip", "");
+        String proxyUsername = preferences.getString("proxy_user", "");
+        String proxyPassword = preferences.getString("proxy_pass", "");
+        String proxySecret = preferences.getString("proxy_secret", "");
+        int proxyPort = preferences.getInt("proxy_port", 1080);
+        String vmessLink = preferences.getString("vmess_link", "");
+
+        LinkedList<ProxyInfo> proxy = new LinkedList<>();
+
+        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
+        internalProxy.isInternal = true;
+        proxy.add(internalProxy);
+
+        File proxyListFile = ProxyUtil.getCacheFile();
+
+        if (proxyListFile.isFile()) {
+
+            try {
+
+                JSONArray serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile));
+
+                for (int index = 0; index < serverList.length(); index++) {
+
+                    JSONObject config = serverList.getJSONObject(index);
+
+                    try {
+
+                        ProxyInfo info = parseProxyInfo(config.getString("proxy"));
+
+                        info.isInternal = true;
+
+                        if (!config.isNull("desc")) {
+
+                            info.descripton = config.getString("desc");
+
+                        }
+
+                        proxy.add(info);
+
+                        if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+
+                            if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password) ||
+                                    (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink)))) {
+
+                                currentProxy = info;
+
+                            }
+
+                        }
+
+                    } catch (InvalidProxyException ignored) {
+
+                        Log.w("nekox", "invalid config: " + config);
+
+                    }
+
+
+                }
+
+            } catch (JSONException e) {
+            }
+
+        }
+
+        File flyChatListFile = new File(ApplicationLoader.applicationContext.getFilesDir(), "flychat_list.json");
+
+        if (flyChatListFile.isFile()) {
+
+            try {
+
+                JSONArray serverList = new JSONArray(FileUtil.readUtf8String(flyChatListFile));
+
+                for (int index = 0; index < serverList.length(); index++) {
+
+                    JSONObject config = serverList.getJSONObject(index);
+
+                    ProxyInfo info = new ProxyInfo(
+                            config.getString("ip"),
+                            config.optInt("port"),
+                            null,
+                            null,
+                            config.getString("secret"));
+
+                    info.isInternal = true;
+                    info.descripton = "來自閉源釣魚軟件 FlyChat :)";
+
+                    if (StringsKt.isBlank(info.secret)) {
+
+                        info.secret = "eedc4484ea28bac866577326e76460754d6d6963726f736f66742e636f6d";
+
+                    }
+
+                    proxy.add(info);
+
+                    if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+
+                        if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password))) {
+
+                            currentProxy = info;
+
+                        }
+
+                    }
+
+                }
+
+            } catch (JSONException e) {
+
+                FileLog.e("invalid flychat config", e);
+
+            }
+
+        }
+
+        synchronized (proxyList) {
+
+            Iterator<ProxyInfo> iter = proxyList.iterator();
+
+            while (iter.hasNext()) {
+
+                if (iter.next().isInternal) iter.remove();
+
+            }
+
+            proxyList.addAll(0,proxy);
+
+        }
+
+    }
+
+    public static boolean proxyEnabled = false;
+
+    static {
+
+        loadProxyList();
+
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+
+        proxyEnabled = preferences.getBoolean("proxy_enabled", false);
+
+    }
+
+    public static void setProxyEnable(boolean enable) {
+
+        proxyEnabled = enable;
+
+        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+
+        preferences.edit().putBoolean("proxy_enabled", enable).apply();
+
+        if (currentProxy == null) {
+
+            currentProxy = proxyList.get(0);
+
+        }
+
+        if (enable && currentProxy instanceof VmessProxy) {
+
+            VmessProxy vmess = (VmessProxy) currentProxy;
+
+            vmess.loader.start();
+
+        } else if (!enable && currentProxy instanceof VmessProxy) {
+
+            VmessProxy vmess = (VmessProxy) currentProxy;
+
+            vmess.loader.stop();
+
+        }
+
+        ConnectionsManager.setProxySettings(enable, SharedConfig.currentProxy.address, SharedConfig.currentProxy.port, SharedConfig.currentProxy.username, SharedConfig.currentProxy.password, SharedConfig.currentProxy.secret);
+
+    }
+
+    public static void setCurrentProxy(ProxyInfo info) {
+
+        currentProxy = info;
+
+        SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
+
+        editor.putString("proxy_ip", info.address);
+        editor.putString("proxy_pass", info.password);
+        editor.putString("proxy_user", info.username);
+        editor.putInt("proxy_port", info.port);
+        editor.putString("proxy_secret", info.secret);
+
+        if (info instanceof VmessProxy) {
+
+            VmessProxy vmess = (VmessProxy) info;
+
+            editor.putString("vmess_link", vmess.vmessLink);
+
+        }
+
+        editor.apply();
+
+        setProxyEnable(true);
+
+
+    }
+
     public static void loadProxyList() {
         if (proxyListLoaded) {
             return;
@@ -728,52 +977,139 @@ public class SharedConfig {
         String proxyPassword = preferences.getString("proxy_pass", "");
         String proxySecret = preferences.getString("proxy_secret", "");
         int proxyPort = preferences.getInt("proxy_port", 1080);
+        String vmessLink = preferences.getString("vmess_link", "");
 
         proxyListLoaded = true;
         proxyList.clear();
         currentProxy = null;
-        String list = preferences.getString("proxy_list", null);
+
+        String list = preferences.getString("proxy_list_json", null);
+
         if (!TextUtils.isEmpty(list)) {
-            byte[] bytes = Base64.decode(list, Base64.DEFAULT);
-            SerializedData data = new SerializedData(bytes);
-            int count = data.readInt32(false);
-            for (int a = 0; a < count; a++) {
-                ProxyInfo info = new ProxyInfo(
-                        data.readString(false),
-                        data.readInt32(false),
-                        data.readString(false),
-                        data.readString(false),
-                        data.readString(false));
-                proxyList.add(info);
-                if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-                    if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
-                        currentProxy = info;
+
+            try {
+
+                JSONArray proxyArray = new JSONArray(list);
+
+                for (int a = 0; a < proxyArray.length(); a++) {
+
+                    JSONObject proxyObj = proxyArray.getJSONObject(a);
+
+                    ProxyInfo info;
+
+                    if (!proxyObj.isNull("vmess_link")) {
+
+                        info = new VmessProxy(proxyObj.getString("vmess_link"), proxyObj.getInt("port"));
+
+                    } else {
+
+                        info = new ProxyInfo(
+                                proxyObj.getString("server"),
+                                proxyObj.optInt("port", 1080),
+                                proxyObj.getString("user"),
+                                proxyObj.getString("pass"),
+                                proxyObj.getString("secret"));
+
                     }
+
+                    proxyList.add(info);
+
+                    if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
+
+                        if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink))) {
+
+                            currentProxy = info;
+
+                            ((VmessProxy) currentProxy).loader.start();
+
+                        } else if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
+
+                            currentProxy = info;
+
+                        }
+                    }
+
                 }
+            } catch (JSONException e) {
+                Log.e("nekox","load proxy error",e);
             }
-            data.cleanup();
+
         }
+
+        reloadProxyList();
+
         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-            ProxyInfo info = currentProxy = new ProxyInfo(proxyAddress, proxyPort, proxyUsername, proxyPassword, proxySecret);
-            proxyList.add(0, info);
+
+            ProxyInfo internalProxy = proxyList.get(0);
+
+           // if (proxyAddress.equals(internalProxy.address) && proxyPort == internalProxy.port && proxyUsername.equals(internalProxy.username) && proxyPassword.equals(internalProxy.password)) {
+
+                currentProxy = internalProxy;
+
+           // }
+
         }
+
+    }
+
+    public static ProxyInfo parseProxyInfo(String url) throws InvalidProxyException {
+
+        if (url.startsWith(V2RayConfig.VMESS_PROTOCOL) || url.startsWith("ss://")) {
+
+            return new VmessProxy(url);
+
+        }
+
+        if (url.startsWith("tg:proxy") ||
+                url.startsWith("tg://proxy") ||
+                url.startsWith("tg:socks") ||
+                url.startsWith("tg://socks") ||
+                url.startsWith("https://t.me/proxy") ||
+                url.startsWith("https://t.me/socks")) {
+            url = url
+                    .replace("tg:proxy", "tg://telegram.org")
+                    .replace("tg://proxy", "tg://telegram.org")
+                    .replace("tg://socks", "tg://telegram.org")
+                    .replace("tg:socks", "tg://telegram.org");
+            Uri data = Uri.parse(url);
+            return new ProxyInfo(data.getQueryParameter("server"),
+                    Utilities.parseInt(data.getQueryParameter("port")),
+                    data.getQueryParameter("user"),
+                    data.getQueryParameter("pass"),
+                    data.getQueryParameter("secret"));
+        }
+
+        throw new InvalidProxyException();
+
+    }
+
+    public static class InvalidProxyException extends Exception {
     }
 
     public static void saveProxyList() {
-        SerializedData serializedData = new SerializedData();
-        int count = proxyList.size();
-        serializedData.writeInt32(count);
-        for (int a = 0; a < count; a++) {
+        JSONArray proxyArray = new JSONArray();
+        for (int a = 0; a < proxyList.size(); a++) {
             ProxyInfo info = proxyList.get(a);
-            serializedData.writeString(info.address != null ? info.address : "");
-            serializedData.writeInt32(info.port);
-            serializedData.writeString(info.username != null ? info.username : "");
-            serializedData.writeString(info.password != null ? info.password : "");
-            serializedData.writeString(info.secret != null ? info.secret : "");
+            if (info.isInternal) continue;
+            JSONObject proxyObJ = new JSONObject();
+            try {
+                if (info instanceof VmessProxy) {
+                    proxyObJ.put("port", info.port);
+                    proxyObJ.put("vmess_link", ((VmessProxy) info).vmessLink);
+                } else {
+                    proxyObJ.put("server", info.address != null ? info.address : "");
+                    proxyObJ.put("port", info.port);
+                    proxyObJ.put("user", info.username != null ? info.username : "");
+                    proxyObJ.put("pass", info.password != null ? info.password : "");
+                    proxyObJ.put("secret", info.secret != null ? info.secret : "");
+                }
+            } catch (JSONException e) {
+                FileLog.e(e);
+            }
+            proxyArray.put(proxyObJ);
         }
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
-        preferences.edit().putString("proxy_list", Base64.encodeToString(serializedData.toByteArray(), Base64.NO_WRAP)).commit();
-        serializedData.cleanup();
+        preferences.edit().putString("proxy_list_json", proxyArray.toString()).apply();
     }
 
     public static ProxyInfo addProxy(ProxyInfo proxyInfo) {
@@ -800,12 +1136,13 @@ public class SharedConfig {
             editor.putString("proxy_pass", "");
             editor.putString("proxy_user", "");
             editor.putString("proxy_secret", "");
+            editor.remove("vmess_link");
             editor.putInt("proxy_port", 1080);
             editor.putBoolean("proxy_enabled", false);
             editor.putBoolean("proxy_enabled_calls", false);
             editor.commit();
             if (enabled) {
-                ConnectionsManager.setProxySettings(false, "", 0, "", "", "");
+                setProxyEnable(false);
             }
         }
         proxyList.remove(proxyInfo);
@@ -815,7 +1152,7 @@ public class SharedConfig {
     public static void checkSaveToGalleryFiles() {
         try {
             File telegramPath;
-            if (NekoConfig.saveCacheToPrivateDirectory) {
+            if (NekoConfig.saveCacheToSdcard) {
                 telegramPath = new File(ApplicationLoader.applicationContext.getFilesDir(), "Telegram");
             } else {
                 telegramPath = new File(Environment.getExternalStorageDirectory(), "Telegram");

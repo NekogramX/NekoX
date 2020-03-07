@@ -50,8 +50,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
-import com.microsoft.appcenter.AppCenter;
-import com.microsoft.appcenter.analytics.Analytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
@@ -119,6 +118,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import tw.nekomimi.nekogram.NekoSettingsActivity;
+import tw.nekomimi.nekogram.NekoXConfig;
+import tw.nekomimi.nekogram.NekoXSettingActivity;
 
 public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate, NotificationCenter.NotificationCenterDelegate, DialogsActivity.DialogsActivityDelegate {
 
@@ -232,13 +233,14 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
 
     private static final int PLAY_SERVICES_REQUEST_CHECK_SETTINGS = 140;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ApplicationLoader.postInitApplication();
-        AppCenter.start(getApplication(), "033a70ca-ea8d-4c2f-8c2c-b37f1b47f766", Analytics.class);
         AndroidUtilities.checkDisplaySize(this, getResources().getConfiguration());
         currentAccount = UserConfig.selectedAccount;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         if (!UserConfig.getInstance(currentAccount).isClientActivated()) {
             Intent intent = getIntent();
             boolean isProxy = false;
@@ -1601,6 +1603,8 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                                                 open_settings = 2;
                                             } else if (url.contains("devices")) {
                                                 open_settings = 3;
+                                            } else if (url.contains("nekox")) {
+                                                open_settings = 5;
                                             } else if (url.contains("neko")) {
                                                 open_settings = 4;
                                             }
@@ -1806,6 +1810,12 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                         fragment = new SessionsActivity(0);
                     } else if (open_settings == 4) {
                         fragment = new NekoSettingsActivity();
+                    } else if (open_settings == 5) {
+                        if (NekoXConfig.developerMode) {
+                            fragment = new NekoXSettingActivity();
+                        } else {
+                            fragment = new NekoSettingsActivity();
+                        }
                     } else {
                         fragment = null;
                     }
@@ -2541,12 +2551,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                         }
                         localeDialog = null;
                     } else if (visibleDialog == proxyErrorDialog) {
-                        SharedPreferences preferences = MessagesController.getGlobalMainSettings();
-                        SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
-                        editor.putBoolean("proxy_enabled", false);
-                        editor.putBoolean("proxy_enabled_calls", false);
-                        editor.commit();
-                        ConnectionsManager.setProxySettings(false, "", 1080, "", "", "");
+                        SharedConfig.setProxyEnable(false);
                         NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
                         proxyErrorDialog = null;
                     }
@@ -2876,7 +2881,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             ApplicationLoader.mainInterfacePausedStageQueueTime = 0;
         });
         onPasscodePause();
-        actionBarLayout.onPause();
+        if (actionBarLayout != null) {
+            actionBarLayout.onPause();
+        }
         if (AndroidUtilities.isTablet()) {
             rightActionBarLayout.onPause();
             layersActionBarLayout.onPause();
@@ -3732,7 +3739,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
 
     @Override
     public void onBackPressed() {
-        if (passcodeView.getVisibility() == View.VISIBLE) {
+        if (passcodeView != null && passcodeView.getVisibility() == View.VISIBLE) {
             finish();
             return;
         }
