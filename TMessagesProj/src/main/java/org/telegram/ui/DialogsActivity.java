@@ -217,7 +217,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     private AlertDialog permissionDialog;
     private boolean askAboutContacts = true;
 
-    private boolean proxyItemVisisble;
+    private boolean proxyItemVisisble = true;
     private boolean closeSearchFieldOnHide;
     private long searchDialogId;
     private TLObject searchObject;
@@ -3336,6 +3336,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (proxyDrawable == null) {
             return;
         }
+        /*
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
         String proxyAddress = preferences.getString("proxy_ip", "");
         boolean proxyEnabled;
@@ -3343,12 +3344,16 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             if (!actionBar.isSearchFieldVisible()) {
                 proxyItem.setVisibility(View.VISIBLE);
             }
-            proxyDrawable.setConnected(proxyEnabled, currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating, animated);
-            proxyItemVisisble = true;
+
+         */
+            proxyDrawable.setConnected(true, currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating, animated);
+           /* proxyItemVisisble = true;
         } else {
-            proxyItem.setVisibility(View.GONE);
+           // proxyItem.setVisibility(View.GONE);
             proxyItemVisisble = false;
         }
+
+            */
     }
 
     private void updateSelectedCount() {
@@ -3493,6 +3498,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             case FilterPopup.DialogType.Users:
                 title = LocaleController.getString("Users", R.string.Users);
                 break;
+            case FilterPopup.DialogType.Contacts:
+                title = LocaleController.getString("Contacts", R.string.Contacts);
+                break;
             case FilterPopup.DialogType.Groups:
                 title = LocaleController.getString("Groups", R.string.Groups);
                 break;
@@ -3507,6 +3515,12 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 break;
             case FilterPopup.DialogType.Unmuted:
                 title = LocaleController.getString("NotificationsUnmuted", R.string.NotificationsUnmuted);
+                break;
+            case FilterPopup.DialogType.Unread:
+                title = LocaleController.getString("NotificationsUnread", R.string.NotificationsUnread);
+                break;
+            case FilterPopup.DialogType.UnmutedAndUnread:
+                title = LocaleController.getString("NotificationsUnmutedAndUnread", R.string.NotificationsUnmutedAndUnread);
                 break;
             default:
                 if (folderId != 0) {

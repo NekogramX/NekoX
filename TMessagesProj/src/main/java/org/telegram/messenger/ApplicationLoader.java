@@ -38,6 +38,8 @@ import org.telegram.ui.Components.ForegroundDetector;
 import java.io.File;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.VmessLoader;
+import tw.nekomimi.nekogram.utils.ZipUtil;
 
 public class ApplicationLoader extends Application {
 
@@ -73,7 +75,7 @@ public class ApplicationLoader extends Application {
         } catch (Exception e) {
             FileLog.e(e);
         }
-        return new File("/data/data/org.telegram.messenger/files");
+        return new File("/data/data/moe.wataru.nekogram/files");
     }
 
     public static void postInitApplication() {
@@ -82,6 +84,69 @@ public class ApplicationLoader extends Application {
         }
 
         applicationInited = true;
+
+        if (!new File(applicationContext.getFilesDir(), "unoffical_base_classic_zh_cn.xml").isFile()) {
+
+            try {
+
+                ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir());
+
+            } catch (Exception e) {
+
+                FileLog.e("load languages error", e);
+
+            }
+
+        }
+
+        SharedPreferences preferences = MessagesController.getGlobalMainSettings();
+
+        SharedConfig.loadProxyList();
+
+        if (!preferences.contains("proxy_enabled")) {
+
+            SharedConfig.currentProxy = SharedConfig.proxyList.get(0);
+
+            SharedPreferences.Editor editor = preferences.edit();
+
+            editor.putString("proxy_ip", SharedConfig.currentProxy.address);
+            editor.putString("proxy_pass", SharedConfig.currentProxy.password);
+            editor.putString("proxy_user", SharedConfig.currentProxy.username);
+            editor.putInt("proxy_port", SharedConfig.currentProxy.port);
+            editor.putString("proxy_secret", SharedConfig.currentProxy.secret);
+
+            SharedConfig.setProxyEnable(true);
+
+        }
+
+        new Thread(() -> {
+
+            VmessLoader loader = new VmessLoader();
+
+            while (true) {
+
+                try {
+
+                    loader.initPublic(11210);
+
+                    loader.start();
+
+                    return;
+
+                } catch (Exception e) {
+
+                    FileLog.d("load v2ray failed: " + e.getMessage());
+
+                    try {
+                        Thread.sleep(10000L);
+                    } catch (InterruptedException ignored) {
+                    }
+
+                }
+
+            }
+
+        }).start();
 
         try {
             LocaleController.getInstance();
@@ -192,6 +257,9 @@ public class ApplicationLoader extends Application {
     }
 
     public static void startPushService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return; // USE NOTIF LISTENER
+        }
         SharedPreferences preferences = MessagesController.getGlobalNotificationsSettings();
         boolean enabled;
         if (preferences.contains("pushService")) {
@@ -213,7 +281,7 @@ public class ApplicationLoader extends Application {
             applicationContext.stopService(new Intent(applicationContext, NotificationsService.class));
 
             PendingIntent pintent = PendingIntent.getService(applicationContext, 0, new Intent(applicationContext, NotificationsService.class), 0);
-            AlarmManager alarm = (AlarmManager)applicationContext.getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarm = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
             alarm.cancel(pintent);
         }
     }

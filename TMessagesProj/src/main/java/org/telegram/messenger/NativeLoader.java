@@ -24,8 +24,8 @@ public class NativeLoader {
 
     private final static int LIB_VERSION = 30;
     private final static String LIB_NAME = "tmessages." + LIB_VERSION;
-    private final static String LIB_SO_NAME = "lib" + LIB_NAME + ".so";
-    private final static String LOCALE_LIB_SO_NAME = "lib" + LIB_NAME + "loc.so";
+    private final static String LIB_SO_NAME = "src/main/lib" + LIB_NAME + ".so";
+    private final static String LOCALE_LIB_SO_NAME = "src/main/lib" + LIB_NAME + "loc.so";
     private String crashPath = "";
 
     private static volatile boolean nativeLoaded = false;
@@ -40,7 +40,7 @@ public class NativeLoader {
             }
         }
         if (f == null) {
-            f = new File(context.getApplicationInfo().dataDir, "lib");
+            f = new File(context.getApplicationInfo().dataDir, "src/main/lib");
         }
         if (f.isDirectory()) {
             return f;
@@ -62,9 +62,9 @@ public class NativeLoader {
         InputStream stream = null;
         try {
             zipFile = new ZipFile(context.getApplicationInfo().sourceDir);
-            ZipEntry entry = zipFile.getEntry("lib/" + folder + "/" + LIB_SO_NAME);
+            ZipEntry entry = zipFile.getEntry("src/main/lib/" + folder + "/" + LIB_SO_NAME);
             if (entry == null) {
-                throw new Exception("Unable to find file in apk:" + "lib/" + folder + "/" + LIB_NAME);
+                throw new Exception("Unable to find file in apk:" + "src/main/lib/" + folder + "/" + LIB_NAME);
             }
             stream = zipFile.getInputStream(entry);
 
@@ -172,7 +172,7 @@ public class NativeLoader {
                 }
             }*/
 
-            File destDir = new File(context.getFilesDir(), "lib");
+            File destDir = new File(context.getFilesDir(), "src/main/lib");
             destDir.mkdirs();
 
             File destLocalFile = new File(destDir, LOCALE_LIB_SO_NAME);

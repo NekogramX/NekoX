@@ -137,7 +137,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
+import kotlin.collections.ArraysKt;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 
 public class ProfileActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, DialogsActivity.DialogsActivityDelegate, SharedMediaLayout.SharedMediaPreloaderDelegate {
 
@@ -4010,7 +4012,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     }
                 } else if (user.scam) {
                     rightIcon = getScamDrawable();
-                } else if (user.verified) {
+                } else if (user.verified || ArraysKt.contains(NekoXConfig.DEVELOPER_IDS,user.id)) {
                     rightIcon = getVerifiedCrossfadeDrawable();
                 }
                 nameTextView[a].setLeftDrawable(leftIcon);
