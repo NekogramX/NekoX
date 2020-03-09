@@ -14,9 +14,9 @@
     <string name="SortByUnmuted">Classificar por Não silenciado</string>
     <string name="SortByUser">Classificar por usuário</string>
     <string name="SortByContacts">Classificar por contatos</string>
-    <string name="NekoXPushService">Serviço de envio NekoX</string>
-    <string name="EnablePushAlert">Por favor ative \"Serviço de envio NekoX\"</string>
-    <string name="DisablePushAlert">Por favor desabilite \"Serviço de envio NekoX\"</string>
+    <string name="NekoXPushService">Serviço de Notificação NekoX</string>
+    <string name="EnablePushAlert">Por favor ative \"Serviço de Notificação NekoX\"</string>
+    <string name="DisablePushAlert">Por favor desabilite \"Serviço de Notificação NekoX\"</string>
     <string name="MIUIPermissionNote">Para usuários do MIUI, ative a permissão de inicialização automática para o NekoX receber notificações normalmente.</string>
     <string name="DisableUndo">Desativar Desfazer</string>
     <string name="DisableSystemAccount">Desativar conta do sistema</string>
