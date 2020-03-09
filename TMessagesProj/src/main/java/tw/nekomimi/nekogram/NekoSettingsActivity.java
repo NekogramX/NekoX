@@ -45,6 +45,7 @@ public class NekoSettingsActivity extends BaseFragment {
 
     private int connectionRow;
     private int ipv6Row;
+    private int disableProxyWhenVpnEnabledRow;
     private int connection2Row;
 
     private int dialogsRow;
@@ -64,6 +65,7 @@ public class NekoSettingsActivity extends BaseFragment {
     private int ignoreBlockedRow;
     private int hideProxySponsorChannelRow;
     private int saveCacheToSdcardRow;
+    private int skipOpenLinkConfiirm;
     private int pauseMusicOnRecordRow;
     private int disablePhotoSideActionRow;
     private int hideKeyboardOnChatScrollRow;
@@ -89,7 +91,6 @@ public class NekoSettingsActivity extends BaseFragment {
     private int privacyRow;
     private int disableSystemAccountRow;
     private int privacy2Row;
-
 
     private int experimentRow;
     private int smoothKeyboardRow;
@@ -156,6 +157,11 @@ public class NekoSettingsActivity extends BaseFragment {
                         ConnectionsManager.native_setUseIpv6(a, NekoConfig.useIPv6);
                     }
                 }
+            } else if (position == disableProxyWhenVpnEnabledRow) {
+                NekoXConfig.toggleDisableProxyWhenVpnEnabled();
+                if (view instanceof TextCheckCell) {
+                    ((TextCheckCell) view).setChecked(NekoXConfig.disableProxyWhenVpnEnabled);
+                }
             } else if (position == hidePhoneRow) {
                 NekoConfig.toggleHidePhone();
                 if (view instanceof TextCheckCell) {
@@ -206,6 +212,11 @@ public class NekoSettingsActivity extends BaseFragment {
                 NekoConfig.toggleSaveCacheToSdcard();
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(NekoConfig.saveCacheToSdcard);
+                }
+            } else if (position == skipOpenLinkConfiirm) {
+                NekoXConfig.toggleSkipOpenLinkConfirm();
+                if (view instanceof TextCheckCell) {
+                    ((TextCheckCell) view).setChecked(NekoXConfig.skipOpenLinkConfirm);
                 }
             } else if (position == useSystemEmojiRow) {
                 SharedConfig.useSystemEmoji = !SharedConfig.useSystemEmoji;
@@ -531,6 +542,7 @@ public class NekoSettingsActivity extends BaseFragment {
                 showFilterMenuAlert();
             } else if (position == disableSystemAccountRow) {
                 NekoXConfig.toggleDisableSystemAccount();
+                getContactsController().deleteUnknownAppAccounts();
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(NekoXConfig.disableSystemAccount);
                 }
@@ -555,6 +567,7 @@ public class NekoSettingsActivity extends BaseFragment {
 
         connectionRow = rowCount++;
         ipv6Row = rowCount++;
+        disableProxyWhenVpnEnabledRow = rowCount ++;
         connection2Row = rowCount++;
 
         dialogsRow = rowCount++;
@@ -574,6 +587,7 @@ public class NekoSettingsActivity extends BaseFragment {
         ignoreBlockedRow = rowCount++;
         hideProxySponsorChannelRow = rowCount++;
         saveCacheToSdcardRow = rowCount++;
+        skipOpenLinkConfiirm = rowCount ++;
         pauseMusicOnRecordRow = rowCount++;
         disablePhotoSideActionRow = rowCount++;
         hideKeyboardOnChatScrollRow = rowCount++;
@@ -1239,8 +1253,11 @@ public class NekoSettingsActivity extends BaseFragment {
                 case 3: {
                     TextCheckCell textCell = (TextCheckCell) holder.itemView;
                     textCell.setEnabled(true, null);
+
                     if (position == ipv6Row) {
                         textCell.setTextAndCheck(LocaleController.getString("IPv6", R.string.IPv6), NekoConfig.useIPv6, false);
+                    } else if (position == disableProxyWhenVpnEnabledRow) {
+                        textCell.setTextAndCheck(LocaleController.getString("DisableProxyWhenVpnEnabled", R.string.DisableProxyWhenVpnEnabled), NekoXConfig.disableProxyWhenVpnEnabled, true);
                     } else if (position == hidePhoneRow) {
                         textCell.setTextAndCheck(LocaleController.getString("HidePhone", R.string.HidePhone), NekoConfig.hidePhone, true);
                     } else if (position == disableUndoRow) {
@@ -1255,6 +1272,8 @@ public class NekoSettingsActivity extends BaseFragment {
                         textCell.setTextAndCheck(LocaleController.getString("HideProxySponsorChannel", R.string.HideProxySponsorChannel), NekoConfig.hideProxySponsorChannel, true);
                     } else if (position == saveCacheToSdcardRow) {
                         textCell.setTextAndCheck(LocaleController.getString("SaveCacheToSdcard", R.string.SaveCacheToSdcard), NekoConfig.saveCacheToSdcard, true);
+                    } else if (position == skipOpenLinkConfiirm) {
+                        textCell.setTextAndCheck(LocaleController.getString("SkipOpenLinkComfirm", R.string.SkipOpenLinkComfirm), NekoXConfig.skipOpenLinkConfirm, true);
                     } else if (position == useSystemEmojiRow) {
                         textCell.setTextAndCheck(LocaleController.getString("EmojiUseDefault", R.string.EmojiUseDefault), SharedConfig.useSystemEmoji, true);
                     } else if (position == typefaceRow) {
@@ -1326,16 +1345,16 @@ public class NekoSettingsActivity extends BaseFragment {
         public boolean isEnabled(RecyclerView.ViewHolder holder) {
             int position = holder.getAdapterPosition();
             return position == hidePhoneRow || position == disableUndoRow || position == inappCameraRow || position == disableChatActionRow || position == ignoreBlockedRow ||
-                    position == useSystemEmojiRow || position == ipv6Row || position == typefaceRow || position == nameOrderRow ||
+                    position == useSystemEmojiRow || position == ipv6Row || position == disableProxyWhenVpnEnabledRow || position == typefaceRow || position == nameOrderRow ||
                     position == forceTabletRow || position == mapPreviewRow || position == newYearRow ||
                     position == actionBarDecorationRow || position == eventTypeRow || position == transparentStatusBarRow ||
-                    position == hideProxySponsorChannelRow || position == saveCacheToSdcardRow ||
+                    position == hideProxySponsorChannelRow || position == saveCacheToSdcardRow || position == skipOpenLinkConfiirm ||
                     position == disableFilteringRow || position == stickerSizeRow ||
                     position == unlimitedFavedStickersRow || position == messageMenuRow || position == deleteAccountRow ||
                     position == translationProviderRow || position == smoothKeyboardRow || position == pauseMusicOnRecordRow ||
                     position == disablePhotoSideActionRow || position == unlimitedPinnedDialogsRow || position == openArchiveOnPullRow ||
                     position == openFilterByActionBarRow || position == openFilterByFabRow || position == hideKeyboardOnChatScrollRow ||
-                    position == sortMenuRow || position == filterMenuRow;
+                    position == sortMenuRow || position == filterMenuRow || position == disableSystemAccountRow;
         }
 
         @Override
@@ -1383,11 +1402,11 @@ public class NekoSettingsActivity extends BaseFragment {
                     position == filterMenuRow || position == sortMenuRow ||
                     position == deleteAccountRow || position == translationProviderRow || position == eventTypeRow || position == actionBarDecorationRow) {
                 return 2;
-            } else if (position == ipv6Row || position == hidePhoneRow || position == disableUndoRow || position == inappCameraRow || position == disableChatActionRow ||
+            } else if (position == ipv6Row || position == disableProxyWhenVpnEnabledRow || position == hidePhoneRow || position == disableUndoRow || position == inappCameraRow || position == disableChatActionRow ||
                     position == transparentStatusBarRow || position == hideProxySponsorChannelRow ||
                     position == ignoreBlockedRow || position == useSystemEmojiRow || position == typefaceRow ||
                     position == forceTabletRow || position == newYearRow ||
-                    position == saveCacheToSdcardRow || position == unlimitedFavedStickersRow ||
+                    position == saveCacheToSdcardRow || position == unlimitedFavedStickersRow || position == skipOpenLinkConfiirm ||
                     position == disableFilteringRow || position == smoothKeyboardRow || position == pauseMusicOnRecordRow ||
                     position == disablePhotoSideActionRow || position == unlimitedPinnedDialogsRow || position == openArchiveOnPullRow ||
                     position == openFilterByActionBarRow || position == openFilterByFabRow || position == hideKeyboardOnChatScrollRow ||

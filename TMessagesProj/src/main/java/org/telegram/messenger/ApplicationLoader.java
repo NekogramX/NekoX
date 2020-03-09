@@ -38,7 +38,9 @@ import org.telegram.ui.Components.ForegroundDetector;
 import java.io.File;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.VmessLoader;
+import tw.nekomimi.nekogram.utils.ProxyUtil;
 import tw.nekomimi.nekogram.utils.ZipUtil;
 
 public class ApplicationLoader extends Application {
@@ -99,54 +101,21 @@ public class ApplicationLoader extends Application {
 
         }
 
-        SharedPreferences preferences = MessagesController.getGlobalMainSettings();
-
         SharedConfig.loadProxyList();
 
-        if (!preferences.contains("proxy_enabled")) {
+        if (ProxyUtil.isVPNEnabled()) {
 
-            SharedConfig.currentProxy = SharedConfig.proxyList.get(0);
+            if (NekoXConfig.disableProxyWhenVpnEnabled) {
 
-            SharedPreferences.Editor editor = preferences.edit();
-
-            editor.putString("proxy_ip", SharedConfig.currentProxy.address);
-            editor.putString("proxy_pass", SharedConfig.currentProxy.password);
-            editor.putString("proxy_user", SharedConfig.currentProxy.username);
-            editor.putInt("proxy_port", SharedConfig.currentProxy.port);
-            editor.putString("proxy_secret", SharedConfig.currentProxy.secret);
-
-            SharedConfig.setProxyEnable(true);
-
-        }
-
-        new Thread(() -> {
-
-            VmessLoader loader = new VmessLoader();
-
-            while (true) {
-
-                try {
-
-                    loader.initPublic(11210);
-
-                    loader.start();
-
-                    return;
-
-                } catch (Exception e) {
-
-                    FileLog.d("load v2ray failed: " + e.getMessage());
-
-                    try {
-                        Thread.sleep(10000L);
-                    } catch (InterruptedException ignored) {
-                    }
-
-                }
+                SharedConfig.setProxyEnable(false);
 
             }
 
-        }).start();
+        } else if (!MessagesController.getGlobalMainSettings().contains("proxy_enabled")) {
+
+            SharedConfig.setCurrentProxy(SharedConfig.proxyList.get(0));
+
+        }
 
         try {
             LocaleController.getInstance();

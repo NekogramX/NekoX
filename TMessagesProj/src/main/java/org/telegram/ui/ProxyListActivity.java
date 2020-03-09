@@ -348,13 +348,13 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                     try {
 
-                        serverList = new JSONObject(HttpUtil.get(serverUrl + "getmtp")).optJSONArray("data");
+                        serverList = new JSONObject(HttpUtil.get(serverUrl + "getmtp","FlyChat")).optJSONArray("data");
 
                         if (serverList != null) break;
 
                     } catch (Exception e) {
 
-                        Log.w("nekox", "update plychat list failed at " + serverUrl, e);
+                        Log.d("nekox", "update plychat list failed at " + serverUrl, e);
 
                     }
 
@@ -573,6 +573,9 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 continue;
             }
             proxyInfo.checking = true;
+            if (proxyInfo instanceof SharedConfig.VmessProxy) {
+                ((SharedConfig.VmessProxy)proxyInfo).loader.start();
+            }
             proxyInfo.proxyCheckPingId = ConnectionsManager.getInstance(currentAccount).checkProxy(proxyInfo.address, proxyInfo.port, proxyInfo.username, proxyInfo.password, proxyInfo.secret, time -> AndroidUtilities.runOnUIThread(() -> {
                 proxyInfo.availableCheckTime = SystemClock.elapsedRealtime();
                 proxyInfo.checking = false;
@@ -584,6 +587,9 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     proxyInfo.available = true;
                 }
                 NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxyCheckDone, proxyInfo);
+                if (proxyInfo instanceof SharedConfig.VmessProxy) {
+                    ((SharedConfig.VmessProxy)proxyInfo).loader.stop();
+                }
             }));
         }
     }

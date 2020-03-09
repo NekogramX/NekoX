@@ -4,11 +4,31 @@ import org.json.JSONArray
 import org.telegram.messenger.ApplicationLoader
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.net.NetworkInterface
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 object ProxyUtil {
 
     @JvmStatic
     val cacheFile = File(ApplicationLoader.applicationContext.filesDir.parent, "nekox/proxy_list.json")
+
+    @JvmStatic
+    fun isVPNEnabled(): Boolean {
+
+        val networkList: MutableList<String> = ArrayList()
+
+        runCatching {
+            Collections.list(NetworkInterface.getNetworkInterfaces()).forEach {
+
+                if (it.isUp()) networkList.add(it.name)
+
+            }
+        }
+
+        return networkList.contains("tun0")
+    }
 
     @JvmStatic
     fun reloadProxyList(): Boolean {

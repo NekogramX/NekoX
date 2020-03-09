@@ -15584,7 +15584,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     public void showOpenUrlAlert(final String url, boolean ask) {
-        if (Browser.isInternalUrl(url, null) || !ask) {
+        if (Browser.isInternalUrl(url, null) || !ask || NekoXConfig.skipOpenLinkConfirm) {
             Browser.openUrl(getParentActivity(), url, inlineReturn == 0);
         } else {
             if (getParentActivity() == null) {

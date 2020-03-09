@@ -22,6 +22,7 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.v2ray.ang.V2RayConfig;
+import com.v2ray.ang.dto.AngConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,10 +37,13 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import kotlin.text.StringsKt;
+import tw.nekomimi.nekogram.ProxyManager;
 import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.VmessLoader;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
+
+import static com.v2ray.ang.V2RayConfig.SS_PROTOCOL;
 
 public class SharedConfig {
 
@@ -165,27 +169,27 @@ public class SharedConfig {
 
     public static class VmessProxy extends ProxyInfo {
 
-        public String vmessLink;
+        public AngConfig.VmessBean bean;
         public VmessLoader loader;
 
         public VmessProxy(String vmessLink) {
 
-            this(vmessLink, new Random(System.currentTimeMillis()).nextInt(55536) + 10000);
+            this(VmessLoader.parseVmessLink(vmessLink));
 
         }
 
-        public VmessProxy(String vmessLink, int port) {
+        public VmessProxy(AngConfig.VmessBean bean) {
 
-            this.vmessLink = vmessLink;
+            this.bean = bean;
 
             address = "127.0.0.1";
             username = "";
             secret = "";
-            this.port = port;
+            port = ProxyManager.getPorxyForBean(bean);
             address = "";
 
             loader = new VmessLoader();
-            loader.initConfig(loader.parseVmessLink(vmessLink, port), port);
+            loader.initConfig(bean, port);
 
         }
 
@@ -223,7 +227,7 @@ public class SharedConfig {
                 editor.putBoolean("sortFilesByName", sortFilesByName);
                 editor.putInt("textSelectionHintShows", textSelectionHintShows);
                 editor.putInt("scheduledOrNoSoundHintShows", scheduledOrNoSoundHintShows);
-                editor.commit();
+                editor.apply();
             } catch (Exception e) {
                 FileLog.e(e);
             }
@@ -443,7 +447,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("suggestStickers", suggestStickers);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setSearchMessagesAsListUsed(boolean searchMessagesAsListUsed) {
@@ -451,42 +455,42 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("searchMessagesAsListUsed", searchMessagesAsListUsed);
-        editor.commit();
+        editor.apply();
     }
 
     public static void increaseTextSelectionHintShowed() {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("textSelectionHintShows", ++textSelectionHintShows);
-        editor.commit();
+        editor.apply();
     }
 
     public static void removeTextSelectionHint() {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("textSelectionHintShows", 3);
-        editor.commit();
+        editor.apply();
     }
 
     public static void increaseScheduledOrNoSuoundHintShowed() {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("scheduledOrNoSoundHintShows", ++scheduledOrNoSoundHintShows);
-        editor.commit();
+        editor.apply();
     }
 
     public static void removeScheduledOrNoSuoundHint() {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("scheduledOrNoSoundHintShows", 3);
-        editor.commit();
+        editor.apply();
     }
 
     public static void increaseSearchAsListHintShows() {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("searchMessagesAsListHintShows", ++searchMessagesAsListHintShows);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setKeepMedia(int value) {
@@ -494,7 +498,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("keep_media", keepMedia);
-        editor.commit();
+        editor.apply();
     }
 
     public static void checkKeepMedia() {
@@ -539,7 +543,7 @@ public class SharedConfig {
             SharedPreferences preferences = MessagesController.getGlobalMainSettings();
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("lastKeepMediaCheckTime", lastKeepMediaCheckTime);
-            editor.commit();
+            editor.apply();
         });
     }
 
@@ -548,7 +552,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("loopStickers", loopStickers);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleBigEmoji() {
@@ -556,7 +560,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("allowBigEmoji", allowBigEmoji);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleShuffleMusic(int type) {
@@ -570,7 +574,7 @@ public class SharedConfig {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("shuffleMusic", shuffleMusic);
         editor.putBoolean("playOrderReversed", playOrderReversed);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleRepeatMode() {
@@ -581,7 +585,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("repeatMode", repeatMode);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleSaveToGallery() {
@@ -589,7 +593,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("save_gallery", saveToGallery);
-        editor.commit();
+        editor.apply();
         checkSaveToGalleryFiles();
     }
 
@@ -598,7 +602,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("autoplay_gif", autoplayGifs);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setUseThreeLinesLayout(boolean value) {
@@ -606,7 +610,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("useThreeLinesLayout", useThreeLinesLayout);
-        editor.commit();
+        editor.apply();
         NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.dialogsNeedReload, true);
     }
 
@@ -615,7 +619,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("archiveHidden", archiveHidden);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleAutoplayVideo() {
@@ -623,7 +627,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("autoplay_video", autoplayVideo);
-        editor.commit();
+        editor.apply();
     }
 
     public static boolean isSecretMapPreviewSet() {
@@ -636,7 +640,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("mapPreviewType", mapPreviewType);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setNoSoundHintShowed(boolean value) {
@@ -647,7 +651,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("noSoundHintShowed", noSoundHintShowed);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toogleRaiseToSpeak() {
@@ -655,7 +659,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("raise_to_speak", raiseToSpeak);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleCustomTabs() {
@@ -663,7 +667,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("custom_tabs", customTabs);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleDirectShare() {
@@ -671,7 +675,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("direct_share", directShare);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleStreamMedia() {
@@ -679,7 +683,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("streamMedia", streamMedia);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleSortContactsByName() {
@@ -687,7 +691,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("sortContactsByName", sortContactsByName);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleSortFilesByName() {
@@ -695,7 +699,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("sortFilesByName", sortFilesByName);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleStreamAllVideo() {
@@ -703,7 +707,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("streamAllVideo", streamAllVideo);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleStreamMkv() {
@@ -711,7 +715,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("streamMkv", streamMkv);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleSaveStreamMedia() {
@@ -719,7 +723,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("saveStreamMedia", saveStreamMedia);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleSmoothKeyboard() {
@@ -727,7 +731,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("smoothKeyboard", smoothKeyboard);
-        editor.commit();
+        editor.apply();
     }
 
     public static void togglePauseMusicOnRecord() {
@@ -735,7 +739,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("pauseMusicOnRecord", pauseMusicOnRecord);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleInappCamera() {
@@ -743,7 +747,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("inappCamera", inappCamera);
-        editor.commit();
+        editor.apply();
     }
 
     public static void toggleRoundCamera16to9() {
@@ -751,7 +755,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("roundCamera16to9", roundCamera16to9);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setDistanceSystemType(int type) {
@@ -759,7 +763,7 @@ public class SharedConfig {
         SharedPreferences preferences = MessagesController.getGlobalMainSettings();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("distanceSystemType", distanceSystemType);
-        editor.commit();
+        editor.apply();
         LocaleController.resetImperialSystemType();
     }
 
@@ -775,7 +779,7 @@ public class SharedConfig {
 
         LinkedList<ProxyInfo> proxy = new LinkedList<>();
 
-        ProxyInfo internalProxy = new ProxyInfo("127.0.0.1", 11210, null, null, null);
+        ProxyInfo internalProxy = new VmessProxy(VmessLoader.getPublic());
         internalProxy.isInternal = true;
         proxy.add(internalProxy);
 
@@ -787,7 +791,7 @@ public class SharedConfig {
 
                 JSONArray serverList = new JSONArray(FileUtil.readUtf8String(proxyListFile));
 
-                for (int index = 0; index < serverList.length(); index++) {
+                for (int index = 0; index < serverList.length() && index < 10; index++) {
 
                     JSONObject config = serverList.getJSONObject(index);
 
@@ -808,7 +812,12 @@ public class SharedConfig {
                         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
                             if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password) ||
-                                    (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink)))) {
+                                    (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).bean.toString())))) {
+
+
+                                if (info instanceof VmessProxy) {
+                                    ((VmessProxy)info).loader.start();
+                                }
 
                                 currentProxy = info;
 
@@ -952,14 +961,6 @@ public class SharedConfig {
         editor.putInt("proxy_port", info.port);
         editor.putString("proxy_secret", info.secret);
 
-        if (info instanceof VmessProxy) {
-
-            VmessProxy vmess = (VmessProxy) info;
-
-            editor.putString("vmess_link", vmess.vmessLink);
-
-        }
-
         editor.apply();
 
         setProxyEnable(true);
@@ -999,7 +1000,7 @@ public class SharedConfig {
 
                     if (!proxyObj.isNull("vmess_link")) {
 
-                        info = new VmessProxy(proxyObj.getString("vmess_link"), proxyObj.getInt("port"));
+                        info = new VmessProxy(proxyObj.getString("vmess_link"));
 
                     } else {
 
@@ -1016,7 +1017,7 @@ public class SharedConfig {
 
                     if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
-                        if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).vmessLink))) {
+                        if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).bean.toString()))) {
 
                             currentProxy = info;
 
@@ -1054,7 +1055,7 @@ public class SharedConfig {
 
     public static ProxyInfo parseProxyInfo(String url) throws InvalidProxyException {
 
-        if (url.startsWith(V2RayConfig.VMESS_PROTOCOL) || url.startsWith("ss://")) {
+        if (url.startsWith(V2RayConfig.VMESS_PROTOCOL) || url.startsWith(SS_PROTOCOL)) {
 
             return new VmessProxy(url);
 
@@ -1095,7 +1096,7 @@ public class SharedConfig {
             try {
                 if (info instanceof VmessProxy) {
                     proxyObJ.put("port", info.port);
-                    proxyObJ.put("vmess_link", ((VmessProxy) info).vmessLink);
+                    proxyObJ.put("vmess_link", ((VmessProxy) info).bean.toString());
                 } else {
                     proxyObJ.put("server", info.address != null ? info.address : "");
                     proxyObJ.put("port", info.port);
@@ -1140,7 +1141,7 @@ public class SharedConfig {
             editor.putInt("proxy_port", 1080);
             editor.putBoolean("proxy_enabled", false);
             editor.putBoolean("proxy_enabled_calls", false);
-            editor.commit();
+            editor.apply();
             if (enabled) {
                 setProxyEnable(false);
             }

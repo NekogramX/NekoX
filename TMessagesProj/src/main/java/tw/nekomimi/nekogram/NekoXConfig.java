@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.telegram.messenger.ApplicationLoader;
-import org.telegram.messenger.FileLog;
-import org.telegram.messenger.MessagesController;
 
 public class NekoXConfig {
 
-    public static int[] DEVELOPER_IDS = {896711046,899300686,339984997};
+    public static int[] DEVELOPER_IDS = {896711046, 1121722278, 899300686, 339984997};
 
     private static SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("nekox_config", Context.MODE_PRIVATE);
 
@@ -42,37 +40,42 @@ public class NekoXConfig {
     public static boolean filterUnmutedAndUnread;
 
     public static boolean disableSystemAccount;
+    public static boolean disableProxyWhenVpnEnabled;
+    public static boolean skipOpenLinkConfirm;
+
 
     static {
 
         disableChatAction = preferences.getBoolean("disable_chat_action", false);
 
-        developerMode = preferences.getBoolean("developer_mode",false);
+        developerMode = preferences.getBoolean("developer_mode", false);
 
         disableFlagSecure = preferences.getBoolean("disable_flag_secure", false);
-        disableScreenshotDetection = preferences.getBoolean("disable_screenshot_detection",false);
+        disableScreenshotDetection = preferences.getBoolean("disable_screenshot_detection", false);
 
-        showTestBackend = preferences.getBoolean("show_test_backend",false);
-        showBotLogin = preferences.getBoolean("show_bot_login",false);
+        showTestBackend = preferences.getBoolean("show_test_backend", false);
+        showBotLogin = preferences.getBoolean("show_bot_login", false);
 
-        sortByUnread = preferences.getBoolean("sort_by_unread",true);
-        sortByUnmuted = preferences.getBoolean("sort_by_unmuted",false);
-        sortByUser = preferences.getBoolean("sort_by_user",false);
-        sortByContacts = preferences.getBoolean("sort_by_contacts",false);
+        sortByUnread = preferences.getBoolean("sort_by_unread", true);
+        sortByUnmuted = preferences.getBoolean("sort_by_unmuted", false);
+        sortByUser = preferences.getBoolean("sort_by_user", false);
+        sortByContacts = preferences.getBoolean("sort_by_contacts", false);
 
-        disableUndo = preferences.getBoolean("disable_undo",true);
+        disableUndo = preferences.getBoolean("disable_undo", true);
 
-        filterUsers = preferences.getBoolean("filter_users",true);
-        filterContacts = preferences.getBoolean("filter_contacts",true);
-        filterGroups = preferences.getBoolean("filter_groups",true);
-        filterChannels = preferences.getBoolean("filter_channels",true);
-        filterBots = preferences.getBoolean("filter_bots",true);
-        filterAdmins = preferences.getBoolean("filter_admins",true);
-        filterUnmuted = preferences.getBoolean("filter_unmuted",true);
-        filterUnread = preferences.getBoolean("filter_unread",true);
-        filterUnmutedAndUnread = preferences.getBoolean("filter_unmuted_and_unread",true);
+        filterUsers = preferences.getBoolean("filter_users", true);
+        filterContacts = preferences.getBoolean("filter_contacts", true);
+        filterGroups = preferences.getBoolean("filter_groups", true);
+        filterChannels = preferences.getBoolean("filter_channels", true);
+        filterBots = preferences.getBoolean("filter_bots", true);
+        filterAdmins = preferences.getBoolean("filter_admins", true);
+        filterUnmuted = preferences.getBoolean("filter_unmuted", true);
+        filterUnread = preferences.getBoolean("filter_unread", true);
+        filterUnmutedAndUnread = preferences.getBoolean("filter_unmuted_and_unread", true);
 
-        disableSystemAccount = preferences.getBoolean("disable_system_account",true);
+        disableSystemAccount = preferences.getBoolean("disable_system_account", false);
+        disableProxyWhenVpnEnabled = preferences.getBoolean("disable_proxy_when_vpn_enabled", false);
+        skipOpenLinkConfirm = preferences.getBoolean("skip_open_link_confirm", false);
 
     }
 
@@ -159,11 +162,13 @@ public class NekoXConfig {
         preferences.edit().putBoolean("filterGroups", filterGroups = !filterGroups).apply();
 
     }
+
     public static void toggleFilterChannels() {
 
         preferences.edit().putBoolean("filter_channels", filterChannels = !filterChannels).apply();
 
     }
+
     public static void toggleFilterBots() {
 
         preferences.edit().putBoolean("filter_bots", filterBots = !filterBots).apply();
@@ -175,6 +180,7 @@ public class NekoXConfig {
         preferences.edit().putBoolean("filter_admins", filterAdmins = !filterAdmins).apply();
 
     }
+
     public static void toggleFilterUnmuted() {
 
         preferences.edit().putBoolean("filter_unmuted", filterUnmuted = !filterUnmuted).apply();
@@ -199,4 +205,16 @@ public class NekoXConfig {
 
     }
 
+    public static void toggleDisableProxyWhenVpnEnabled() {
+
+        preferences.edit().putBoolean("disable_proxy_when_vpn_enabled", disableProxyWhenVpnEnabled = !disableProxyWhenVpnEnabled).apply();
+
+    }
+
+    public static void toggleSkipOpenLinkConfirm() {
+
+        preferences.edit().putBoolean("skip_open_link_confirm", skipOpenLinkConfirm = !skipOpenLinkConfirm).apply();
+
+
+    }
 }

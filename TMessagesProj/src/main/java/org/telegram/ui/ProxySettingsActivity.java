@@ -224,12 +224,11 @@ public class ProxySettingsActivity extends BaseFragment {
                     SharedPreferences.Editor editor = preferences.edit();
                     if (addingNewProxy) {
                         SharedConfig.addProxy(currentProxyInfo);
-                        SharedConfig.currentProxy = currentProxyInfo;
-                        SharedConfig.setProxyEnable(true);
+                        SharedConfig.setCurrentProxy(currentProxyInfo);
                     } else {
                         SharedConfig.setProxyEnable(false);
-                        SharedConfig.saveProxyList();
                     }
+                    SharedConfig.saveProxyList();
                     if (addingNewProxy || SharedConfig.currentProxy == currentProxyInfo) {
                         editor.putString("proxy_ip", currentProxyInfo.address);
                         editor.putString("proxy_pass", currentProxyInfo.password);
@@ -237,8 +236,7 @@ public class ProxySettingsActivity extends BaseFragment {
                         editor.putInt("proxy_port", currentProxyInfo.port);
                         editor.putString("proxy_secret", currentProxyInfo.secret);
                         if (currentProxyInfo instanceof SharedConfig.VmessProxy) {
-                            editor.putString("vmess_link", ((SharedConfig.VmessProxy)currentProxyInfo).vmessLink);
-                            ((SharedConfig.VmessProxy)currentProxyInfo).loader.start();
+                            editor.putString("vmess_link", ((SharedConfig.VmessProxy)currentProxyInfo).bean.toString());
                         }
                         ConnectionsManager.setProxySettings(SharedConfig.proxyEnabled, currentProxyInfo.address, currentProxyInfo.port, currentProxyInfo.username, currentProxyInfo.password, currentProxyInfo.secret);
                     }
