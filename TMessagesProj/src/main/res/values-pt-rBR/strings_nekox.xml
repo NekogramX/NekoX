@@ -21,7 +21,7 @@
     <string name="DisableUndo">Desativar Desfazer</string>
     <string name="DisableSystemAccount">Desativar conta do sistema</string>
     <string name="FilterMenu">Menu de filtro de diálogo</string>
-    <string name="DisableProxyWhenVpnEnabled">Desabilitar proxy quando a VPN estiver ativada</string>
+    <string name="DisableProxyWhenVpnEnabled">Desativar proxy quando a VPN estiver ativada</string>
     <string name="SkipOpenLinkComfirm">Pular link aberto confirmar</string>
     <string name="DeleteAllInChat">Excluir tudo no chat</string>
     <string name="DeleteAllInChatAlert">Aviso! Isto irá **excluir todas as mensagens** deste chat para **todos** os participantes.</string>
