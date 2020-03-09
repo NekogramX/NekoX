@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="NekoXProxy">NekoX Público Proxy</string>
+    <string name="PublicPrefix">[ Público ]</string>
+    <string name="NekoXProxyInfo">Pode levar dezenas de segundos para carregar o proxy interno do NekoX Público :)</string>
+    <string name="FakeScreenshot">Pré-visualizar imagem</string>
+    <string name="SaveCacheToSdcard">Salvar cache em sdcard*</string>
+    <string name="NotificationsUnread">Não lida</string>
+    <string name="NotificationsUnmutedAndUnread">Não silenciado &amp; Não Lido</string>
+</resources>
