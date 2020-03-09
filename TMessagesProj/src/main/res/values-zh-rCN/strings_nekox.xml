@@ -21,6 +21,8 @@
     <string name="DisableUndo">禁用五秒内后悔</string>
     <string name="DisableSystemAccount">禁用系统帐户</string>
     <string name="FilterMenu">分类菜单</string>
+    <string name="DisableProxyWhenVpnEnabled">启用 VPN 时禁用代理</string>
+    <string name="SkipOpenLinkComfirm">跳过打开链接确认</string>
     <string name="DeleteAllInChat">删除群组所有消息</string>
     <string name="DeleteAllInChatAlert">警告！这将**删除此聊天中所有用户**的**所有消息**。</string>
     <string name="UnblockAll">解除所有</string>
