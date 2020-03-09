@@ -1,9 +1,10 @@
 name: NekogramX
 
-on: 
- push:
+on:
+  push:
     branches:
-    - master
+      - master
+      - release
 
 jobs:
   linux:
@@ -29,25 +30,38 @@ jobs:
         run: |
           ./gradlew assembleAfatRelease
           ./gradlew bundleAfatRelease
-      - name: Find artifact file
+      - name: Read whatsnew files
         run: |
-          export OUTPUT="TMessagesProj/build/outputs"
-          echo ::set-env name=APK_FILE::$(find $OUTPUT/apk -name "*.apk")
-          echo ::set-env name=AAB_FILE::$(find $OUTPUT/bundle -name "*.aab")
+            bash bin/generate-channel-release-message.sh
+      - name: Genearte release message
+        run: |
+          bash bin/generate-channel-message.sh
       - name: Upload apk artifact to canary channel
         uses: NekogramX/nekox-upload-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           file: ${{ env.APK_FILE }}
-          caption: "NekoX Build [${{ github.sha }}](https://github.com/NekogramX/NekoX/commit/${{ github.sha }})"
+          caption: ${{ env.GIT_MSG }}
+        if: github.ref == 'refs/heads/master'
+      - name: Upload apk artifact to release channel
+        uses: NekogramX/nekox-upload-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          file: ${{ env.APK_FILE }}
+          caption: ${{ env.RELEASE_MESSAGE }}
+        if: github.ref == 'refs/heads/master'
       - uses: actions/upload-artifact@master
-        name: Upload apk artifact
         with:
           name: NekoX-${{ github.sha }}.apk
           path: ${{ env.APK_FILE }}
-      - uses: actions/upload-artifact@master
-        name: Upload aab artifact
+        if: github.ref == 'refs/heads/master'
+      - uses: r0adkll/upload-google-play@v1
         with:
-          name: NekoX-${{ github.sha }}.aab
-          path: ${{ env.AAB_FILE }}
+          serviceAccountJson: ${{ secrets.GOOGLE_ACCOUNT_SERVICE }}
+          packageName: moe.wataru.nekogram
+          releaseFile: ${{ env.AAB_FILE }}
+          track: production
+          whatsNewDirectory: /whatsnew
+        if: github.ref == 'refs/heads/master'
