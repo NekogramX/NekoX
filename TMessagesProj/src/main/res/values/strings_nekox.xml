@@ -39,6 +39,16 @@
     <string name="UnblockAllWarn">Are you sure you want to unblock **all users and bots**?</string>
     <string name="BlockedListEmply">You haven\'t blocked anyone :)</string>
 
+    <string name="ProxyTypeVmess">Vmess Proxy</string>
+    <string name="VmessUserId">User Id</string>
+    <string name="VmessAlterId">Alter Id</string>
+    <string name="VmessSecurity">Security</string>
+    <string name="VmessNetowrk">Network</string>
+    <string name="VmessHeadType">Head Type</string>
+    <string name="VmessRequestHost">Request Host / QUIC Security</string>
+    <string name="VmessPath">Path / QUIC Key</string>
+    <string name="VmessTls">Use TLS</string>
+
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>
     <string name="DeveloperSettings">Developer Settings</string>
