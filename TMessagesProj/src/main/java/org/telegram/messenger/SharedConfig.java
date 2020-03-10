@@ -922,7 +922,7 @@ public class SharedConfig {
 
         }
 
-        Log.d("nekox","proxy addr " + currentProxy.address + ", port: " +currentProxy.port);
+        Log.d("nekox","proxy addr " + currentProxy.address + ", port: " +currentProxy.port + ", enable: " + enable);
 
         ConnectionsManager.setProxySettings(enable, SharedConfig.currentProxy.address, SharedConfig.currentProxy.port, SharedConfig.currentProxy.username, SharedConfig.currentProxy.password, SharedConfig.currentProxy.secret);
 
