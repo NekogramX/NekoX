@@ -11,7 +11,7 @@ object ProxyManager {
     val pref by lazy { ApplicationLoader.applicationContext.getSharedPreferences("port_cfg", Context.MODE_PRIVATE) }
 
     @JvmStatic
-    fun getPorxyForBean(bean: AngConfig.VmessBean): Int {
+    fun getPortForBean(bean: AngConfig.VmessBean): Int {
 
         val hash = (bean.address + bean.port + bean.path).hashCode().toString()
 

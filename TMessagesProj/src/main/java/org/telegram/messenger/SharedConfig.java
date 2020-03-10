@@ -181,11 +181,12 @@ public class SharedConfig {
             address = "127.0.0.1";
             username = "";
             secret = "";
-            port = ProxyManager.getPorxyForBean(bean);
+            port = ProxyManager.getPortForBean(bean);
             address = "";
 
             loader = new VmessLoader();
             loader.initConfig(bean, port);
+            loader.start();
 
         }
 
@@ -810,11 +811,6 @@ public class SharedConfig {
                             if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password) ||
                                     (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).bean.toString())))) {
 
-
-                                if (info instanceof VmessProxy) {
-                                    ((VmessProxy) info).loader.start();
-                                }
-
                                 currentProxy = info;
 
                             }
@@ -927,19 +923,7 @@ public class SharedConfig {
 
         }
 
-        if (enable && currentProxy instanceof VmessProxy) {
-
-            VmessProxy vmess = (VmessProxy) currentProxy;
-
-            vmess.loader.start();
-
-        } else if (!enable && currentProxy instanceof VmessProxy) {
-
-            VmessProxy vmess = (VmessProxy) currentProxy;
-
-            vmess.loader.stop();
-
-        }
+        Log.d("nekox","proxy addr " + currentProxy.address + ", port: " +currentProxy.port);
 
         ConnectionsManager.setProxySettings(enable, SharedConfig.currentProxy.address, SharedConfig.currentProxy.port, SharedConfig.currentProxy.username, SharedConfig.currentProxy.password, SharedConfig.currentProxy.secret);
 
@@ -1016,8 +1000,6 @@ public class SharedConfig {
                         if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).bean.toString()))) {
 
                             currentProxy = info;
-
-                            ((VmessProxy) currentProxy).loader.start();
 
                         } else if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
 

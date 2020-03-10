@@ -15,6 +15,7 @@ import libv2ray.V2RayPoint
 import libv2ray.V2RayVPNServiceSupportsSet
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.FileLog
+import kotlin.concurrent.thread
 
 class VmessLoader {
 
@@ -267,7 +268,11 @@ class VmessLoader {
 
         if (point.isRunning) return
 
-        point.runLoop()
+        thread {
+
+            point.runLoop()
+
+        }
 
     }
 
