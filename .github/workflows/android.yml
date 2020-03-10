@@ -10,8 +10,6 @@ jobs:
   linux:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      LANG: "en_US.UTF8"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
@@ -25,25 +23,17 @@ jobs:
         run: |
           ./gradlew assembleAfatRelease
           ./gradlew bundleAfatRelease
-      - name: Genearte release message
+      - uses: NekogramX/nekox-build-script@master
+        env:
+          GIT_REF: ${{ github.ref }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          RELEASE_CHANNEL:  ${{ secrets.TELEGRAM_TO }}
+          CANARY_CHANNEL:  ${{ secrets.TELEGRAM_TO }}
+      - name: Find artifact files
         run: |
-          bash bin/generate-channel-message.sh
-      - name: Upload apk artifact to canary channel
-        uses: NekogramX/nekox-upload-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          file: ${{ env.APK_FILE }}
-          caption: ${{ env.GIT_MSG }}
-        if: github.ref == 'refs/heads/master'
-      - name: Upload apk artifact to release channel
-        uses: NekogramX/nekox-upload-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          file: ${{ env.APK_FILE }}
-          caption: ${{ env.RELEASE_MESSAGE }}
-        if: github.ref == 'refs/heads/master'
+          OUTPUT="TMessagesProj/build/outputs"
+          echo ::set-env name=APK_FILE::$(find $OUTPUT/apk -name "*.apk")
+          echo ::set-env name=AAB_FILE::$(find $OUTPUT/bundle -name "*.aab")
       - uses: actions/upload-artifact@master
         with:
           name: NekoX-${{ github.sha }}.apk
