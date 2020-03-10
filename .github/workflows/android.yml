@@ -23,17 +23,17 @@ jobs:
         run: |
           ./gradlew assembleAfatRelease
           ./gradlew bundleAfatRelease
+      - name: Find artifact files
+          run: |
+            OUTPUT="TMessagesProj/build/outputs"
+            echo ::set-env name=APK_FILE::$(find $OUTPUT/apk -name "*.apk")
+            echo ::set-env name=AAB_FILE::$(find $OUTPUT/bundle -name "*.aab")
       - uses: NekogramX/nekox-build-script@master
         env:
           GIT_REF: ${{ github.ref }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           RELEASE_CHANNEL:  ${{ secrets.TELEGRAM_TO }}
           CANARY_CHANNEL:  ${{ secrets.TELEGRAM_TO }}
-      - name: Find artifact files
-        run: |
-          OUTPUT="TMessagesProj/build/outputs"
-          echo ::set-env name=APK_FILE::$(find $OUTPUT/apk -name "*.apk")
-          echo ::set-env name=AAB_FILE::$(find $OUTPUT/bundle -name "*.aab")
       - uses: actions/upload-artifact@master
         with:
           name: NekoX-${{ github.sha }}.apk
