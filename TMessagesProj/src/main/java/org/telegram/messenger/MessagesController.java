@@ -2607,12 +2607,6 @@ public class MessagesController extends BaseController implements NotificationCe
 
             });
 
-            ThreadUtil.sleep(20);
-
-        }
-
-        while (blockedUsers.size() > 0) {
-
             ThreadUtil.sleep(100);
 
         }

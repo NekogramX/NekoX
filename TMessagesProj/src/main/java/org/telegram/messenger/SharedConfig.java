@@ -182,7 +182,6 @@ public class SharedConfig {
             username = "";
             secret = "";
             port = ProxyManager.getPortForBean(bean);
-            address = "";
 
             loader = new VmessLoader();
             loader.initConfig(bean, port);

@@ -332,56 +332,6 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
             }
 
-            try {
-
-                File save = new File(ApplicationLoader.applicationContext.getFilesDir(), "flychat_list.json");
-
-                JSONArray serverList = null;
-
-                LinkedList<String> serverUrls = new LinkedList<>();
-
-                serverUrls.add("https://m.flychat.in/");
-                serverUrls.add("https://m.flychat.live/");
-                serverUrls.add("https://m.flychat.buzz/");
-
-                for (String serverUrl : serverUrls) {
-
-                    try {
-
-                        serverList = new JSONObject(HttpUtil.get(serverUrl + "getmtp","FlyChat")).optJSONArray("data");
-
-                        if (serverList != null) break;
-
-                    } catch (Exception e) {
-
-                        Log.d("nekox", "update plychat list failed at " + serverUrl, e);
-
-                    }
-
-                }
-
-                if (serverList == null) return;
-
-                String slStr = serverList.toString();
-
-                if (save.isFile() && FileUtil.readUtf8String(save).equals(slStr)) return;
-
-                FileUtil.writeUtf8String(slStr, save);
-
-                SharedConfig.reloadProxyList();
-
-                if (getParentActivity() != null) {
-
-                    getParentActivity().runOnUiThread(() -> updateRows(true));
-
-                }
-
-            } catch (Exception e) {
-
-                Log.w("nekox", "update plychat list failed", e);
-
-            }
-
         }).start();
 
         return true;
