@@ -222,23 +222,23 @@ public class ProxySettingsActivity extends BaseFragment {
 
                     SharedPreferences preferences = MessagesController.getGlobalMainSettings();
                     SharedPreferences.Editor editor = preferences.edit();
-                    boolean enabled;
                     if (addingNewProxy) {
                         SharedConfig.addProxy(currentProxyInfo);
-                        SharedConfig.currentProxy = currentProxyInfo;
-                        editor.putBoolean("proxy_enabled", true);
-                        enabled = true;
+                        SharedConfig.setCurrentProxy(currentProxyInfo);
                     } else {
-                        enabled = preferences.getBoolean("proxy_enabled", false);
-                        SharedConfig.saveProxyList();
+                        SharedConfig.setProxyEnable(false);
                     }
+                    SharedConfig.saveProxyList();
                     if (addingNewProxy || SharedConfig.currentProxy == currentProxyInfo) {
                         editor.putString("proxy_ip", currentProxyInfo.address);
                         editor.putString("proxy_pass", currentProxyInfo.password);
                         editor.putString("proxy_user", currentProxyInfo.username);
                         editor.putInt("proxy_port", currentProxyInfo.port);
                         editor.putString("proxy_secret", currentProxyInfo.secret);
-                        ConnectionsManager.setProxySettings(enabled, currentProxyInfo.address, currentProxyInfo.port, currentProxyInfo.username, currentProxyInfo.password, currentProxyInfo.secret);
+                        if (currentProxyInfo instanceof SharedConfig.VmessProxy) {
+                            editor.putString("vmess_link", ((SharedConfig.VmessProxy)currentProxyInfo).bean.toString());
+                        }
+                        ConnectionsManager.setProxySettings(SharedConfig.proxyEnabled, currentProxyInfo.address, currentProxyInfo.port, currentProxyInfo.username, currentProxyInfo.password, currentProxyInfo.secret);
                     }
                     editor.commit();
 

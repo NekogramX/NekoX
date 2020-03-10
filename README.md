@@ -1,13 +1,12 @@
-# Nekogram
-![Logo](https://raw.githubusercontent.com/Nekogram/Nekogram/master/TMessagesProj/src/main/res/mipmap-xxxhdpi/ic_launcher.png)  
-Nekogram is an UNOFFICIAL app that uses Telegram's API.
+# NekoX
+![Logo](https://raw.githubusercontent.com/NekogramX/NekoX/master/TMessagesProj/src/main/res/mipmap-xxxhdpi/ic_launcher.png)  
 
-- Google play store: https://play.google.com/store/apps/details?id=tw.nekomimi.nekogram
-- Update news (English): https://t.me/nekoupdates
-- Update news (Chinese): https://t.me/zuragram
-- APKs: https://github.com/Nekogram/Nekogram/releases
-- Feedback: https://t.me/nekosupportbot
-- Feedback: https://github.com/Nekogram/Nekogram/issues
+NekogramX is an UNOFFICIAL app that uses Telegram's API.
+
+- Google play store: https://play.google.com/store/apps/details?id=moe.wataru.nekogram
+- Update news (Chinese): https://t.me/NekogramX
+- Feedback: https://t.me/NekoXChat
+- Feedback: https://github.com/NekogramX/NekoX/issues
 
 ## API, Protocol documentation
 
@@ -28,7 +27,7 @@ MTproto protocol manuals: https://core.telegram.org/mtproto
 
 Nekogram is forked from Telegram, thus most locales follows the translations of Telegram for Android, checkout https://translations.telegram.org/en/android/.
 
-As for the Nekogram specialized strings, we use Crowdin to translate Nekogram. Join project at https://neko.crowdin.com/nekogram. Help us bring Nekogram to the world!
+As for the Nekogram specialized strings, we use Crowdin to translate Nekogram. Join project at https://neko.crowdin.com/nekogram and https://nekox.crowdin.com/nekox. Help us bring Nekogram to the world!
 
 ## Contributors
 

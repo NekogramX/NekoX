@@ -57,12 +57,15 @@ import org.telegram.messenger.FileLog;
 import org.telegram.messenger.ImageLocation;
 import org.telegram.messenger.ImageReceiver;
 import org.telegram.messenger.R;
+import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.Utilities;
 import org.telegram.tgnet.TLRPC;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -452,7 +455,12 @@ public class WebPlayerView extends ViewGroup implements VideoPlayer.VideoPlayerD
         URLConnection httpConnection = null;
         try {
             URL downloadUrl = new URL(url);
-            httpConnection = downloadUrl.openConnection();
+            if (SharedConfig.proxyEnabled && SharedConfig.currentProxy != null && SharedConfig.currentProxy.secret == null) {
+                Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress(SharedConfig.currentProxy.address, SharedConfig.currentProxy.port));
+                httpConnection = downloadUrl.openConnection(proxy);
+            } else {
+                httpConnection = downloadUrl.openConnection();
+            }
             httpConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20150101 Firefox/47.0 (Chrome)");
             if (tryGzip) {
                 httpConnection.addRequestProperty("Accept-Encoding", "gzip, deflate");

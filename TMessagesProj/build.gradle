@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 repositories {
     mavenCentral()
     google()
@@ -15,6 +18,7 @@ configurations.all {
 }
 
 dependencies {
+
     implementation 'androidx.core:core:1.1.0-beta01'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0'
@@ -22,6 +26,8 @@ dependencies {
     compileOnly 'org.checkerframework:checker-qual:2.5.2'
     compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.android.gms:play-services-vision:16.2.0'
@@ -32,23 +38,32 @@ dependencies {
     implementation 'com.stripe:stripe-android:2.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation files('libs/libgsaverification-client.aar')
-    implementation "com.microsoft.appcenter:appcenter-analytics:3.0.0"
+    implementation files('libs/libv2ray.aar')
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61"
 }
 
 android {
     compileSdkVersion 29
     buildToolsVersion '29.0.2'
-    //ndkVersion "20.0.5594570"
+    ndkVersion "21.0.6113669"
 
-    defaultConfig.applicationId = "tw.nekomimi.nekogram"
+    defaultConfig.applicationId = "moe.wataru.nekogram"
 
-    sourceSets.main.jniLibs.srcDirs = ['./jni/']
+   // sourceSets.main.jniLibs.srcDirs = ['./jni/']
+    sourceSets.main {
+        jniLibs.srcDir 'jniLibs'
+        jni.srcDirs = [] //disable automatic ndk-build call
+    }
+    /*
 
     externalNativeBuild {
         ndkBuild {
             path "jni/Android.mk"
         }
     }
+
+     */
 
     lintOptions {
         disable 'MissingTranslation'
@@ -96,7 +111,7 @@ android {
             debuggable true
             jniDebuggable true
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".beta"
+           // applicationIdSuffix ".beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -143,7 +158,7 @@ android {
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".beta"
+           // applicationIdSuffix ".beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -230,24 +245,15 @@ android {
                 manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
             }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 4
-            }
         }
         arm64 {
             ndk {
                 abiFilters "arm64-v8a"
             }
-            ext {
-                abiVersionCode = 5
-            }
         }
         x64 {
             ndk {
                 abiFilters "x86_64"
-            }
-            ext {
-                abiVersionCode = 6
             }
         }
         arm64_SDK23 {
@@ -264,9 +270,6 @@ android {
                 manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
             }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 7
-            }
         }
         x64_SDK23 {
             ndk {
@@ -279,48 +282,29 @@ android {
                 manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
             }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 8
-            }
         }
+
+
         afat {
             sourceSets.debug {
                 manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
             }
-            /*sourceSets.debugAsan {
+            /*
+            sourceSets.debugAsan {
                 manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
-            }*/
+            }
+             */
             sourceSets.release {
                 manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
-            }
-            ext {
-                abiVersionCode = 9
             }
         }
     }
 
-    defaultConfig.versionCode = 10 * 1876
+    defaultConfig.versionCode = 10 * 1892
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "Nekogram-${defaultConfig.versionName}-${defaultConfig.versionCode / 10}-${variant.productFlavors.get(0).name}-${buildType.name}.apk"
-            output.getProcessManifestProvider().get().doLast {
-                def abiVersion = variant.productFlavors.get(0).abiVersionCode
-
-                def outputDir = manifestOutputDirectory
-                File directory
-                if (outputDir instanceof File) {
-                    directory = outputDir
-                } else {
-                    directory = outputDir.get().asFile
-                }
-
-                String manifestPath = directory.toString() + "/AndroidManifest.xml"
-                def manifestContent = file(manifestPath).getText()
-
-                manifestContent = manifestContent.replace(String.format('android:versionCode="%d"', defaultConfig.versionCode), String.format('android:versionCode="%s"', defaultConfig.versionCode + abiVersion))
-                file(manifestPath).write(manifestContent)
-            }
+            outputFileName = "NekogramX-${defaultConfig.versionName}-${defaultConfig.versionCode}-${variant.productFlavors.get(0).name}-${buildType.name}.apk"
         }
     }
 
@@ -334,19 +318,22 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionName "5.15.0.3"
+        versionName "5.15.0.23"
 
         vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
 
+        /*
         externalNativeBuild {
             ndkBuild {
                 arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-16", "--jobs=8"
                 abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
             }
         }
+         */
 
         manifestPlaceholders = [applicationClassName: "ApplicationLoader"]
     }
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'

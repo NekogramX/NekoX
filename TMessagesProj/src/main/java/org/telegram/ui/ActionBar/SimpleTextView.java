@@ -265,6 +265,11 @@ public class SimpleTextView extends View implements Drawable.Callback {
     }
 
     @Override
+    public void setBackground(Drawable background) {
+        wrapBackgroundDrawable = background;
+    }
+
+    @Override
     public Drawable getBackground() {
         if (wrapBackgroundDrawable != null) {
             return wrapBackgroundDrawable;

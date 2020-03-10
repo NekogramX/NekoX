@@ -38,6 +38,10 @@ import org.telegram.ui.Components.ForegroundDetector;
 import java.io.File;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
+import tw.nekomimi.nekogram.VmessLoader;
+import tw.nekomimi.nekogram.utils.ProxyUtil;
+import tw.nekomimi.nekogram.utils.ZipUtil;
 
 public class ApplicationLoader extends Application {
 
@@ -73,7 +77,7 @@ public class ApplicationLoader extends Application {
         } catch (Exception e) {
             FileLog.e(e);
         }
-        return new File("/data/data/org.telegram.messenger/files");
+        return new File("/data/data/moe.wataru.nekogram/files");
     }
 
     public static void postInitApplication() {
@@ -82,6 +86,36 @@ public class ApplicationLoader extends Application {
         }
 
         applicationInited = true;
+
+        if (!new File(applicationContext.getFilesDir(), "unoffical_base_classic_zh_cn.xml").isFile()) {
+
+            try {
+
+                ZipUtil.unzip(applicationContext.getAssets().open("languages.zip"), applicationContext.getFilesDir());
+
+            } catch (Exception e) {
+
+                FileLog.e("load languages error", e);
+
+            }
+
+        }
+
+        SharedConfig.loadProxyList();
+
+        if (ProxyUtil.isVPNEnabled()) {
+
+            if (NekoXConfig.disableProxyWhenVpnEnabled) {
+
+                SharedConfig.setProxyEnable(false);
+
+            }
+
+        } else if (!MessagesController.getGlobalMainSettings().contains("proxy_enabled")) {
+
+            SharedConfig.setCurrentProxy(SharedConfig.proxyList.get(0));
+
+        }
 
         try {
             LocaleController.getInstance();
@@ -192,6 +226,9 @@ public class ApplicationLoader extends Application {
     }
 
     public static void startPushService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return; // USE NOTIF LISTENER
+        }
         SharedPreferences preferences = MessagesController.getGlobalNotificationsSettings();
         boolean enabled;
         if (preferences.contains("pushService")) {
@@ -213,7 +250,7 @@ public class ApplicationLoader extends Application {
             applicationContext.stopService(new Intent(applicationContext, NotificationsService.class));
 
             PendingIntent pintent = PendingIntent.getService(applicationContext, 0, new Intent(applicationContext, NotificationsService.class), 0);
-            AlarmManager alarm = (AlarmManager)applicationContext.getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarm = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
             alarm.cancel(pintent);
         }
     }

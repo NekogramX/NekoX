@@ -71,6 +71,7 @@
     <application
         android:name="org.telegram.messenger.${applicationClassName}"
         android:allowBackup="false"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:hardwareAccelerated="@bool/useHardwareAcceleration"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
@@ -79,7 +80,6 @@
         android:manageSpaceActivity="org.telegram.ui.ExternalActionActivity"
         android:supportsRtl="false"
         tools:replace="android:supportsRtl">
-
         <activity
             android:name="org.telegram.ui.LaunchActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
@@ -142,6 +142,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="tg" />
+                <data android:scheme="vmess" />
+                <data android:scheme="ss" />
             </intent-filter>
             <intent-filter android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:priority="1">
                 <action android:name="android.intent.action.VIEW" />
@@ -293,6 +295,14 @@
         <service android:name=".BringAppForegroundService" android:enabled="true"/>
         <service android:name=".NotificationsService" android:enabled="true"/>
         <service android:name=".NotificationRepeat" android:exported="false"/>
+        <service android:name="tw.nekomimi.nekogram.NekoXPushService"
+            android:enabled="true"
+            android:label="@string/NekoXPushService"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService"/>
+            </intent-filter>
+        </service>
         <service android:name=".VideoEncodingService" android:enabled="true"/>
         <service android:name=".LocationSharingService" android:enabled="true"/>
         <service android:name=".voip.VoIPService" android:enabled="true"/>

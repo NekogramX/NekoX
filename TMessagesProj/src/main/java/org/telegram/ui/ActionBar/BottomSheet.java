@@ -491,8 +491,7 @@ public class BottomSheet extends Dialog {
         public BottomSheetCell(Context context, int type) {
             super(context);
 
-            setBackground(null);
-            setBackgroundDrawable(Theme.getSelectorDrawable(false));
+            setBackground(Theme.getSelectorDrawable(false));
             //setPadding(AndroidUtilities.dp(16), 0, AndroidUtilities.dp(16), 0);
 
             imageView = new ImageView(context);
