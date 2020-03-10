@@ -38,7 +38,7 @@ jobs:
           name: NekoX-${{ github.sha }}.apk
           path: ${{ env.APK_FILE }}
         if: github.ref == 'refs/heads/master'
-      - uses: r0adkll/upload-google-play@v1
+      - uses: r0adkll/upload-google-play@v1.0.4
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_ACCOUNT_SERVICE }}
           packageName: moe.wataru.nekogram
