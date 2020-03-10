@@ -20,28 +20,24 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
-
 import com.v2ray.ang.V2RayConfig;
 import com.v2ray.ang.dto.AngConfig;
-
+import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.tgnet.ConnectionsManager;
+import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.ProxyManager;
+import tw.nekomimi.nekogram.VmessLoader;
+import tw.nekomimi.nekogram.utils.FileUtil;
+import tw.nekomimi.nekogram.utils.ProxyUtil;
 
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Random;
-
-import kotlin.text.StringsKt;
-import tw.nekomimi.nekogram.ProxyManager;
-import tw.nekomimi.nekogram.utils.FileUtil;
-import tw.nekomimi.nekogram.NekoConfig;
-import tw.nekomimi.nekogram.VmessLoader;
-import tw.nekomimi.nekogram.utils.ProxyUtil;
 
 import static com.v2ray.ang.V2RayConfig.SS_PROTOCOL;
 
@@ -816,7 +812,7 @@ public class SharedConfig {
 
 
                                 if (info instanceof VmessProxy) {
-                                    ((VmessProxy)info).loader.start();
+                                    ((VmessProxy) info).loader.start();
                                 }
 
                                 currentProxy = info;
@@ -899,7 +895,7 @@ public class SharedConfig {
 
             }
 
-            proxyList.addAll(0,proxy);
+            proxyList.addAll(0, proxy);
 
         }
 
@@ -1032,7 +1028,7 @@ public class SharedConfig {
 
                 }
             } catch (JSONException e) {
-                Log.e("nekox","load proxy error",e);
+                Log.e("nekox", "load proxy error", e);
             }
 
         }
@@ -1041,13 +1037,7 @@ public class SharedConfig {
 
         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
-            ProxyInfo internalProxy = proxyList.get(0);
-
-           // if (proxyAddress.equals(internalProxy.address) && proxyPort == internalProxy.port && proxyUsername.equals(internalProxy.username) && proxyPassword.equals(internalProxy.password)) {
-
-                currentProxy = internalProxy;
-
-           // }
+            setCurrentProxy(proxyList.get(0));
 
         }
 

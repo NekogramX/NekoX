@@ -1,5 +1,9 @@
 package tw.nekomimi.nekogram.utils
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
 import org.json.JSONArray
 import org.telegram.messenger.ApplicationLoader
 import java.io.ByteArrayInputStream
@@ -17,6 +21,8 @@ object ProxyUtil {
     @JvmStatic
     fun isVPNEnabled(): Boolean {
 
+        val cm = ApplicationLoader.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
         val networkList: MutableList<String> = ArrayList()
 
         runCatching {
@@ -28,6 +34,7 @@ object ProxyUtil {
         }
 
         return networkList.contains("tun0")
+
     }
 
     @JvmStatic
