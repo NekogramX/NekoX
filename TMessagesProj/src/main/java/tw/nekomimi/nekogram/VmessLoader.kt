@@ -273,7 +273,7 @@ class VmessLoader {
 
     fun stop() {
 
-        point.stopLoop()
+        // point.stopLoop()
 
     }
 
