@@ -27,10 +27,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.DownloadController;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessagesController;
@@ -41,6 +43,7 @@ import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.BaseFragment;
+import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.ActionBar.ThemeDescription;
 import org.telegram.ui.Cells.HeaderCell;
@@ -48,21 +51,13 @@ import org.telegram.ui.Cells.ShadowSectionCell;
 import org.telegram.ui.Cells.TextCheckCell;
 import org.telegram.ui.Cells.TextInfoPrivacyCell;
 import org.telegram.ui.Cells.TextSettingsCell;
+import org.telegram.ui.Components.AlertsCreator;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.RecyclerListView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.io.File;
 import java.net.URLEncoder;
-import java.util.LinkedList;
 import java.util.List;
 
-import tw.nekomimi.nekogram.utils.FileUtil;
-import tw.nekomimi.nekogram.utils.HttpUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
 
 public class ProxyListActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
@@ -380,7 +375,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     if (!SharedConfig.proxyList.isEmpty()) {
                         SharedConfig.setCurrentProxy(SharedConfig.proxyList.get(0));
                     } else {
-                        presentFragment(new ProxySettingsActivity());
+                        addProxy();
                         return;
                     }
                 }
@@ -436,7 +431,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     textCheckCell.setChecked(true);
                 }
             } else if (position == proxyAddRow) {
-                presentFragment(new ProxySettingsActivity());
+                addProxy();
             }
         });
         listView.setOnItemLongClickListener((view, position) -> {
@@ -476,6 +471,39 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         });
 
         return fragmentView;
+    }
+
+    private void addProxy() {
+
+        BottomSheet.Builder builder = new BottomSheet.Builder(getParentActivity());
+
+        builder.setItems(new String[] {
+
+                LocaleController.getString("UseProxySocks5",R.string.UseProxySocks5),
+                LocaleController.getString("UseProxyTelegram",R.string.UseProxyTelegram),
+                LocaleController.getString("ProxyTypeVmess",R.string.ProxyTypeVmess)
+
+
+        },(v,i) -> {
+
+            if (i == 0) {
+
+                presentFragment(new ProxySettingsActivity(0));
+
+            } else if (i ==1) {
+
+                presentFragment(new ProxySettingsActivity(1));
+
+            } else {
+
+                AlertsCreator.showSimpleToast(this,"unimplemented :(");
+
+            }
+
+        });
+
+        builder.show();
+
     }
 
     private void updateRows(boolean notify) {
@@ -523,9 +551,6 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 continue;
             }
             proxyInfo.checking = true;
-            if (proxyInfo instanceof SharedConfig.VmessProxy) {
-                ((SharedConfig.VmessProxy)proxyInfo).loader.start();
-            }
             proxyInfo.proxyCheckPingId = ConnectionsManager.getInstance(currentAccount).checkProxy(proxyInfo.address, proxyInfo.port, proxyInfo.username, proxyInfo.password, proxyInfo.secret, time -> AndroidUtilities.runOnUIThread(() -> {
                 proxyInfo.availableCheckTime = SystemClock.elapsedRealtime();
                 proxyInfo.checking = false;
@@ -537,9 +562,6 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     proxyInfo.available = true;
                 }
                 NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxyCheckDone, proxyInfo);
-                if (proxyInfo instanceof SharedConfig.VmessProxy) {
-                    ((SharedConfig.VmessProxy)proxyInfo).loader.stop();
-                }
             }));
         }
     }

@@ -492,7 +492,7 @@ public class BottomSheet extends Dialog {
             super(context);
 
             setBackground(Theme.getSelectorDrawable(false));
-            //setPadding(AndroidUtilities.dp(16), 0, AndroidUtilities.dp(16), 0);
+            setPadding(AndroidUtilities.dp(16), 0, AndroidUtilities.dp(16), 0);
 
             imageView = new ImageView(context);
             imageView.setScaleType(ImageView.ScaleType.CENTER);
@@ -575,7 +575,7 @@ public class BottomSheet extends Dialog {
         touchSlop = vc.getScaledTouchSlop();
 
         Rect padding = new Rect();
-        shadowDrawable = context.getResources().getDrawable(R.drawable.sheet_shadow_round).mutate();
+        shadowDrawable = context.getResources().getDrawable(R.drawable.sheet_shadow).mutate();
         shadowDrawable.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_dialogBackground), PorterDuff.Mode.MULTIPLY));
         shadowDrawable.getPadding(padding);
         backgroundPaddingLeft = padding.left;

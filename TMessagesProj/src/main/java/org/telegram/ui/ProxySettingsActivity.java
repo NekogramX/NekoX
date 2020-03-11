@@ -91,7 +91,7 @@ public class ProxySettingsActivity extends BaseFragment {
     private TextSettingsCell shareCell;
     private TextSettingsCell pasteCell;
     private ActionBarMenuItem doneItem;
-    private RadioCell[] typeCell = new RadioCell[2];
+   // private RadioCell[] typeCell = new RadioCell[2];
     private int currentType = -1;
 
     private int pasteType = -1;
@@ -163,10 +163,11 @@ public class ProxySettingsActivity extends BaseFragment {
         }
     }
 
-    public ProxySettingsActivity() {
+    public ProxySettingsActivity(int type) {
         super();
         currentProxyInfo = new SharedConfig.ProxyInfo("", 1080, "", "", "");
         addingNewProxy = true;
+        currentType = type;
     }
 
     public ProxySettingsActivity(SharedConfig.ProxyInfo proxyInfo) {
@@ -266,19 +267,6 @@ public class ProxySettingsActivity extends BaseFragment {
         scrollView.addView(linearLayout2, new ScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         final View.OnClickListener typeCellClickListener = view -> setProxyType((Integer) view.getTag(), true);
-
-        for (int a = 0; a < 2; a++) {
-            typeCell[a] = new RadioCell(context);
-            typeCell[a].setBackground(Theme.getSelectorDrawable(true));
-            typeCell[a].setTag(a);
-            if (a == 0) {
-                typeCell[a].setText(LocaleController.getString("UseProxySocks5", R.string.UseProxySocks5), a == currentType, true);
-            } else if (a == 1) {
-                typeCell[a].setText(LocaleController.getString("UseProxyTelegram", R.string.UseProxyTelegram), a == currentType, false);
-            }
-            linearLayout2.addView(typeCell[a], LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 50));
-            typeCell[a].setOnClickListener(typeCellClickListener);
-        }
 
         sectionCell[0] = new ShadowSectionCell(context);
         linearLayout2.addView(sectionCell[0], LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
@@ -556,8 +544,15 @@ public class ProxySettingsActivity extends BaseFragment {
         shareDoneProgress = 1f;
         checkShareDone(false);
 
-        currentType = -1;
-        setProxyType(TextUtils.isEmpty(currentProxyInfo.secret) ? 0 : 1, false);
+        if (currentType == -1) {
+
+            setProxyType(TextUtils.isEmpty(currentProxyInfo.secret) ? 0 : 1, false);
+
+        } else {
+
+             setProxyType(currentType, false);
+
+        }
 
         pasteType = -1;
         pasteString = null;
@@ -749,8 +744,6 @@ public class ProxySettingsActivity extends BaseFragment {
                 ((View) inputFields[FIELD_PASSWORD].getParent()).setVisibility(View.GONE);
                 ((View) inputFields[FIELD_USER].getParent()).setVisibility(View.GONE);
             }
-            typeCell[0].setChecked(currentType == 0, animated);
-            typeCell[1].setChecked(currentType == 1, animated);
         }
     }
 
@@ -796,14 +789,6 @@ public class ProxySettingsActivity extends BaseFragment {
         arrayList.add(new ThemeDescription(pasteCell, ThemeDescription.FLAG_SELECTORWHITE, null, null, null, null, Theme.key_windowBackgroundWhite));
         arrayList.add(new ThemeDescription(pasteCell, ThemeDescription.FLAG_SELECTORWHITE, null, null, null, null, Theme.key_listSelector));
         arrayList.add(new ThemeDescription(pasteCell, 0, new Class[]{TextSettingsCell.class}, new String[]{"textView"}, null, null, null, Theme.key_windowBackgroundWhiteBlueText4));
-
-        for (int a = 0; a < typeCell.length; a++) {
-            arrayList.add(new ThemeDescription(typeCell[a], ThemeDescription.FLAG_SELECTORWHITE, null, null, null, null, Theme.key_windowBackgroundWhite));
-            arrayList.add(new ThemeDescription(typeCell[a], ThemeDescription.FLAG_SELECTORWHITE, null, null, null, null, Theme.key_listSelector));
-            arrayList.add(new ThemeDescription(typeCell[a], 0, new Class[]{RadioCell.class}, new String[]{"textView"}, null, null, null, Theme.key_windowBackgroundWhiteBlackText));
-            arrayList.add(new ThemeDescription(typeCell[a], ThemeDescription.FLAG_CHECKBOX, new Class[]{RadioCell.class}, new String[]{"radioButton"}, null, null, null, Theme.key_radioBackground));
-            arrayList.add(new ThemeDescription(typeCell[a], ThemeDescription.FLAG_CHECKBOXCHECK, new Class[]{RadioCell.class}, new String[]{"radioButton"}, null, null, null, Theme.key_radioBackgroundChecked));
-        }
 
         if (inputFields != null) {
             for (int a = 0; a < inputFields.length; a++) {
