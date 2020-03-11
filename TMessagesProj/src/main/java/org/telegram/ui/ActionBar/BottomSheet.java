@@ -105,8 +105,8 @@ public class BottomSheet extends Dialog {
     protected int backgroundPaddingTop;
     protected int backgroundPaddingLeft;
 
-    private boolean applyTopPadding = true;
-    private boolean applyBottomPadding = true;
+    private boolean applyTopPadding = false;
+    private boolean applyBottomPadding = false;
 
     private ArrayList<BottomSheetCell> itemViews = new ArrayList<>();
 
@@ -492,7 +492,7 @@ public class BottomSheet extends Dialog {
             super(context);
 
             setBackground(Theme.getSelectorDrawable(false));
-            setPadding(AndroidUtilities.dp(16), 0, AndroidUtilities.dp(16), 0);
+            setPadding(0, 0, AndroidUtilities.dp(16), 0);
 
             imageView = new ImageView(context);
             imageView.setScaleType(ImageView.ScaleType.CENTER);
@@ -772,7 +772,7 @@ public class BottomSheet extends Dialog {
                     startAnimationRunnable = null;
                     startOpenAnimation();
                 }
-            }, 150);
+            });
         } else {
             startOpenAnimation();
         }
@@ -809,6 +809,7 @@ public class BottomSheet extends Dialog {
     public void setTitle(CharSequence value, boolean big) {
         title = value;
         bigTitle = big;
+        setApplyTopPadding(true);
     }
 
     public void setApplyTopPadding(boolean value) {
@@ -864,7 +865,6 @@ public class BottomSheet extends Dialog {
                     ObjectAnimator.ofFloat(containerView, View.TRANSLATION_Y, 0),
                     ObjectAnimator.ofInt(backDrawable, AnimationProperties.COLOR_DRAWABLE_ALPHA, dimBehind ? 51 : 0));
             currentSheetAnimation.setDuration(400);
-            currentSheetAnimation.setStartDelay(20);
             currentSheetAnimation.setInterpolator(openInterpolator);
             currentSheetAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override

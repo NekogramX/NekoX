@@ -85,13 +85,12 @@ public class ProxySettingsActivity extends BaseFragment {
     private ScrollView scrollView;
     private LinearLayout linearLayout2;
     private LinearLayout inputFieldsContainer;
-    private HeaderCell headerCell;
     private ShadowSectionCell[] sectionCell = new ShadowSectionCell[3];
     private TextInfoPrivacyCell[] bottomCells = new TextInfoPrivacyCell[2];
     private TextSettingsCell shareCell;
     private TextSettingsCell pasteCell;
     private ActionBarMenuItem doneItem;
-   // private RadioCell[] typeCell = new RadioCell[2];
+    // private RadioCell[] typeCell = new RadioCell[2];
     private int currentType = -1;
 
     private int pasteType = -1;
@@ -237,7 +236,7 @@ public class ProxySettingsActivity extends BaseFragment {
                         editor.putInt("proxy_port", currentProxyInfo.port);
                         editor.putString("proxy_secret", currentProxyInfo.secret);
                         if (currentProxyInfo instanceof SharedConfig.VmessProxy) {
-                            editor.putString("vmess_link", ((SharedConfig.VmessProxy)currentProxyInfo).bean.toString());
+                            editor.putString("vmess_link", ((SharedConfig.VmessProxy) currentProxyInfo).bean.toString());
                         }
                         ConnectionsManager.setProxySettings(SharedConfig.proxyEnabled, currentProxyInfo.address, currentProxyInfo.port, currentProxyInfo.username, currentProxyInfo.password, currentProxyInfo.secret);
                     }
@@ -266,10 +265,7 @@ public class ProxySettingsActivity extends BaseFragment {
         linearLayout2.setOrientation(LinearLayout.VERTICAL);
         scrollView.addView(linearLayout2, new ScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        final View.OnClickListener typeCellClickListener = view -> setProxyType((Integer) view.getTag(), true);
-
         sectionCell[0] = new ShadowSectionCell(context);
-        linearLayout2.addView(sectionCell[0], LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
 
         inputFieldsContainer = new LinearLayout(context);
         inputFieldsContainer.setOrientation(LinearLayout.VERTICAL);
@@ -550,7 +546,11 @@ public class ProxySettingsActivity extends BaseFragment {
 
         } else {
 
-             setProxyType(currentType, false);
+            int t = currentType;
+
+            currentType = -1;
+
+            setProxyType(t, false);
 
         }
 
@@ -804,8 +804,6 @@ public class ProxySettingsActivity extends BaseFragment {
             arrayList.add(new ThemeDescription(null, ThemeDescription.FLAG_TEXTCOLOR, null, null, null, null, Theme.key_windowBackgroundWhiteBlackText));
             arrayList.add(new ThemeDescription(null, ThemeDescription.FLAG_HINTTEXTCOLOR, null, null, null, null, Theme.key_windowBackgroundWhiteHintText));
         }
-        arrayList.add(new ThemeDescription(headerCell, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_windowBackgroundWhite));
-        arrayList.add(new ThemeDescription(headerCell, 0, new Class[]{HeaderCell.class}, new String[]{"textView"}, null, null, null, Theme.key_windowBackgroundWhiteBlueHeader));
         for (int a = 0; a < sectionCell.length; a++) {
             if (sectionCell[a] != null) {
                 arrayList.add(new ThemeDescription(sectionCell[a], ThemeDescription.FLAG_BACKGROUNDFILTER, new Class[]{ShadowSectionCell.class}, null, null, null, Theme.key_windowBackgroundGrayShadow));

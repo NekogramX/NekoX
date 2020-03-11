@@ -49,6 +49,8 @@
     <string name="VmessPath">Path / QUIC Key</string>
     <string name="VmessTls">Use TLS</string>
 
+    <string name="ImportProxyFromClipboard">Import From Clip</string>
+
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>
     <string name="DeveloperSettings">Developer Settings</string>

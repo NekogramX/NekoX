@@ -9,6 +9,7 @@
 package org.telegram.ui;
 
 import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -131,65 +132,14 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                         builder.setMessage(LocaleController.getString("NekoXProxyInfo", R.string.NekoXProxyInfo));
                     } else {
                         builder.setMessage(currentInfo.descripton);
-
-                        builder.setNegativeButton(LocaleController.getString("ShareFile", R.string.ShareFile), (it, x) -> {
-
-                            StringBuilder params = new StringBuilder();
-                            String address = currentInfo.address;
-                            String password = currentInfo.password;
-                            String user = currentInfo.username;
-                            String port = currentInfo.port + "";
-                            String secret = currentInfo.secret;
-                            String url;
-                            try {
-                                if (!TextUtils.isEmpty(address)) {
-                                    params.append("server=").append(URLEncoder.encode(address, "UTF-8"));
-                                }
-                                if (!TextUtils.isEmpty(port)) {
-                                    if (params.length() != 0) {
-                                        params.append("&");
-                                    }
-                                    params.append("port=").append(URLEncoder.encode(port, "UTF-8"));
-                                }
-                                if (!"".equals(secret)) {
-                                    url = "https://t.me/proxy?";
-                                    if (params.length() != 0) {
-                                        params.append("&");
-                                    }
-                                    params.append("secret=").append(URLEncoder.encode(secret, "UTF-8"));
-                                } else {
-                                    url = "https://t.me/socks?";
-                                    if (!TextUtils.isEmpty(user)) {
-                                        if (params.length() != 0) {
-                                            params.append("&");
-                                        }
-                                        params.append("user=").append(URLEncoder.encode(user, "UTF-8"));
-                                    }
-                                    if (!TextUtils.isEmpty(password)) {
-                                        if (params.length() != 0) {
-                                            params.append("&");
-                                        }
-                                        params.append("pass=").append(URLEncoder.encode(password, "UTF-8"));
-                                    }
-                                }
-                            } catch (Exception ignore) {
-                                return;
-                            }
-                            if (params.length() == 0) {
-                                return;
-                            }
-                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                            shareIntent.setType("text/plain");
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, url + params.toString());
-                            Intent chooserIntent = Intent.createChooser(shareIntent, LocaleController.getString("ShareLink", R.string.ShareLink));
-                            chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            getParentActivity().startActivity(chooserIntent);
-
-                        });
                     }
                     builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
                     builder.show();
                 } else {
+                    if (currentInfo instanceof SharedConfig.VmessProxy) {
+                        AlertsCreator.showSimpleToast(ProxyListActivity.this,"unimplemented :(");
+                        return;
+                    }
                     presentFragment(new ProxySettingsActivity(currentInfo));
                 }
             });
@@ -481,7 +431,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 LocaleController.getString("UseProxySocks5",R.string.UseProxySocks5),
                 LocaleController.getString("UseProxyTelegram",R.string.UseProxyTelegram),
-                LocaleController.getString("ProxyTypeVmess",R.string.ProxyTypeVmess)
+                LocaleController.getString("ProxyTypeVmess",R.string.ProxyTypeVmess),
+                LocaleController.getString("ImportProxyFromClipboard",R.string.ImportProxyFromClipboard)
 
 
         },(v,i) -> {
@@ -494,9 +445,13 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 presentFragment(new ProxySettingsActivity(1));
 
-            } else {
+            } else if (i == 2){
 
                 AlertsCreator.showSimpleToast(this,"unimplemented :(");
+
+            } else {
+
+
 
             }
 

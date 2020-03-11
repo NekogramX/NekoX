@@ -333,7 +333,7 @@ public class AdminLogFilterAlert extends BottomSheet {
             delegate.didSelectRights(currentFilter, selectedAdmins);
             dismiss();
         });
-        containerView.addView(saveButton, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.LEFT | Gravity.BOTTOM));
+        containerView.addView(saveButton, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 56, Gravity.LEFT | Gravity.BOTTOM));
 
         adapter.notifyDataSetChanged();
     }
