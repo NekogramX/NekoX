@@ -488,6 +488,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                // AlertsCreator.showSimpleToast(this, "unimplemented :(");
 
+                ProxyUtil.importFromClipboard(getParentActivity());
+
             }
 
         });

@@ -54,7 +54,7 @@ class VmessLoader {
 
                     val indexSplit = server.indexOf("?")
                     if (indexSplit > 0) {
-                        vmess = ResolveVmess4Kitsunebi(server)
+                        vmess = resolveSimpleVmess1(server)
                     } else {
 
                         var result = server.replace(VMESS_PROTOCOL, "")
@@ -215,7 +215,7 @@ class VmessLoader {
             }
         }
 
-        private fun ResolveVmess4Kitsunebi(server: String): VmessBean {
+        private fun resolveSimpleVmess1(server: String): VmessBean {
 
             val vmess = VmessBean()
 
@@ -244,7 +244,7 @@ class VmessLoader {
             vmess.security = "chacha20-poly1305"
             vmess.network = "tcp"
             vmess.headerType = "none"
-            vmess.remarks = "Alien"
+            vmess.remarks = ""
             vmess.alterId = 0
 
             return vmess

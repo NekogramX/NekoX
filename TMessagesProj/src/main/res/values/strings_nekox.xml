@@ -59,6 +59,7 @@
     <string name="VmessTls">Use TLS</string>
 
     <string name="ImportProxyFromClipboard">Import From Clipboard</string>
+    <string name="BrokenLink">Unknown / Broken Link</string>
 
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>

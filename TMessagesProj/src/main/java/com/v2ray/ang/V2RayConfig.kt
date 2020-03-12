@@ -13,6 +13,7 @@ object V2RayConfig {
     const val PREF_CURR_CONFIG_DOMAIN = "pref_v2ray_config_domain"
     const val PREF_INAPP_BUY_IS_PREMIUM = "pref_inapp_buy_is_premium"
     const val VMESS_PROTOCOL: String = "vmess://"
+    const val VMESS1_PROTOCOL = "vmess1://"
     const val SS_PROTOCOL: String = "ss://"
     const val SOCKS_PROTOCOL: String = "socks://"
     const val BROADCAST_ACTION_SERVICE = "com.v2ray.ang.action.service"
