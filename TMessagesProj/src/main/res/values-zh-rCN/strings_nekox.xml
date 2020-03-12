@@ -17,14 +17,12 @@
     <string name="NekoXPushService">NekoX 通知服务</string>
     <string name="EnablePushAlert">请启用 \"NekoX 通知服务\"</string>
     <string name="DisablePushAlert">请禁用 \"NekoX 通知服务\"</string>
-    <string name="MIUIPermissionNote">对于 MIUI 用户, 请先为 NekoX 启用自启动权限才能正常接收通知.</string>
     <string name="DisableUndo">禁用五秒内后悔</string>
     <string name="DisableSystemAccount">禁用系统帐户</string>
     <string name="FilterMenu">分类菜单</string>
     <string name="DisableProxyWhenVpnEnabled">启用 VPN 时禁用代理</string>
     <string name="SkipOpenLinkComfirm">跳过打开链接确认</string>
     <string name="DeleteAllInChat">删除群组所有消息</string>
-    <string name="DeleteAllInChatAlert">警告！这将**删除此聊天中所有用户**的**所有消息**。</string>
     <string name="UnblockAll">解除所有</string>
     <string name="UnblockAllWarn">您确定要解除屏蔽**所有用户和机器人**吗？</string>
     <string name="BlockedListEmply">您还没有屏蔽任何人 :)</string>
