@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.googlecode.mp4parser:isoparser:1.0.6'
     implementation 'com.stripe:stripe-android:2.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.zxing:core:3.3.0'
     implementation files('libs/libgsaverification-client.aar')
     implementation files('libs/libv2ray.aar')
     implementation "androidx.core:core-ktx:+"

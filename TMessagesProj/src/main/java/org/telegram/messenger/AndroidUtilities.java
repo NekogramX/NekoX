@@ -2635,6 +2635,9 @@ public class AndroidUtilities {
                             password = data.getQueryParameter("pass");
                             secret = data.getQueryParameter("secret");
                         }
+                    } else if (scheme.equals("vmess")) {
+                        showVmessAlert(activity,new SharedConfig.VmessProxy(data.toString()));
+                        return true;
                     }
                 }
                 if (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(port)) {

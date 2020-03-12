@@ -24,20 +24,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import org.telegram.messenger.*;
+
+import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.ApplicationLoader;
+import org.telegram.messenger.DownloadController;
+import org.telegram.messenger.LocaleController;
+import org.telegram.messenger.MessagesController;
+import org.telegram.messenger.NotificationCenter;
+import org.telegram.messenger.R;
+import org.telegram.messenger.SharedConfig;
+import org.telegram.messenger.browser.Browser;
 import org.telegram.tgnet.ConnectionsManager;
-import org.telegram.ui.ActionBar.*;
-import org.telegram.ui.Cells.*;
+import org.telegram.ui.ActionBar.ActionBar;
+import org.telegram.ui.ActionBar.AlertDialog;
+import org.telegram.ui.ActionBar.BaseFragment;
+import org.telegram.ui.ActionBar.BottomSheet;
+import org.telegram.ui.ActionBar.Theme;
+import org.telegram.ui.ActionBar.ThemeDescription;
+import org.telegram.ui.Cells.HeaderCell;
+import org.telegram.ui.Cells.ShadowSectionCell;
+import org.telegram.ui.Cells.TextCheckCell;
+import org.telegram.ui.Cells.TextInfoPrivacyCell;
+import org.telegram.ui.Cells.TextSettingsCell;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.RecyclerListView;
-import tw.nekomimi.nekogram.VmessSettingsActivity;
-import tw.nekomimi.nekogram.utils.ProxyUtil;
 
 import java.util.List;
+
+import okhttp3.HttpUrl;
+import tw.nekomimi.nekogram.VmessSettingsActivity;
+import tw.nekomimi.nekogram.utils.ProxyUtil;
 
 public class ProxyListActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
@@ -380,7 +402,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                     } else if (i == 1) {
 
-                        ProxyUtil.shareProxy(getParentActivity(), info,0);
+                        ProxyUtil.shareProxy(getParentActivity(), info, 0);
 
                     } else if (i == 2) {
 
@@ -453,7 +475,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 LocaleController.getString("AddProxySocks5", R.string.AddProxySocks5),
                 LocaleController.getString("AddProxyTelegram", R.string.AddProxyTelegram),
                 LocaleController.getString("AddProxyVmess", R.string.AddProxyVmess),
-                LocaleController.getString("ImportProxyFromClipboard", R.string.ImportProxyFromClipboard)
+                LocaleController.getString("ImportProxyFromClipboard", R.string.ImportProxyFromClipboard),
+                LocaleController.getString("ScanQRCode", R.string.ScanQRCode)
 
 
         }, (v, i) -> {
@@ -470,11 +493,51 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                 presentFragment(new VmessSettingsActivity());
 
-            } else {
+            } else if (i == 3) {
 
                 // AlertsCreator.showSimpleToast(this, "unimplemented :(");
 
                 ProxyUtil.importFromClipboard(getParentActivity());
+
+            } else {
+
+                CameraScanActivity.showAsSheet(this, new CameraScanActivity.CameraScanActivityDelegate() {
+
+                    @Override
+                    public void didFindQr(String text) {
+
+                        finishFragment(false);
+
+                        try {
+
+                            HttpUrl.parse(text);
+
+                            Browser.openUrl(getParentActivity(), text);
+
+                        } catch (Exception ignored) {
+
+                            AlertDialog.Builder d = new AlertDialog.Builder(getParentActivity());
+
+                            d.setMessage(text);
+
+                            d.setNegativeButton(LocaleController.getString("Copy", R.string.Copy), (vd, id) -> {
+
+                                AndroidUtilities.addToClipboard(text);
+
+                                Toast.makeText(ApplicationLoader.applicationContext, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show();
+
+                            });
+
+                            d.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
+
+                            showDialog(d.create());
+
+                        }
+
+
+                    }
+
+                });
 
             }
 

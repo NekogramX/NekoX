@@ -9,6 +9,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.setPadding
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
+import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
 import com.v2ray.ang.V2RayConfig.VMESS_PROTOCOL
 import okhttp3.HttpUrl
@@ -131,7 +133,7 @@ object ProxyUtil {
 
                 exists = true
 
-                import(ctx,it)
+                import(ctx, it)
 
             }
 
@@ -151,7 +153,7 @@ object ProxyUtil {
 
             if (link.startsWith(VMESS_PROTOCOL)) {
 
-                AndroidUtilities.showVmessAlert(ctx,SharedConfig.VmessProxy(link))
+                AndroidUtilities.showVmessAlert(ctx, SharedConfig.VmessProxy(link))
 
             } else {
 
@@ -213,13 +215,13 @@ object ProxyUtil {
 
         }
 
-        if (type == 0) {
+        if (type == 1) {
 
             AndroidUtilities.addToClipboard(url)
 
             Toast.makeText(ctx, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show()
 
-        } else if (type == 1) {
+        } else if (type == 0) {
 
             val shareIntent = Intent(Intent.ACTION_SEND)
 
@@ -241,7 +243,7 @@ object ProxyUtil {
 
                 addView(ImageView(ctx).apply {
 
-                    setImageBitmap(encodeAsBitmap(url))
+                    setImageBitmap(createQRCode(url))
 
                 })
 
@@ -251,14 +253,31 @@ object ProxyUtil {
 
     }
 
-    fun encodeAsBitmap(str: String,width: Int = 800): Bitmap {
+    fun createQRCode(text: String, size: Int = 800): Bitmap? {
+        try {
+            val hints = HashMap<EncodeHintType, String>()
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8")
+            val bitMatrix = QRCodeWriter().encode(text,
+                    BarcodeFormat.QR_CODE, size, size, hints)
+            val pixels = IntArray(size * size)
+            for (y in 0..size - 1) {
+                for (x in 0..size - 1) {
+                    if (bitMatrix.get(x, y)) {
+                        pixels[y * size + x] = 0xff000000.toInt()
+                    } else {
+                        pixels[y * size + x] = 0xffffffff.toInt()
+                    }
 
-        return QRCodeWriter().
-        encode(str, BarcodeFormat.QR_CODE, width, width,
-                null,null,
-                ApplicationLoader.applicationContext)
-
+                }
+            }
+            val bitmap = Bitmap.createBitmap(size, size,
+                    Bitmap.Config.ARGB_8888)
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+            return null
+        }
     }
-
 
 }
