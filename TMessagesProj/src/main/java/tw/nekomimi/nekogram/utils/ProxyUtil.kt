@@ -239,8 +239,6 @@ object ProxyUtil {
 
             AlertDialog.Builder(ctx).setView(LinearLayout(ctx).apply {
 
-                setPadding(AndroidUtilities.dp(16f))
-
                 addView(ImageView(ctx).apply {
 
                     setImageBitmap(createQRCode(url))
