@@ -18,11 +18,11 @@ data class AngConfig(
                          var alterId: Int = 64,
                          var security: String = "auto",
                          var network: String = "tcp",
-                         var remarks: String = "def",
+                         var remarks: String = "",
                          var headerType: String = "none",
                          var requestHost: String = "",
                          var path: String = "",
-                         var streamSecurity: String = "",
+                         var streamSecurity: String = "tls",
                          var configType: Int = 1,
                          var configVersion: Int = 1,
                          var testResult: String = "") {

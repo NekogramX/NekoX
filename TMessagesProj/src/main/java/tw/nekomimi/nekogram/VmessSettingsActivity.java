@@ -46,11 +46,13 @@ import org.telegram.ui.ActionBar.ThemeDescription;
 import org.telegram.ui.Cells.TextCheckCell;
 import org.telegram.ui.Cells.TextInfoPrivacyCell;
 import org.telegram.ui.Cells.TextSettingsCell;
+import org.telegram.ui.Components.AlertsCreator;
 import org.telegram.ui.Components.EditTextBoldCursor;
 import org.telegram.ui.Components.LayoutHelper;
 
 import java.util.ArrayList;
 
+import kotlin.NumbersKt;
 import kotlin.text.StringsKt;
 
 public class VmessSettingsActivity extends BaseFragment {
@@ -176,8 +178,45 @@ public class VmessSettingsActivity extends BaseFragment {
                         return;
                     }
 
+                    if (StringsKt.isBlank(ipField.getText())) {
+
+                        ipField.requestFocus();
+                        AndroidUtilities.showKeyboard(ipField);
+
+                        return;
+
+                    }
+
+                    if (StringsKt.isBlank(portField.getText())) {
+
+                        portField.requestFocus();
+                        AndroidUtilities.showKeyboard(portField);
+
+                        return;
+
+                    }
+
+                    if (StringsKt.isBlank(userIdField.getText())) {
+
+                        userIdField.requestFocus();
+                        AndroidUtilities.showKeyboard(userIdField);
+
+                        return;
+
+                    }
+
+                    if (StringsKt.isBlank(alterIdField.getText())) {
+
+                        alterIdField.requestFocus();
+                        AndroidUtilities.showKeyboard(alterIdField);
+
+                        return;
+
+                    }
+
                     currentBean.setAddress(ipField.getText().toString());
                     currentBean.setPort(Utilities.parseInt(portField.getText().toString()));
+                    currentBean.setId(userIdField.getText().toString());
                     currentBean.setAlterId(Utilities.parseInt(alterIdField.getText().toString()));
                     currentBean.setSecurity(securityField.getValueTextView().getText().toString());
                     currentBean.setNetwork(networkField.getValueTextView().getText().toString());
