@@ -190,6 +190,18 @@ public class SharedConfig {
 
         }
 
+        public void reset() {
+
+            port = ProxyManager.getPortForBean(bean);
+
+            loader.stop();
+
+            loader = new VmessLoader();
+            loader.initConfig(bean, port);
+            loader.start();
+
+        }
+
     }
 
     public static LinkedList<ProxyInfo> proxyList = new LinkedList<>();

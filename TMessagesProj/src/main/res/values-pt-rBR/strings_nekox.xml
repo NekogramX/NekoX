@@ -32,7 +32,6 @@
     <string name="VmessUserId">ID do usuário</string>
     <string name="VmessAlterId">Alterar ID</string>
     <string name="VmessSecurity">Segurança</string>
-    <string name="VmessNetowrk">Rede</string>
     <string name="VmessHeadType">Tipo de cabeça</string>
     <string name="VmessRequestHost">Host do Pedido / Segurança QUIC</string>
     <string name="VmessPath">Path / QUIC Key</string>

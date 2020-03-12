@@ -338,18 +338,6 @@ public class LocaleController {
         languagesDict.put(localeInfo.getKey(), localeInfo);
 
         localeInfo = new LocaleInfo();
-        localeInfo.name = "瓜體中文";
-        localeInfo.nameEnglish = "Duangified Chinese (Traditional)";
-        localeInfo.shortName = "duang_zh_hant";
-        localeInfo.baseLangCode = "zh_hant";
-        localeInfo.isRtl = false;
-        localeInfo.pathToFile = "unofficial";
-        localeInfo.pluralLangCode = "zh_tw";
-        localeInfo.builtIn = true;
-        languages.add(localeInfo);
-        languagesDict.put(localeInfo.getKey(), localeInfo);
-
-        localeInfo = new LocaleInfo();
         localeInfo.name = "简体中文";
         localeInfo.nameEnglish = "Chinese (Simplified, @zh_CN)";
         localeInfo.shortName = "classic_zh_cn";
@@ -395,18 +383,6 @@ public class LocaleController {
         localeInfo.nameEnglish = "Chinese (hongkonger)";
         localeInfo.shortName = "hongkonger";
         localeInfo.baseLangCode = "zh_hant_hk";
-        localeInfo.isRtl = false;
-        localeInfo.pathToFile = "unofficial";
-        localeInfo.pluralLangCode = "zh_hk";
-        localeInfo.builtIn = true;
-        languages.add(localeInfo);
-        languagesDict.put(localeInfo.getKey(), localeInfo);
-
-        localeInfo = new LocaleInfo();
-        localeInfo.name = "廣東話";
-        localeInfo.nameEnglish = "Chinese (cantonese)";
-        localeInfo.shortName = "cantonese";
-        localeInfo.baseLangCode = "zh_hant_cantonese";
         localeInfo.isRtl = false;
         localeInfo.pathToFile = "unofficial";
         localeInfo.pluralLangCode = "zh_hk";
