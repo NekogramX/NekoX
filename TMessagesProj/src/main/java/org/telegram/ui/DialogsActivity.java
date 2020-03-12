@@ -56,6 +56,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
@@ -74,6 +75,7 @@ import org.telegram.messenger.UserObject;
 import org.telegram.messenger.Utilities;
 import org.telegram.messenger.XiaomiUtilities;
 import org.telegram.messenger.FileLog;
+import org.telegram.messenger.browser.Browser;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
@@ -139,12 +141,13 @@ import org.telegram.ui.Components.UndoView;
 import java.util.ArrayList;
 import java.util.Date;
 
+import okhttp3.HttpUrl;
 import tw.nekomimi.nekogram.FilterPopup;
 import tw.nekomimi.nekogram.MessageHelper;
 import tw.nekomimi.nekogram.NekoConfig;
 
 public class DialogsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
-    
+
     private DialogsRecyclerView listView;
     private RecyclerListView searchListView;
     private LinearLayoutManager layoutManager;
@@ -155,6 +158,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     private RadialProgressView progressView;
     private ActionBarMenuItem passcodeItem;
     private ActionBarMenuItem proxyItem;
+    private ActionBarMenuItem scanItem;
     private ProxyDrawable proxyDrawable;
     private ImageView floatingButton;
     private FrameLayout floatingButtonContainer;
@@ -257,7 +261,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     private int canUnmuteCount;
     private int canClearCacheCount;
     private int canReportSpamCount;
-    
+
     private int folderId;
 
     private final static int pin = 100;
@@ -1048,6 +1052,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             updatePasscodeButton();
             updateProxyButton(false);
         }
+
+        scanItem = menu.addItem(3, R.drawable.floating_camera);
+        scanItem.setContentDescription(LocaleController.getString("ScanQRCode", R.string.ScanQRCode));
+        scanItem.setVisibility(View.GONE);
+
         final ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
             @Override
             public void onSearchExpand() {
@@ -1057,6 +1066,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (proxyItem != null && proxyItemVisisble) {
                     proxyItem.setVisibility(View.GONE);
+                    scanItem.setVisibility(View.VISIBLE);
                 }
                 if (listView != null) {
                     if (searchString != null) {
@@ -1079,6 +1089,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (proxyItem != null && proxyItemVisisble) {
                     proxyItem.setVisibility(View.VISIBLE);
+                    scanItem.setVisibility(View.GONE);
                 }
                 if (searchString != null) {
                     finishFragment();
@@ -1212,6 +1223,59 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     updatePasscodeButton();
                 } else if (id == 2) {
                     presentFragment(new ProxyListActivity());
+                } else if (id == 3) {
+
+
+                    CameraScanActivity.showAsSheet(DialogsActivity.this, new CameraScanActivity.CameraScanActivityDelegate() {
+
+                        @Override
+                        public void didFindQr(String text) {
+
+
+                            BottomSheet.Builder builder = new BottomSheet.Builder(getParentActivity());
+
+                            boolean isUrl = false;
+
+                            try {
+
+                                HttpUrl.parse(text);
+
+                                isUrl = true;
+
+                            } catch (Exception ignored) {
+                            }
+
+                            builder.setTitle(text);
+
+                            builder.setItems(new String[]{
+
+                                    isUrl ? LocaleController.getString("Open", R.string.OpenUrlTitle) : null,
+                                    LocaleController.getString("Copy", R.string.Copy),
+                                    LocaleController.getString("Cancel", R.string.Cancel)
+
+                            }, (v, i) -> {
+
+                                if (i == 0) {
+
+                                    Browser.openUrl(getParentActivity(), text);
+
+                                } else if (i == 1) {
+
+                                    AndroidUtilities.addToClipboard(text);
+
+                                    Toast.makeText(ApplicationLoader.applicationContext, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show();
+
+                                }
+
+                            });
+
+                            showDialog(builder.create());
+
+
+                        }
+                    });
+
+
                 } else if (id >= 10 && id < 10 + UserConfig.MAX_ACCOUNT_COUNT) {
                     if (getParentActivity() == null) {
                         return;
@@ -3346,7 +3410,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             }
 
          */
-            proxyDrawable.setConnected(true, currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating, animated);
+        proxyDrawable.setConnected(true, currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating, animated);
            /* proxyItemVisisble = true;
         } else {
            // proxyItem.setVisibility(View.GONE);
@@ -3753,7 +3817,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
         floatingHidden = hide;
         AnimatorSet animatorSet = new AnimatorSet();
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(floatingButtonHideProgress,floatingHidden ? 1f : 0f);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(floatingButtonHideProgress, floatingHidden ? 1f : 0f);
         valueAnimator.addUpdateListener(animation -> {
             floatingButtonHideProgress = (float) animation.getAnimatedValue();
             floatingButtonTranslation = AndroidUtilities.dp(100) * floatingButtonHideProgress;

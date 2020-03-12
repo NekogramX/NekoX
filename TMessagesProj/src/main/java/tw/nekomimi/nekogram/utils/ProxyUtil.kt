@@ -4,6 +4,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.view.Gravity
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -12,6 +14,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.v2ray.ang.V2RayConfig.VMESS_PROTOCOL
 import okhttp3.HttpUrl
 import org.json.JSONArray
@@ -239,11 +242,16 @@ object ProxyUtil {
 
             AlertDialog.Builder(ctx).setView(LinearLayout(ctx).apply {
 
+                gravity = Gravity.CENTER
+
+                val width = AndroidUtilities.dp(330f)
+
                 addView(ImageView(ctx).apply {
 
                     setImageBitmap(createQRCode(url))
+                    scaleType = ImageView.ScaleType.FIT_XY
 
-                })
+                },LinearLayout.LayoutParams(width,width))
 
             }).show()
 
@@ -253,13 +261,14 @@ object ProxyUtil {
 
     fun createQRCode(text: String, size: Int = 800): Bitmap? {
         try {
-            val hints = HashMap<EncodeHintType, String>()
-            hints.put(EncodeHintType.CHARACTER_SET, "utf-8")
+            val hints = HashMap<EncodeHintType, Any>()
+            hints[EncodeHintType.CHARACTER_SET] = "utf-8"
+            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H;
             val bitMatrix = QRCodeWriter().encode(text,
                     BarcodeFormat.QR_CODE, size, size, hints)
             val pixels = IntArray(size * size)
-            for (y in 0..size - 1) {
-                for (x in 0..size - 1) {
+            for (y in 0 until size) {
+                for (x in 0 until size) {
                     if (bitMatrix.get(x, y)) {
                         pixels[y * size + x] = 0xff000000.toInt()
                     } else {
@@ -268,8 +277,7 @@ object ProxyUtil {
 
                 }
             }
-            val bitmap = Bitmap.createBitmap(size, size,
-                    Bitmap.Config.ARGB_8888)
+            val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
             bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
             return bitmap
         } catch (e: WriterException) {

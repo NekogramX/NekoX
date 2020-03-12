@@ -42,7 +42,6 @@ import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.browser.Browser;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.ui.ActionBar.ActionBar;
-import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.ActionBar.Theme;
@@ -478,7 +477,6 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 LocaleController.getString("ImportProxyFromClipboard", R.string.ImportProxyFromClipboard),
                 LocaleController.getString("ScanQRCode", R.string.ScanQRCode)
 
-
         }, (v, i) -> {
 
             if (i == 0) {
@@ -506,31 +504,88 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     @Override
                     public void didFindQr(String text) {
 
+                        BottomSheet.Builder builder = new BottomSheet.Builder(getParentActivity());
+
+                        boolean isUrl = false;
+
                         try {
 
                             HttpUrl.parse(text);
 
+                            isUrl = true;
+
                             Browser.openUrl(getParentActivity(), text);
 
+                            return;
+
                         } catch (Exception ignored) {
-
-                            AlertDialog.Builder d = new AlertDialog.Builder(getParentActivity());
-
-                            d.setMessage(text);
-
-                            d.setNegativeButton(LocaleController.getString("Copy", R.string.Copy), (vd, id) -> {
-
-                                AndroidUtilities.addToClipboard(text);
-
-                                Toast.makeText(ApplicationLoader.applicationContext, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show();
-
-                            });
-
-                            d.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
-
-                            showDialog(d.create());
-
                         }
+
+                        builder.setTitle(text);
+
+                        builder.setItems(new String[]{
+
+                                LocaleController.getString("Copy", R.string.Copy),
+                                LocaleController.getString("Cancel", R.string.Cancel)
+
+                        }, (v, i) -> {
+
+                            if (i == 0l) {
+
+                                CameraScanActivity.showAsSheet(ProxyListActivity.this, new CameraScanActivity.CameraScanActivityDelegate() {
+
+                                    @Override
+                                    public void didFindQr(String text) {
+
+
+                                        BottomSheet.Builder builder = new BottomSheet.Builder(getParentActivity());
+
+                                        boolean isUrl = false;
+
+                                        try {
+
+                                            HttpUrl.parse(text);
+
+                                            isUrl = true;
+
+                                        } catch (Exception ignored) {
+                                        }
+
+                                        if (isUrl) {
+
+                                            Browser.openUrl(getParentActivity(), text);
+
+                                        } else {
+
+                                            builder.setTitle(text);
+
+                                            builder.setItems(new String[]{
+
+                                                    LocaleController.getString("Copy", R.string.Copy),
+                                                    LocaleController.getString("Cancel", R.string.Cancel)
+
+                                            }, (v, i) -> {
+
+                                                if (i == 0) {
+
+                                                    AndroidUtilities.addToClipboard(text);
+
+                                                    Toast.makeText(ApplicationLoader.applicationContext, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show();
+
+                                                }
+
+                                            });
+
+                                        }
+
+                                    }
+                                });
+
+                            }
+
+                        });
+
+                        showDialog(builder.create());
 
 
                     }
