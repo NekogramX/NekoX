@@ -40,14 +40,21 @@
     <string name="BlockedListEmply">You haven\'t blocked anyone :)</string>
 
     <string name="ProxyTypeVmess">Vmess Proxy</string>
+    <string name="AddProxySocks5">Add Socks5 Proxy</string>
+    <string name="AddProxyTelegram">Add MTProto Proxy</string>
+    <string name="AddProxyVmess">Add Vmess Proxy</string>
+
+    <string name="ProxyInfoVmess">Vmess Proxy Settings</string>
     <string name="VmessUserId">User Id</string>
     <string name="VmessAlterId">Alter Id</string>
     <string name="VmessSecurity">Security</string>
-    <string name="VmessNetowrk">Network</string>
+    <string name="VmessNetwork">Network</string>
     <string name="VmessHeadType">Head Type</string>
     <string name="VmessRequestHost">Request Host / QUIC Security</string>
     <string name="VmessPath">Path / QUIC Key</string>
     <string name="VmessTls">Use TLS</string>
+
+    <string name="ImportProxyFromClipboard">Import From Clipboard</string>
 
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>

@@ -52,10 +52,13 @@ object V2RayConfig {
     const val MSG_STATE_RESTART = 5
 
     object EConfigType {
+
+        @JvmField
         val Vmess = 1
-        val Custom = 2
+
+        @JvmField
         val Shadowsocks = 3
-        val Socks = 4
+
     }
 
 }

@@ -456,7 +456,7 @@ public class CacheControlActivity extends BaseFragment {
                     }
                     cleanupFolders();
                 });
-                linearLayout.addView(cell, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 50));
+                linearLayout.addView(cell, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 56));
                 builder.setCustomView(linearLayout);
                 showDialog(builder.create());
             }

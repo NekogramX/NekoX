@@ -138,18 +138,6 @@ object V2rayConfigUtil {
 
                     outbound.protocol = "shadowsocks"
                 }
-                V2RayConfig.EConfigType.Socks -> {
-                    outbound.settings?.vnext = null
-
-                    val server = outbound.settings?.servers?.get(0)
-                    server?.address = vmess.address
-                    server?.port = vmess.port
-
-                    //Mux
-                    outbound.mux?.enabled = false
-
-                    outbound.protocol = "socks"
-                }
                 else -> {
                 }
             }

@@ -21,16 +21,16 @@ object ProxyUtil {
     @JvmStatic
     fun isVPNEnabled(): Boolean {
 
-        val cm = ApplicationLoader.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        val networkList: MutableList<String> = ArrayList()
+        val networkList = mutableListOf<String>()
 
         runCatching {
+
             Collections.list(NetworkInterface.getNetworkInterfaces()).forEach {
 
-                if (it.isUp()) networkList.add(it.name)
+                if (it.isUp) networkList.add(it.name)
 
             }
+
         }
 
         return networkList.contains("tun0")
@@ -39,8 +39,6 @@ object ProxyUtil {
 
     @JvmStatic
     fun reloadProxyList(): Boolean {
-
-        val ctx = ApplicationLoader.applicationContext
 
         cacheFile.parentFile?.mkdirs()
 
