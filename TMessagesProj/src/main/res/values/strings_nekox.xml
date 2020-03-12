@@ -32,12 +32,12 @@
     <string name="DisableProxyWhenVpnEnabled">Disable proxy when VPN enabled</string>
     <string name="SkipOpenLinkConfirm">Skip open link confirm</string>
 
-    <string name="DeleteAllInChat">Delete all in caht</string>
+    <string name="DeleteAllInChat">Delete all in chat</string>
     <string name="DeleteAllInChatAlert">Warning! This will **delete all messages** in this chat for **all** participants.</string>
 
     <string name="UnblockAll">Unblock All</string>
     <string name="UnblockAllWarn">Are you sure you want to unblock **all users and bots**?</string>
-    <string name="BlockedListEmply">You haven\'t blocked anyone :)</string>
+    <string name="BlockedListEmpty">You haven\'t blocked anyone :)</string>
 
     <string name="ProxyTypeVmess">Vmess Proxy</string>
     <string name="AddProxySocks5">Add Socks5 Proxy</string>

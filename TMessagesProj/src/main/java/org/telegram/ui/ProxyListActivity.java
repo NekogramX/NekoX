@@ -506,8 +506,6 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     @Override
                     public void didFindQr(String text) {
 
-                        finishFragment(false);
-
                         try {
 
                             HttpUrl.parse(text);
