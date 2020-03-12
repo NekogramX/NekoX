@@ -251,9 +251,9 @@ object ProxyUtil {
                     setImageBitmap(createQRCode(url))
                     scaleType = ImageView.ScaleType.FIT_XY
 
-                },LinearLayout.LayoutParams(width,width))
+                }, LinearLayout.LayoutParams(width, width))
 
-            }).show()
+            }, -1).show()
 
         }
 
@@ -263,7 +263,7 @@ object ProxyUtil {
         try {
             val hints = HashMap<EncodeHintType, Any>()
             hints[EncodeHintType.CHARACTER_SET] = "utf-8"
-            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H;
+            //hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
             val bitMatrix = QRCodeWriter().encode(text,
                     BarcodeFormat.QR_CODE, size, size, hints)
             val pixels = IntArray(size * size)
