@@ -87,7 +87,6 @@ public class ProxySettingsActivity extends BaseFragment {
     private LinearLayout inputFieldsContainer;
     private ShadowSectionCell[] sectionCell = new ShadowSectionCell[3];
     private TextInfoPrivacyCell[] bottomCells = new TextInfoPrivacyCell[2];
-    private TextSettingsCell shareCell;
     private TextSettingsCell pasteCell;
     private ActionBarMenuItem doneItem;
     // private RadioCell[] typeCell = new RadioCell[2];
@@ -472,64 +471,6 @@ public class ProxySettingsActivity extends BaseFragment {
         linearLayout2.addView(sectionCell[2], 1, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
         sectionCell[2].setVisibility(View.GONE);
 
-        shareCell = new TextSettingsCell(context);
-        shareCell.setBackgroundDrawable(Theme.getSelectorDrawable(true));
-        shareCell.setText(LocaleController.getString("ShareFile", R.string.ShareFile), false);
-        shareCell.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
-        linearLayout2.addView(shareCell, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
-        shareCell.setOnClickListener(v -> {
-            StringBuilder params = new StringBuilder();
-            String address = inputFields[FIELD_IP].getText().toString();
-            String password = inputFields[FIELD_PASSWORD].getText().toString();
-            String user = inputFields[FIELD_USER].getText().toString();
-            String port = inputFields[FIELD_PORT].getText().toString();
-            String secret = inputFields[FIELD_SECRET].getText().toString();
-            String url;
-            try {
-                if (!TextUtils.isEmpty(address)) {
-                    params.append("server=").append(URLEncoder.encode(address, "UTF-8"));
-                }
-                if (!TextUtils.isEmpty(port)) {
-                    if (params.length() != 0) {
-                        params.append("&");
-                    }
-                    params.append("port=").append(URLEncoder.encode(port, "UTF-8"));
-                }
-                if (currentType == 1) {
-                    url = "https://t.me/proxy?";
-                    if (params.length() != 0) {
-                        params.append("&");
-                    }
-                    params.append("secret=").append(URLEncoder.encode(secret, "UTF-8"));
-                } else {
-                    url = "https://t.me/socks?";
-                    if (!TextUtils.isEmpty(user)) {
-                        if (params.length() != 0) {
-                            params.append("&");
-                        }
-                        params.append("user=").append(URLEncoder.encode(user, "UTF-8"));
-                    }
-                    if (!TextUtils.isEmpty(password)) {
-                        if (params.length() != 0) {
-                            params.append("&");
-                        }
-                        params.append("pass=").append(URLEncoder.encode(password, "UTF-8"));
-                    }
-                }
-            } catch (Exception ignore) {
-                return;
-            }
-            if (params.length() == 0) {
-                return;
-            }
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, url + params.toString());
-            Intent chooserIntent = Intent.createChooser(shareIntent, LocaleController.getString("ShareLink", R.string.ShareLink));
-            chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getParentActivity().startActivity(chooserIntent);
-        });
-
         sectionCell[1] = new ShadowSectionCell(context);
         sectionCell[1].setBackgroundDrawable(Theme.getThemedDrawable(context, R.drawable.greydivider_bottom, Theme.key_windowBackgroundGrayShadow));
         linearLayout2.addView(sectionCell[1], LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
@@ -660,7 +601,6 @@ public class ProxySettingsActivity extends BaseFragment {
                 shareDoneAnimator.setDuration(200);
                 shareDoneAnimator.addUpdateListener(a -> {
                     shareDoneProgress = AndroidUtilities.lerp(shareDoneProgressAnimValues, a.getAnimatedFraction());
-                    shareCell.setTextColor(ColorUtils.blendARGB(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText2), Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4), shareDoneProgress));
                     doneItem.setAlpha(shareDoneProgress / 2f + 0.5f);
                 });
             }
@@ -670,17 +610,15 @@ public class ProxySettingsActivity extends BaseFragment {
                 shareDoneAnimator.start();
             } else {
                 shareDoneProgress = enabled ? 1f : 0f;
-                shareCell.setTextColor(enabled ? Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4) : Theme.getColor(Theme.key_windowBackgroundWhiteGrayText2));
                 doneItem.setAlpha(enabled ? 1f : .5f);
             }
-            shareCell.setEnabled(enabled);
             doneItem.setEnabled(enabled);
             shareDoneEnabled = enabled;
         }
     }
 
     private void checkShareDone(boolean animated) {
-        if (shareCell == null || doneItem == null || inputFields[FIELD_IP] == null || inputFields[FIELD_PORT] == null) {
+        if (doneItem == null || inputFields[FIELD_IP] == null || inputFields[FIELD_PORT] == null) {
             return;
         }
         setShareDoneEnabled(inputFields[FIELD_IP].length() != 0 && Utilities.parseInt(inputFields[FIELD_PORT].getText().toString()) != 0, animated);
@@ -758,9 +696,6 @@ public class ProxySettingsActivity extends BaseFragment {
     @Override
     public ThemeDescription[] getThemeDescriptions() {
         final ThemeDescription.ThemeDescriptionDelegate delegate = () -> {
-            if (shareCell != null && (shareDoneAnimator == null || !shareDoneAnimator.isRunning())) {
-                shareCell.setTextColor(shareDoneEnabled ? Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4) : Theme.getColor(Theme.key_windowBackgroundWhiteGrayText2));
-            }
             if (inputFields != null) {
                 for (int i = 0; i < inputFields.length; i++) {
                     inputFields[i].setLineColors(Theme.getColor(Theme.key_windowBackgroundWhiteInputField),
@@ -780,11 +715,6 @@ public class ProxySettingsActivity extends BaseFragment {
         arrayList.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_SEARCHPLACEHOLDER, null, null, null, null, Theme.key_actionBarDefaultSearchPlaceholder));
         arrayList.add(new ThemeDescription(inputFieldsContainer, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_windowBackgroundWhite));
         arrayList.add(new ThemeDescription(linearLayout2, 0, new Class[]{View.class}, Theme.dividerPaint, null, null, Theme.key_divider));
-
-        arrayList.add(new ThemeDescription(shareCell, ThemeDescription.FLAG_SELECTORWHITE, null, null, null, null, Theme.key_windowBackgroundWhite));
-        arrayList.add(new ThemeDescription(shareCell, ThemeDescription.FLAG_SELECTORWHITE, null, null, null, null, Theme.key_listSelector));
-        arrayList.add(new ThemeDescription(null, 0, null, null, null, null, delegate, Theme.key_windowBackgroundWhiteBlueText4));
-        arrayList.add(new ThemeDescription(null, 0, null, null, null, null, delegate, Theme.key_windowBackgroundWhiteGrayText2));
 
         arrayList.add(new ThemeDescription(pasteCell, ThemeDescription.FLAG_SELECTORWHITE, null, null, null, null, Theme.key_windowBackgroundWhite));
         arrayList.add(new ThemeDescription(pasteCell, ThemeDescription.FLAG_SELECTORWHITE, null, null, null, null, Theme.key_listSelector));
