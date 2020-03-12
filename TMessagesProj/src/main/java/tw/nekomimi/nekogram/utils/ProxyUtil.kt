@@ -1,5 +1,6 @@
 package tw.nekomimi.nekogram.utils
 
+import android.app.Dialog
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
@@ -240,18 +241,26 @@ object ProxyUtil {
 
         } else {
 
-            AlertDialog.Builder(ctx).setView(LinearLayout(ctx).apply {
+            android.app.AlertDialog.Builder(ctx).setView(LinearLayout(ctx).apply {
 
-                gravity = Gravity.CENTER
+                addView(LinearLayout(ctx).apply {
 
-                val width = AndroidUtilities.dp(330f)
+                    gravity = Gravity.CENTER
 
-                addView(ImageView(ctx).apply {
+                    val width = AndroidUtilities.dp(330f)
 
-                    setImageBitmap(createQRCode(url))
-                    scaleType = ImageView.ScaleType.FIT_XY
+                    addView(ImageView(ctx).apply {
 
-                },LinearLayout.LayoutParams(width,width))
+                        setImageBitmap(createQRCode(url))
+                        scaleType = ImageView.ScaleType.FIT_XY
+
+                    }, LinearLayout.LayoutParams(width, width))
+
+                }, LinearLayout.LayoutParams(-1, -1).apply {
+
+                    gravity = Gravity.CENTER
+
+                })
 
             }).show()
 
@@ -263,7 +272,7 @@ object ProxyUtil {
         try {
             val hints = HashMap<EncodeHintType, Any>()
             hints[EncodeHintType.CHARACTER_SET] = "utf-8"
-            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H;
+            //hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
             val bitMatrix = QRCodeWriter().encode(text,
                     BarcodeFormat.QR_CODE, size, size, hints)
             val pixels = IntArray(size * size)
