@@ -154,8 +154,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             String server;
             int port;
             if (proxyInfo instanceof SharedConfig.VmessProxy) {
-                server = ((SharedConfig.VmessProxy)proxyInfo).bean.getAddress();
-                port = ((SharedConfig.VmessProxy)proxyInfo).bean.getPort();
+                server = ((SharedConfig.VmessProxy) proxyInfo).bean.getAddress();
+                port = ((SharedConfig.VmessProxy) proxyInfo).bean.getPort();
             } else {
                 server = proxyInfo.address;
                 port = proxyInfo.port;
@@ -395,33 +395,88 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             if (position >= proxyStartRow && position < proxyEndRow) {
                 final SharedConfig.ProxyInfo info = SharedConfig.proxyList.get(position - proxyStartRow);
 
-                if (info.isInternal) return false;
+                BottomSheet.Builder builder = new BottomSheet.Builder(context);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-                builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
+                builder.setItems(new String[]{
 
-                builder.setMessage(LocaleController.getString("DeleteProxy", R.string.DeleteProxy));
-                builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
-                builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialog, which) -> {
-                    SharedConfig.deleteProxy(info);
-                    if (SharedConfig.currentProxy == null) {
-                        SharedConfig.setProxyEnable(false);
-                    }
-                    NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
-                    NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
-                    NotificationCenter.getGlobalInstance().addObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
-                    updateRows(false);
-                    if (listAdapter != null) {
-                        listAdapter.notifyItemRemoved(position);
-                        if (SharedConfig.currentProxy == null) {
-                            listAdapter.notifyItemChanged(useProxyRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
-                            listAdapter.notifyItemChanged(callsRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
+                        info.isInternal ? null : LocaleController.getString("EditProxy", R.string.EditProxy),
+                        (info.isInternal && info.descripton == null) ? null : LocaleController.getString("ShareProxy", R.string.ShareProxy),
+                        (info.isInternal && info.descripton == null) ? null : LocaleController.getString("CopyLink", R.string.CopyLink),
+                        (info.isInternal) ? null : LocaleController.getString("ProxyDelete", R.string.ProxyDelete),
+                        LocaleController.getString("Cancel", R.string.Cancel)
+
+                }, new int[]{
+
+                        R.drawable.group_edit,
+                        R.drawable.share,
+                        R.drawable.msg_link,
+                        R.drawable.msg_delete,
+                        R.drawable.msg_cancel
+
+                }, (v, i) -> {
+
+                    if (i == 0) {
+
+                        if (info instanceof SharedConfig.VmessProxy) {
+                            presentFragment(new VmessSettingsActivity((SharedConfig.VmessProxy) info));
+                        } else {
+                            presentFragment(new ProxySettingsActivity(info));
                         }
+
+                    } else if (i == 1) {
+
+                        ProxyUtil.shareProxy(getParentActivity(), info);
+
+                    } else if (i == 2) {
+
+                        ProxyUtil.shareProxy(getParentActivity(), info, true);
+
+                    } else if (i == 3) {
+
+                        BottomSheet.Builder del = new BottomSheet.Builder(context);
+
+                        del.setItems(new String[]{
+
+                                LocaleController.getString("OK", R.string.OK),
+                                LocaleController.getString("Cancel", R.string.Cancel)
+
+                        }, new int[]{
+
+                                R.drawable.msg_delete,
+                                R.drawable.msg_cancel
+
+                        }, (dv, di) -> {
+
+                            if (di == 0) {
+
+                                SharedConfig.deleteProxy(info);
+                                if (SharedConfig.currentProxy == null) {
+                                    SharedConfig.setProxyEnable(false);
+                                }
+                                NotificationCenter.getGlobalInstance().removeObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
+                                NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+                                NotificationCenter.getGlobalInstance().addObserver(ProxyListActivity.this, NotificationCenter.proxySettingsChanged);
+                                updateRows(false);
+                                if (listAdapter != null) {
+                                    listAdapter.notifyItemRemoved(position);
+                                    if (SharedConfig.currentProxy == null) {
+                                        listAdapter.notifyItemChanged(useProxyRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
+                                        listAdapter.notifyItemChanged(callsRow, ListAdapter.PAYLOAD_CHECKED_CHANGED);
+                                    }
+                                }
+
+                            }
+
+                        });
+
+                        showDialog(del.create());
+
                     }
+
                 });
 
                 showDialog(builder.create());
+
                 return true;
             }
             return false;

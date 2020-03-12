@@ -1,16 +1,19 @@
 package tw.nekomimi.nekogram.utils
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
+import android.content.Intent
+import android.net.ProxyInfo
+import android.text.TextUtils
+import android.widget.Toast
+import okhttp3.HttpUrl
 import org.json.JSONArray
-import org.telegram.messenger.ApplicationLoader
+import org.telegram.messenger.*
+import org.telegram.ui.ProxySettingsActivity
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.net.NetworkInterface
+import java.net.URLEncoder
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 object ProxyUtil {
@@ -103,6 +106,68 @@ object ProxyUtil {
         }
 
         return false
+
+    }
+
+    @JvmStatic
+    @JvmOverloads
+    fun shareProxy(ctx: Context,info: SharedConfig.ProxyInfo,copy: Boolean = false) {
+
+        val url = if (info is SharedConfig.VmessProxy) {
+
+            info.toString()
+
+        } else {
+
+            val httpUrl = HttpUrl.parse(if(info.secret.isEmpty()) {
+
+                "https://t.me/socks"
+
+            } else {
+
+                "https://t.me/proxy"
+
+            })!!.newBuilder()
+
+            httpUrl.addQueryParameter("server",info.address)
+            httpUrl.addQueryParameter("port",info.port.toString())
+
+            if (info.secret.isNotBlank()) {
+
+                httpUrl.addQueryParameter("secret", info.secret)
+
+            } else {
+
+                httpUrl.addQueryParameter("user",info.username)
+                httpUrl.addQueryParameter("pass",info.password)
+
+            }
+
+            httpUrl.build().toString()
+
+        }
+
+        if (copy) {
+
+            AndroidUtilities.addToClipboard(url)
+
+            Toast.makeText(ctx,LocaleController.getString("LinkCopied",R.string.LinkCopied),Toast.LENGTH_LONG).show()
+
+        } else {
+
+            val shareIntent = Intent(Intent.ACTION_SEND)
+
+            shareIntent.type = "text/plain"
+
+            shareIntent.putExtra(Intent.EXTRA_TEXT, url)
+
+            val chooserIntent = Intent.createChooser(shareIntent, LocaleController.getString("ShareLink", R.string.ShareLink))
+
+            chooserIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+            ctx.startActivity(chooserIntent)
+
+        }
 
     }
 

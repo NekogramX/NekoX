@@ -1009,7 +1009,7 @@ public class SharedConfig {
 
                     if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
-                        if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).bean.toString()))) {
+                        if ((info instanceof VmessProxy && vmessLink.equals(((VmessProxy) info).bean.toString()))) {
 
                             currentProxy = info;
 

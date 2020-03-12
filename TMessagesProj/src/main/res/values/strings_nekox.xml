@@ -44,6 +44,10 @@
     <string name="AddProxyTelegram">Add MTProto Proxy</string>
     <string name="AddProxyVmess">Add Vmess Proxy</string>
 
+    <string name="EditProxy">Edit Proxy</string>
+    <string name="ShareProxy">Share Proxy</string>
+    <string name="ProxyDelete">Delete Proxy</string>
+
     <string name="ProxyInfoVmess">Vmess Proxy Settings</string>
     <string name="VmessUserId">User Id</string>
     <string name="VmessAlterId">Alter Id</string>
