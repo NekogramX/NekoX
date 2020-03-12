@@ -235,21 +235,17 @@ object ProxyUtil {
 
         } else {
 
-            val builder = AlertDialog.Builder(ctx)
+            AlertDialog.Builder(ctx).setView(LinearLayout(ctx).apply {
 
-            val view = LinearLayout(ctx)
+                setPadding(AndroidUtilities.dp(16f))
 
-            view.setPadding(AndroidUtilities.dp(16f))
+                addView(ImageView(ctx).apply {
 
-            val image = ImageView(ctx)
+                    setImageBitmap(encodeAsBitmap(url))
 
-            image.setImageBitmap(encodeAsBitmap(url))
+                })
 
-            view.addView(image)
-
-            builder.setView(view)
-
-            builder.show()
+            }).show()
 
         }
 
