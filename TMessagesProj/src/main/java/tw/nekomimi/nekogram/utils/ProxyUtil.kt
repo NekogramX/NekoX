@@ -175,7 +175,7 @@ object ProxyUtil {
 
         val url = if (info is SharedConfig.VmessProxy) {
 
-            info.toString()
+            info.bean.toString()
 
         } else {
 
