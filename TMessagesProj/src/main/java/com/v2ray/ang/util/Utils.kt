@@ -4,12 +4,17 @@ import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.text.TextUtils
 import android.util.Base64
 import android.util.Patterns
 import android.webkit.URLUtil
+import androidx.core.graphics.get
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
+import com.google.zxing.qrcode.QRCodeWriter
 import org.telegram.messenger.ApplicationLoader
 import java.io.IOException
 import java.net.Socket

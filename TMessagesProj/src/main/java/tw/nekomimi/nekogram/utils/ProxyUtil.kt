@@ -3,11 +3,18 @@ package tw.nekomimi.nekogram.utils
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.view.setPadding
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.qrcode.QRCodeWriter
 import com.v2ray.ang.V2RayConfig.VMESS_PROTOCOL
 import okhttp3.HttpUrl
 import org.json.JSONArray
 import org.telegram.messenger.*
+import org.telegram.ui.ActionBar.AlertDialog
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.net.NetworkInterface
@@ -170,8 +177,7 @@ object ProxyUtil {
 
 
     @JvmStatic
-    @JvmOverloads
-    fun shareProxy(ctx: Context, info: SharedConfig.ProxyInfo, copy: Boolean = false) {
+    fun shareProxy(ctx: Context, info: SharedConfig.ProxyInfo, type: Int) {
 
         val url = if (info is SharedConfig.VmessProxy) {
 
@@ -207,13 +213,13 @@ object ProxyUtil {
 
         }
 
-        if (copy) {
+        if (type == 0) {
 
             AndroidUtilities.addToClipboard(url)
 
             Toast.makeText(ctx, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show()
 
-        } else {
+        } else if (type == 1) {
 
             val shareIntent = Intent(Intent.ACTION_SEND)
 
@@ -227,8 +233,36 @@ object ProxyUtil {
 
             ctx.startActivity(chooserIntent)
 
+        } else {
+
+            val builder = AlertDialog.Builder(ctx)
+
+            val view = LinearLayout(ctx)
+
+            view.setPadding(AndroidUtilities.dp(16f))
+
+            val image = ImageView(ctx)
+
+            image.setImageBitmap(encodeAsBitmap(url))
+
+            view.addView(image)
+
+            builder.setView(view)
+
+            builder.show()
+
         }
 
     }
+
+    fun encodeAsBitmap(str: String,width: Int = 800): Bitmap {
+
+        return QRCodeWriter().
+        encode(str, BarcodeFormat.QR_CODE, width, width,
+                null,null,
+                ApplicationLoader.applicationContext)
+
+    }
+
 
 }

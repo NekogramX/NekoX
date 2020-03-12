@@ -23,7 +23,9 @@
     <string name="EnablePushAlert">Please enable "NekoX Push Service"</string>
     <string name="DisablePushAlert">Please disable "NekoX Push Service"</string>
 
-    <string name="MIUIPermissionNote">For MIUI users, please enable auto-start permission for NekoX to receive notifications normally.</string>
+    <string name="MIUIPermissionNote">For MIUI users, please enable auto-start permission for NekoX to receive
+        notifications normally.
+    </string>
 
     <string name="DisableUndo">Disable Undo</string>
     <string name="DisableSystemAccount">Disable System Account</string>
@@ -33,7 +35,9 @@
     <string name="SkipOpenLinkComfirm">Skip open link confirm</string>
 
     <string name="DeleteAllInChat">Delete all in caht</string>
-    <string name="DeleteAllInChatAlert">Warning! This will **delete all messages** in this chat for **all** participants.</string>
+    <string name="DeleteAllInChatAlert">Warning! This will **delete all messages** in this chat for **all**
+        participants.
+    </string>
 
     <string name="UnblockAll">Unblock All</string>
     <string name="UnblockAllWarn">Are you sure you want to unblock **all users and bots**?</string>
@@ -60,6 +64,9 @@
 
     <string name="ImportProxyFromClipboard">Import From Clipboard</string>
     <string name="BrokenLink">Unknown / Broken Link</string>
+
+    <string name="ShareQRCode">QR Code</string>
+    <string name="ScanQRCode">Scan QR Code</string>
 
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>

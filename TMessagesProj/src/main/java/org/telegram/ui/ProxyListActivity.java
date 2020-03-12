@@ -23,41 +23,21 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.DownloadController;
-import org.telegram.messenger.LocaleController;
-import org.telegram.messenger.MessagesController;
-import org.telegram.messenger.NotificationCenter;
-import org.telegram.messenger.R;
-import org.telegram.messenger.SharedConfig;
+import org.telegram.messenger.*;
 import org.telegram.tgnet.ConnectionsManager;
-import org.telegram.ui.ActionBar.ActionBar;
-import org.telegram.ui.ActionBar.AlertDialog;
-import org.telegram.ui.ActionBar.BaseFragment;
-import org.telegram.ui.ActionBar.BottomSheet;
-import org.telegram.ui.ActionBar.Theme;
-import org.telegram.ui.ActionBar.ThemeDescription;
-import org.telegram.ui.Cells.HeaderCell;
-import org.telegram.ui.Cells.ShadowSectionCell;
-import org.telegram.ui.Cells.TextCheckCell;
-import org.telegram.ui.Cells.TextInfoPrivacyCell;
-import org.telegram.ui.Cells.TextSettingsCell;
-import org.telegram.ui.Components.AlertsCreator;
+import org.telegram.ui.ActionBar.*;
+import org.telegram.ui.Cells.*;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.RecyclerListView;
-
-import java.util.List;
-
 import tw.nekomimi.nekogram.VmessSettingsActivity;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
+
+import java.util.List;
 
 public class ProxyListActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
@@ -374,6 +354,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                         info.isInternal ? null : LocaleController.getString("EditProxy", R.string.EditProxy),
                         (info.isInternal && info.descripton == null) ? null : LocaleController.getString("ShareProxy", R.string.ShareProxy),
+                        (info.isInternal && info.descripton == null) ? null : LocaleController.getString("ShareQRCode", R.string.ShareQRCode),
                         (info.isInternal && info.descripton == null) ? null : LocaleController.getString("CopyLink", R.string.CopyLink),
                         (info.isInternal) ? null : LocaleController.getString("ProxyDelete", R.string.ProxyDelete),
                         LocaleController.getString("Cancel", R.string.Cancel)
@@ -381,6 +362,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 }, new int[]{
 
                         R.drawable.group_edit,
+                        R.drawable.share,
                         R.drawable.share,
                         R.drawable.msg_link,
                         R.drawable.msg_delete,
@@ -398,13 +380,17 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                     } else if (i == 1) {
 
-                        ProxyUtil.shareProxy(getParentActivity(), info);
+                        ProxyUtil.shareProxy(getParentActivity(), info,0);
 
                     } else if (i == 2) {
 
-                        ProxyUtil.shareProxy(getParentActivity(), info, true);
+                        ProxyUtil.shareProxy(getParentActivity(), info, 2);
 
                     } else if (i == 3) {
+
+                        ProxyUtil.shareProxy(getParentActivity(), info, 1);
+
+                    } else if (i == 4) {
 
                         BottomSheet.Builder del = new BottomSheet.Builder(context);
 
@@ -486,7 +472,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
             } else {
 
-               // AlertsCreator.showSimpleToast(this, "unimplemented :(");
+                // AlertsCreator.showSimpleToast(this, "unimplemented :(");
 
                 ProxyUtil.importFromClipboard(getParentActivity());
 
