@@ -32,6 +32,9 @@
     <string name="AddProxySocks5">添加 Socks5 代理</string>
     <string name="AddProxyTelegram">添加 MTProto 代理</string>
     <string name="AddProxyVmess">添加 Vmess 代理</string>
+    <string name="EditProxy">編輯代理</string>
+    <string name="ShareProxy">分享代理</string>
+    <string name="ProxyDelete">刪除代理</string>
     <string name="ProxyInfoVmess">Vmess 代理設定</string>
     <string name="VmessUserId">用戶ID</string>
     <string name="VmessAlterId">額外ID</string>
@@ -42,6 +45,7 @@
     <string name="VmessPath">路徑 / QUIC 加密密鑰</string>
     <string name="VmessTls">使用 TLS</string>
     <string name="ImportProxyFromClipboard">從剪切板導入</string>
+    <string name="BrokenLink">未知或損壞的鏈接</string>
     <string name="EnableDeveloperMode">啓用開發人員模式</string>
     <string name="DisableDeveloperMode">禁用開發人員模式</string>
     <string name="DeveloperSettings">開發人員設定</string>
