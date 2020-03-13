@@ -1,0 +1,4 @@
+- Add VMess proxies manually
+- Import proxies from clipboard and QR Code
+- Export proxy links to clipboard or QR Code
+- Support QR Code scanning (You can see entry in search bar)

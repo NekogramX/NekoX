@@ -15,15 +15,22 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build
+      - name: assembleAfatRelease
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
           ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
           ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
         run: |
           ./gradlew assembleAfatRelease
+      - name: bundleAfatRelease
+        env:
+          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+          ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
+          ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
+        run: |
           ./gradlew bundleAfatRelease
-      - name: Find artifact files
+        if: github.ref == 'refs/heads/release'
+      - name: Find apk file
         run: |
           OUTPUT="TMessagesProj/build/outputs"
           echo ::set-env name=APK_FILE::$(find $OUTPUT/apk -name "*.apk")
@@ -42,7 +49,7 @@ jobs:
           name: NekoX-${{ github.sha }}.apk
           path: ${{ env.APK_FILE }}
         if: github.ref == 'refs/heads/master'
-      - uses: r0adkll/upload-google-play@v1.0.4
+      - uses: r0adkll/upload-google-play@master
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_ACCOUNT_SERVICE }}
           packageName: moe.wataru.nekogram
