@@ -293,6 +293,8 @@ object ProxyUtil {
 
                                 saveTo.parentFile?.mkdirs()
 
+                                saveTo.createNewFile()
+
                                 saveTo.outputStream().use {
 
                                     code?.compress(Bitmap.CompressFormat.JPEG, 100, it);
