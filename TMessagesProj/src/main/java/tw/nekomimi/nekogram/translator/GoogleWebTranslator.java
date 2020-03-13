@@ -19,7 +19,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.HttpUrl;
+import okhttp3.Request;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.utils.HttpUtil;
 
 public class GoogleWebTranslator extends Translator {
 
@@ -121,51 +124,19 @@ public class GoogleWebTranslator extends Translator {
     }
 
     private String request(String url) {
+
         try {
-            ByteArrayOutputStream outbuf;
-            InputStream httpConnectionStream;
-            URL downloadUrl = new URL(url);
-            URLConnection httpConnection;
-            if (NekoConfig.translationProvider != 2 && SharedConfig.proxyEnabled && SharedConfig.currentProxy != null && SharedConfig.currentProxy.secret == null) {
-                Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress(SharedConfig.currentProxy.address, SharedConfig.currentProxy.port));
-                httpConnection = downloadUrl.openConnection(proxy);
-            } else {
-                httpConnection = downloadUrl.openConnection();
-            }
-            httpConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 10_0 like Mac OS X) AppleWebKit/602.1.38 (KHTML, like Gecko) Version/10.0 Mobile/14A5297c Safari/602.1");
-            httpConnection.setConnectTimeout(1000);
-            httpConnection.setReadTimeout(2000);
-            httpConnection.connect();
-            httpConnectionStream = httpConnection.getInputStream();
 
-            outbuf = new ByteArrayOutputStream();
+            return (NekoConfig.translationProvider == 2 ? HttpUtil.okhttpClient : HttpUtil.getOkhttpClientWithCurrProxy())
+                    .newCall(new Request.Builder()
+                            .url(url)
+                            .header("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 10_0 like Mac OS X) AppleWebKit/602.1.38 (KHTML, like Gecko) Version/10.0 Mobile/14A5297c Safari/602.1")
+                            .build()).execute().body().string();
 
-            byte[] data = new byte[1024 * 32];
-            while (true) {
-                int read = httpConnectionStream.read(data);
-                if (read > 0) {
-                    outbuf.write(data, 0, read);
-                } else if (read == -1) {
-                    break;
-                } else {
-                    break;
-                }
-            }
-            String result = new String(outbuf.toByteArray());
-            try {
-                httpConnectionStream.close();
-            } catch (Throwable e) {
-                FileLog.e(e);
-            }
-            try {
-                outbuf.close();
-            } catch (Exception ignore) {
-
-            }
-            return result;
         } catch (Throwable e) {
             FileLog.e(e);
             return null;
         }
+
     }
 }

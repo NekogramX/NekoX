@@ -3,11 +3,32 @@ package tw.nekomimi.nekogram.utils
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.internal.http2.Header
+import org.telegram.messenger.SharedConfig
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
 object HttpUtil {
 
+    @JvmField
     val okhttpClient = OkHttpClient().newBuilder().readTimeout(500,TimeUnit.MILLISECONDS).build()
+
+    @JvmStatic
+    val okhttpClientWithCurrProxy: OkHttpClient get() {
+
+        return if (!SharedConfig.proxyEnabled || SharedConfig.currentProxy?.secret != null ) {
+
+            okhttpClient
+
+        } else {
+
+            okhttpClient.newBuilder()
+                    .proxy(Proxy(Proxy.Type.SOCKS,InetSocketAddress(SharedConfig.currentProxy.address,SharedConfig.currentProxy.port)))
+                    .build()
+
+        }
+
+    }
 
     @JvmStatic
     fun get(url: String): String {

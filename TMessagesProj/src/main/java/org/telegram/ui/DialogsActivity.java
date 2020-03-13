@@ -1053,7 +1053,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             updateProxyButton(false);
         }
 
-        scanItem = menu.addItem(3, R.drawable.floating_camera);
+        scanItem = menu.addItem(3, R.drawable.ic_scan);
         scanItem.setContentDescription(LocaleController.getString("ScanQRCode", R.string.ScanQRCode));
         scanItem.setVisibility(View.GONE);
 
@@ -1225,12 +1225,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     presentFragment(new ProxyListActivity());
                 } else if (id == 3) {
 
-
                     CameraScanActivity.showAsSheet(DialogsActivity.this, new CameraScanActivity.CameraScanActivityDelegate() {
 
                         @Override
                         public void didFindQr(String text) {
-
 
                             BottomSheet.Builder builder = new BottomSheet.Builder(getParentActivity());
 
