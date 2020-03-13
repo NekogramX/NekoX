@@ -140,6 +140,7 @@ import java.util.concurrent.CountDownLatch;
 import kotlin.collections.ArraysKt;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.NekoXConfig;
+import tw.nekomimi.nekogram.utils.ProxyUtil;
 
 public class ProfileActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, DialogsActivity.DialogsActivityDelegate, SharedMediaLayout.SharedMediaPreloaderDelegate {
 
@@ -248,6 +249,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private final static int leave_group = 7;
     private final static int invite_to_group = 9;
     private final static int share = 10;
+    private final static int qr_code = 11;
     private final static int edit_channel = 12;
     private final static int add_shortcut = 14;
     private final static int call_item = 15;
@@ -1185,7 +1187,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         removeSelfFromStack();
                     });
                     presentFragment(fragment);
-                } else if (id == share) {
+                } else if (id == share || id == qr_code) {
                     try {
                         String text = null;
                         if (user_id != 0) {
@@ -1193,7 +1195,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             if (user == null) {
                                 return;
                             }
-                            if (botInfo != null && userInfo != null && !TextUtils.isEmpty(userInfo.about)) {
+                            if (botInfo != null && userInfo != null && !TextUtils.isEmpty(userInfo.about) && id == share) {
                                 text = String.format("%s https://" + MessagesController.getInstance(currentAccount).linkPrefix + "/%s", userInfo.about, user.username);
                             } else {
                                 text = String.format("https://" + MessagesController.getInstance(currentAccount).linkPrefix + "/%s", user.username);
@@ -1203,7 +1205,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             if (chat == null) {
                                 return;
                             }
-                            if (chatInfo != null && !TextUtils.isEmpty(chatInfo.about)) {
+                            if (chatInfo != null && !TextUtils.isEmpty(chatInfo.about) && id == share) {
                                 text = String.format("%s\nhttps://" + MessagesController.getInstance(currentAccount).linkPrefix + "/%s", chatInfo.about, chat.username);
                             } else {
                                 text = String.format("https://" + MessagesController.getInstance(currentAccount).linkPrefix + "/%s", chat.username);
@@ -1212,10 +1214,14 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         if (TextUtils.isEmpty(text)) {
                             return;
                         }
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setType("text/plain");
-                        intent.putExtra(Intent.EXTRA_TEXT, text);
-                        startActivityForResult(Intent.createChooser(intent, LocaleController.getString("BotShare", R.string.BotShare)), 500);
+                        if (id == share) {
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.setType("text/plain");
+                            intent.putExtra(Intent.EXTRA_TEXT, text);
+                            startActivityForResult(Intent.createChooser(intent, LocaleController.getString("BotShare", R.string.BotShare)), 500);
+                        } else {
+                            ProxyUtil.showQrDialog(context,text);
+                        }
                     } catch (Exception e) {
                         FileLog.e(e);
                     }
@@ -4223,6 +4229,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 otherItem.addSubItem(invite_to_group, R.drawable.msg_addbot, LocaleController.getString("BotInvite", R.string.BotInvite));
                             }
                             otherItem.addSubItem(share, R.drawable.msg_share, LocaleController.getString("BotShare", R.string.BotShare));
+                            otherItem.addSubItem(qr_code, R.drawable.wallet_qr, LocaleController.getString("ShareQRCode", R.string.ShareQRCode));
                         } else {
                             otherItem.addSubItem(add_contact, R.drawable.msg_addcontact, LocaleController.getString("AddContact", R.string.AddContact));
                         }
@@ -4259,15 +4266,16 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     if (!chat.megagroup && chatInfo != null && chatInfo.can_view_stats) {
                         otherItem.addSubItem(statistics, R.drawable.msg_stats, LocaleController.getString("Statistics", R.string.Statistics));
                     }
+                    if (!TextUtils.isEmpty(chat.username)) {
+                        otherItem.addSubItem(share, R.drawable.msg_share, LocaleController.getString("BotShare", R.string.BotShare));
+                        otherItem.addSubItem(qr_code, R.drawable.wallet_qr, LocaleController.getString("ShareQRCode", R.string.ShareQRCode));
+                    }
                     if (chat.megagroup) {
                         otherItem.addSubItem(search_members, R.drawable.msg_search, LocaleController.getString("SearchMembers", R.string.SearchMembers));
                         if (!chat.creator && !chat.left && !chat.kicked) {
                             otherItem.addSubItem(leave_group, R.drawable.msg_leave, LocaleController.getString("LeaveMegaMenu", R.string.LeaveMegaMenu));
                         }
                     } else {
-                        if (!TextUtils.isEmpty(chat.username)) {
-                            otherItem.addSubItem(share, R.drawable.msg_share, LocaleController.getString("BotShare", R.string.BotShare));
-                        }
                         if (!currentChat.creator && !currentChat.left && !currentChat.kicked) {
                             otherItem.addSubItem(leave_group, R.drawable.msg_leave, LocaleController.getString("LeaveChannelMenu", R.string.LeaveChannelMenu));
                         }

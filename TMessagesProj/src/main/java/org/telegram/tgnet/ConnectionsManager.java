@@ -683,7 +683,7 @@ public class ConnectionsManager extends BaseController {
 
     @SuppressLint("NewApi")
     protected static boolean useIpv6Address() {
-        if (Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT < 19 || !(SharedConfig.proxyEnabled && !SharedConfig.currentProxy.secret.isEmpty())) {
             return false;
         }
         if (BuildVars.LOGS_ENABLED) {

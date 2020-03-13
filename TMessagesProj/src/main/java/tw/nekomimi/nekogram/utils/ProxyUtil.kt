@@ -239,30 +239,37 @@ object ProxyUtil {
 
         } else {
 
-            android.app.AlertDialog.Builder(ctx).setView(LinearLayout(ctx).apply {
-
-                addView(LinearLayout(ctx).apply {
-
-                    gravity = Gravity.CENTER
-
-                    val width = AndroidUtilities.dp(330f)
-
-                    addView(ImageView(ctx).apply {
-
-                        setImageBitmap(createQRCode(url))
-                        scaleType = ImageView.ScaleType.FIT_XY
-
-                    }, LinearLayout.LayoutParams(width, width))
-
-                }, LinearLayout.LayoutParams(-1, -1).apply {
-
-                    gravity = Gravity.CENTER
-
-                })
-
-            }).show()
+            showQrDialog(ctx,url)
 
         }
+
+    }
+
+    @JvmStatic
+    fun showQrDialog(ctx: Context,text: String) {
+
+        android.app.AlertDialog.Builder(ctx).setView(LinearLayout(ctx).apply {
+
+            addView(LinearLayout(ctx).apply {
+
+                gravity = Gravity.CENTER
+
+                val width = AndroidUtilities.dp(330f)
+
+                addView(ImageView(ctx).apply {
+
+                    setImageBitmap(createQRCode(text))
+                    scaleType = ImageView.ScaleType.FIT_XY
+
+                }, LinearLayout.LayoutParams(width, width))
+
+            }, LinearLayout.LayoutParams(-1, -1).apply {
+
+                gravity = Gravity.CENTER
+
+            })
+
+        }).show()
 
     }
 
