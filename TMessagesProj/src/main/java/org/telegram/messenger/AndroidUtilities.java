@@ -2835,7 +2835,7 @@ public class AndroidUtilities {
                         if (time != -1) {
                             cell.setTextAndValue(LocaleController.getString("Available", R.string.Available), LocaleController.formatString("Ping", R.string.Ping, time), true);
                             colorKey = Theme.key_windowBackgroundWhiteGreenText;
-                        } else if (c < 10) {
+                        } else if (c < 3) {
                             ConnectionsManager.getInstance(UserConfig.selectedAccount).checkProxy(info.address, info.port, "", "", "", t -> AndroidUtilities.runOnUIThread(() -> run(t),500));
                             colorKey = Theme.key_windowBackgroundWhiteGreenText;
                         } else {

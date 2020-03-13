@@ -1,26 +1,21 @@
 package tw.nekomimi.nekogram.utils
 
-import android.app.Dialog
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.view.Gravity
-import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.view.setPadding
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.v2ray.ang.V2RayConfig.VMESS_PROTOCOL
 import okhttp3.HttpUrl
 import org.json.JSONArray
 import org.telegram.messenger.*
-import org.telegram.ui.ActionBar.AlertDialog
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.net.NetworkInterface
@@ -127,17 +122,20 @@ object ProxyUtil {
 
         var exists = false
 
-        clip.primaryClip?.getItemAt(0)?.text?.split(" ")?.forEach {
+        clip.primaryClip?.getItemAt(0)?.text?.split('\n')?.map { it.split(" ") }?.forEach {
+            it.forEach {
 
-            if (it.startsWith("tg://proxy") ||
-                    it.startsWith("tg://socks") ||
-                    it.startsWith("https://t.me/proxy") ||
-                    it.startsWith("https://t.me/socks") ||
-                    it.startsWith("vmess://")) {
+                if (it.startsWith("tg://proxy") ||
+                        it.startsWith("tg://socks") ||
+                        it.startsWith("https://t.me/proxy") ||
+                        it.startsWith("https://t.me/socks") ||
+                        it.startsWith("vmess://")) {
 
-                exists = true
+                    exists = true
 
-                import(ctx, it)
+                    import(ctx, it)
+
+                }
 
             }
 
@@ -273,8 +271,7 @@ object ProxyUtil {
             val hints = HashMap<EncodeHintType, Any>()
             hints[EncodeHintType.CHARACTER_SET] = "utf-8"
             //hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
-            val bitMatrix = QRCodeWriter().encode(text,
-                    BarcodeFormat.QR_CODE, size, size, hints)
+            val bitMatrix = QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, size, size, hints)
             val pixels = IntArray(size * size)
             for (y in 0 until size) {
                 for (x in 0 until size) {
@@ -283,7 +280,6 @@ object ProxyUtil {
                     } else {
                         pixels[y * size + x] = 0xffffffff.toInt()
                     }
-
                 }
             }
             val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
