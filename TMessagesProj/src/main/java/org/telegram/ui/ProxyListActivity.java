@@ -8,13 +8,16 @@
 
 package org.telegram.ui;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -530,7 +533,14 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                         }, (v, i) -> {
 
-                            if (i == 0l) {
+                            if (i == 0) {
+
+                                if (Build.VERSION.SDK_INT >= 23) {
+                                    if (getParentActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                        getParentActivity().requestPermissions(new String[]{Manifest.permission.CAMERA}, 22);
+                                        return;
+                                    }
+                                }
 
                                 CameraScanActivity.showAsSheet(ProxyListActivity.this, new CameraScanActivity.CameraScanActivityDelegate() {
 

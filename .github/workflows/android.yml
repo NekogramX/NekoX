@@ -22,6 +22,8 @@ jobs:
           ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
         run: |
           ./gradlew assembleAfatRelease
+          OUTPUT="TMessagesProj/build/outputs"
+          echo ::set-env name=APK_FILE::$(find $OUTPUT/apk -name "*.apk")
       - name: bundleAfatRelease
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -29,13 +31,6 @@ jobs:
           ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
         run: |
           ./gradlew bundleAfatRelease
-        if: github.ref == 'refs/heads/release'
-      - name: Find apk file
-        run: |
-          OUTPUT="TMessagesProj/build/outputs"
-          echo ::set-env name=APK_FILE::$(find $OUTPUT/apk -name "*.apk")
-      - name: Find aab file
-        run: |
           OUTPUT="TMessagesProj/build/outputs"
           echo ::set-env name=AAB_FILE::$(find $OUTPUT/bundle -name "*.aab")
         if: github.ref == 'refs/heads/release'

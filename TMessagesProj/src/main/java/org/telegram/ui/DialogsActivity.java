@@ -1225,6 +1225,13 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     presentFragment(new ProxyListActivity());
                 } else if (id == 3) {
 
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (getParentActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            getParentActivity().requestPermissions(new String[]{Manifest.permission.CAMERA}, 22);
+                            return;
+                        }
+                    }
+
                     CameraScanActivity.showAsSheet(DialogsActivity.this, new CameraScanActivity.CameraScanActivityDelegate() {
 
                         @Override
