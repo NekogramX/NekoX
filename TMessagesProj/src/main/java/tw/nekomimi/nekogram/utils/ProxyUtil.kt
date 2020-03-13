@@ -1,9 +1,14 @@
 package tw.nekomimi.nekogram.utils
 
+import android.Manifest
+import android.app.Activity
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.os.Build
+import android.os.Environment
 import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -16,6 +21,7 @@ import com.v2ray.ang.V2RayConfig.VMESS_PROTOCOL
 import okhttp3.HttpUrl
 import org.json.JSONArray
 import org.telegram.messenger.*
+import org.telegram.ui.ActionBar.BottomSheet
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.net.NetworkInterface
@@ -181,7 +187,7 @@ object ProxyUtil {
 
 
     @JvmStatic
-    fun shareProxy(ctx: Context, info: SharedConfig.ProxyInfo, type: Int) {
+    fun shareProxy(ctx: Activity, info: SharedConfig.ProxyInfo, type: Int) {
 
         val url = if (info is SharedConfig.VmessProxy) {
 
@@ -239,14 +245,16 @@ object ProxyUtil {
 
         } else {
 
-            showQrDialog(ctx,url)
+            showQrDialog(ctx, url)
 
         }
 
     }
 
     @JvmStatic
-    fun showQrDialog(ctx: Context,text: String) {
+    fun showQrDialog(ctx: Activity, text: String) {
+
+        val code = createQRCode(text)
 
         android.app.AlertDialog.Builder(ctx).setView(LinearLayout(ctx).apply {
 
@@ -258,8 +266,46 @@ object ProxyUtil {
 
                 addView(ImageView(ctx).apply {
 
-                    setImageBitmap(createQRCode(text))
+                    setImageBitmap(code)
+
                     scaleType = ImageView.ScaleType.FIT_XY
+
+                    setOnLongClickListener {
+
+                        BottomSheet.Builder(ctx).setItems(arrayOf(
+
+                                LocaleController.getString("SaveToGallery", R.string.SaveToGallery),
+                                LocaleController.getString("Cancel", R.string.Cancel)
+
+                        )) { _, i ->
+
+                            if (i == 0) {
+
+                                if (Build.VERSION.SDK_INT >= 23 && ctx.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                                    ctx.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 4)
+
+                                    return@setItems
+
+                                }
+
+                                val saveTo = File(ctx.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "share_${text.hashCode()}.jpg")
+
+                                saveTo.parentFile?.mkdirs()
+
+                                saveTo.outputStream().use {
+
+                                    code?.compress(Bitmap.CompressFormat.JPEG, 100, it);
+
+                                }
+
+                            }
+
+                        }.show()
+
+                        return@setOnLongClickListener true
+
+                    }
 
                 }, LinearLayout.LayoutParams(width, width))
 

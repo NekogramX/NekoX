@@ -296,6 +296,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int joinRow;
     private int lastSectionRow;
 
+
     private final Property<ProfileActivity, Float> HEADER_SHADOW = new AnimationProperties.FloatProperty<ProfileActivity>("headerShadow") {
         @Override
         public void setValue(ProfileActivity object, float value) {
@@ -1220,7 +1221,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             intent.putExtra(Intent.EXTRA_TEXT, text);
                             startActivityForResult(Intent.createChooser(intent, LocaleController.getString("BotShare", R.string.BotShare)), 500);
                         } else {
-                            ProxyUtil.showQrDialog(context,text);
+                            ProxyUtil.showQrDialog(getParentActivity(),text);
                         }
                     } catch (Exception e) {
                         FileLog.e(e);
