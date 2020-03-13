@@ -35,6 +35,8 @@ object ZipUtil {
 
                 val entryFile = File(output, entry.name)
 
+                if(!entryFile.canonicalFile.startsWith(output)) return
+
                 if (entry.isDirectory) {
 
                     entryFile.mkdirs()
