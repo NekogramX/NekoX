@@ -1852,17 +1852,21 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             }
 
             if (f.exists()) {
+
+                Bitmap bitmap;
+
                 if (isVideo) {
 
-                    AlertUtil.showToast("Scan in video not supported yet :(");
+                    bitmap = videoTextureView.getBitmap();
 
                 } else {
 
-                    Bitmap bitmap = ImageLoader.loadBitmap(f.getPath(), null, -1f, -1f, false);
-
-                    ProxyUtil.tryReadQR(parentActivity,bitmap);
+                    bitmap = ImageLoader.loadBitmap(f.getPath(), null, -1f, -1f, false);
 
                 }
+
+                ProxyUtil.tryReadQR(parentActivity,bitmap);
+
             } else {
                 showDownloadAlert();
             }

@@ -361,11 +361,11 @@ object ProxyUtil {
 
         if (result == null || result.text.isBlank()) {
 
-            AlertUtil.showToast(LocaleController.getString("NoQrFound", R.string.NoQrFound))
+            AlertUtil.showToast(ctx, LocaleController.getString("NoQrFound", R.string.NoQrFound))
 
         } else {
 
-            showLinkAlert(ctx,result.text)
+            showLinkAlert(ctx, result.text)
 
         }
 
