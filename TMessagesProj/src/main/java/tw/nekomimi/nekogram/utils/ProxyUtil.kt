@@ -358,27 +358,19 @@ object ProxyUtil {
     @JvmStatic
     fun tryReadQR(ctx: Activity, bitmap: Bitmap) {
 
-        runCatching {
+        val intArray = IntArray(bitmap.getWidth() * bitmap.getHeight())
+        bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight())
+        val source = RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray)
 
-            val intArray = IntArray(bitmap.getWidth() * bitmap.getHeight())
-            bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight())
-            val source = RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray)
+        val result = qrReader.decode(BinaryBitmap(GlobalHistogramBinarizer(source)))
 
-            val result = qrReader.decode(BinaryBitmap(GlobalHistogramBinarizer(source)))
-
-            if (result == null || result.text.isBlank()) {
-
-                AlertUtil.showToast(LocaleController.getString("NoQrFound", R.string.NoQrFound))
-
-            } else {
-
-                showLinkAlert(ctx, result.text)
-
-            }
-
-        }.onFailure {
+        if (result == null || result.text.isBlank()) {
 
             AlertUtil.showToast(LocaleController.getString("NoQrFound", R.string.NoQrFound))
+
+        } else {
+
+            showLinkAlert(ctx, result.text)
 
         }
 
