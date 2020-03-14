@@ -64,6 +64,8 @@
     <string name="ShareQRCode">QR Code</string>
     <string name="ScanQRCode">Scan QR Code</string>
 
+    <string name="NoQrFound">No QR Code found</string>
+
     <string name="EnableDeveloperMode">Enable Developer Mode</string>
     <string name="DisableDeveloperMode">Disable Developer Mode</string>
     <string name="DeveloperSettings">Developer Settings</string>

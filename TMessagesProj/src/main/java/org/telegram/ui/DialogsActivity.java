@@ -145,6 +145,7 @@ import okhttp3.HttpUrl;
 import tw.nekomimi.nekogram.FilterPopup;
 import tw.nekomimi.nekogram.MessageHelper;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.utils.ProxyUtil;
 
 public class DialogsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
@@ -1237,45 +1238,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                         @Override
                         public void didFindQr(String text) {
 
-                            BottomSheet.Builder builder = new BottomSheet.Builder(getParentActivity());
-
-                            boolean isUrl = false;
-
-                            try {
-
-                                HttpUrl.parse(text);
-
-                                isUrl = true;
-
-                            } catch (Exception ignored) {
-                            }
-
-                            builder.setTitle(text);
-
-                            builder.setItems(new String[]{
-
-                                    isUrl ? LocaleController.getString("Open", R.string.OpenUrlTitle) : null,
-                                    LocaleController.getString("Copy", R.string.Copy),
-                                    LocaleController.getString("Cancel", R.string.Cancel)
-
-                            }, (v, i) -> {
-
-                                if (i == 0) {
-
-                                    Browser.openUrl(getParentActivity(), text);
-
-                                } else if (i == 1) {
-
-                                    AndroidUtilities.addToClipboard(text);
-
-                                    Toast.makeText(ApplicationLoader.applicationContext, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show();
-
-                                }
-
-                            });
-
-                            showDialog(builder.create());
-
+                            ProxyUtil.showLinkAlert(getParentActivity(),text,false);
 
                         }
                     });

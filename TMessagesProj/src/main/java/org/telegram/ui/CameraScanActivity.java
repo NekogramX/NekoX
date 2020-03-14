@@ -600,7 +600,11 @@ public class CameraScanActivity extends BaseFragment implements Camera.PreviewCa
     }
 
     private void showErrorAlert() {
-        AlertsCreator.createSimpleAlert(getParentActivity(), LocaleController.getString("WalletQRCode", R.string.WalletQRCode), LocaleController.getString("WalletScanImageNotFound", R.string.WalletScanImageNotFound)).show();
+        if (any) {
+            AlertsCreator.createSimpleAlert(getParentActivity(), LocaleController.getString("WalletQRCode", R.string.WalletQRCode), LocaleController.getString("NoQrFound", R.string.NoQrFound)).show();
+        } else {
+            AlertsCreator.createSimpleAlert(getParentActivity(), LocaleController.getString("WalletQRCode", R.string.WalletQRCode), LocaleController.getString("WalletScanImageNotFound", R.string.WalletScanImageNotFound)).show();
+        }
     }
 
     private void onNoQrFound(boolean alert) {

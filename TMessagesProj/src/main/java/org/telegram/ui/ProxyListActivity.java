@@ -547,46 +547,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                                     @Override
                                     public void didFindQr(String text) {
 
-
-                                        BottomSheet.Builder builder = new BottomSheet.Builder(getParentActivity());
-
-                                        boolean isUrl = false;
-
-                                        try {
-
-                                            HttpUrl.parse(text);
-
-                                            isUrl = true;
-
-                                        } catch (Exception ignored) {
-                                        }
-
-                                        if (isUrl) {
-
-                                            Browser.openUrl(getParentActivity(), text);
-
-                                        } else {
-
-                                            builder.setTitle(text);
-
-                                            builder.setItems(new String[]{
-
-                                                    LocaleController.getString("Copy", R.string.Copy),
-                                                    LocaleController.getString("Cancel", R.string.Cancel)
-
-                                            }, (v, i) -> {
-
-                                                if (i == 0) {
-
-                                                    AndroidUtilities.addToClipboard(text);
-
-                                                    Toast.makeText(ApplicationLoader.applicationContext, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show();
-
-                                                }
-
-                                            });
-
-                                        }
+                                        ProxyUtil.showLinkAlert(getParentActivity(),text,true);
 
                                     }
                                 });

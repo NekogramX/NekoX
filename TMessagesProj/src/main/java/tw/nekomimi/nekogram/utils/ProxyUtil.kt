@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,14 +14,15 @@ import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.EncodeHintType
-import com.google.zxing.WriterException
+import com.google.zxing.*
+import com.google.zxing.common.GlobalHistogramBinarizer
+import com.google.zxing.qrcode.QRCodeReader
 import com.google.zxing.qrcode.QRCodeWriter
 import com.v2ray.ang.V2RayConfig.VMESS_PROTOCOL
 import okhttp3.HttpUrl
 import org.json.JSONArray
 import org.telegram.messenger.*
+import org.telegram.messenger.browser.Browser
 import org.telegram.ui.ActionBar.BottomSheet
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -344,6 +346,64 @@ object ProxyUtil {
             e.printStackTrace()
             return null
         }
+    }
+
+    val qrReader = QRCodeReader()
+
+    @JvmStatic
+    fun tryReadQR(ctx: Activity, bitmap: Bitmap) {
+
+        val intArray = IntArray(bitmap.getWidth() * bitmap.getHeight())
+        bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight())
+        val source = RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray)
+
+        val result = qrReader.decode(BinaryBitmap(GlobalHistogramBinarizer(source)))
+
+        if (result == null || result.text.isBlank()) {
+
+            AlertUtil.showToast(LocaleController.getString("NoQrFound", R.string.NoQrFound))
+
+        } else {
+
+            showLinkAlert(ctx,result.text)
+
+        }
+
+    }
+
+    @JvmStatic
+    fun showLinkAlert(ctx: Activity, text: String, directOpen: Boolean = false) {
+
+        val builder = BottomSheet.Builder(ctx)
+
+        var isUrl = false
+
+        runCatching {
+            HttpUrl.parse(text)
+            if (directOpen) {
+                Browser.openUrl(ctx, text)
+                return
+            }
+            isUrl = true
+        }
+
+        builder.setTitle(text)
+
+        builder.setItems(arrayOf(
+                if (isUrl) LocaleController.getString("Open", R.string.OpenUrlTitle) else null,
+                LocaleController.getString("Copy", R.string.Copy),
+                LocaleController.getString("Cancel", R.string.Cancel)
+        )) { _, i ->
+            if (i == 0) {
+                Browser.openUrl(ctx, text)
+            } else if (i == 1) {
+                AndroidUtilities.addToClipboard(text)
+                Toast.makeText(ApplicationLoader.applicationContext, LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_LONG).show()
+            }
+        }
+
+        builder.show()
+
     }
 
 }
