@@ -14455,6 +14455,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     private void saveStickerToGallery(MessageObject messageObject) {
+
         String path = messageObject.messageOwner.attachPath;
         if (!TextUtils.isEmpty(path)) {
             File temp = new File(path);

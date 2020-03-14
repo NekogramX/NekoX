@@ -1870,8 +1870,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             } else {
                 showDownloadAlert();
             }
-        } catch (Exception e) {
-            FileLog.e(e);
+        } catch (Exception ignored) {
+            AlertUtil.showToast(LocaleController.getString("NoQrFound", R.string.NoQrFound));
         }
     }
 
