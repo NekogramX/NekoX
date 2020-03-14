@@ -48,6 +48,7 @@
     <string name="BrokenLink">Link desconhecido / quebrado</string>
     <string name="ShareQRCode">QR Code</string>
     <string name="ScanQRCode">Escanear QR Code</string>
+    <string name="NoQrFound">Nenhum QR Code encontrado</string>
     <string name="EnableDeveloperMode">Ativar modo de desenvolvedor</string>
     <string name="DisableDeveloperMode">Desativar modo desenvolvedor</string>
     <string name="DeveloperSettings">Configurações do desenvolvedor</string>
