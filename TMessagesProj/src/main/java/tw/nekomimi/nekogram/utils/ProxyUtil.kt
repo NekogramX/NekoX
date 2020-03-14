@@ -385,7 +385,7 @@ object ProxyUtil {
     }
 
     @JvmStatic
-    fun showLinkAlert(ctx: Activity, text: String, directOpen: Boolean = false) {
+    fun showLinkAlert(ctx: Activity, text: String) {
 
         val builder = BottomSheet.Builder(ctx)
 
@@ -393,7 +393,7 @@ object ProxyUtil {
 
         runCatching {
             HttpUrl.parse(text)
-            if (directOpen) {
+            if (Browser.isInternalUrl(text, booleanArrayOf(false))) {
                 Browser.openUrl(ctx, text)
                 return
             }

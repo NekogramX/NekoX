@@ -547,7 +547,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                                     @Override
                                     public void didFindQr(String text) {
 
-                                        ProxyUtil.showLinkAlert(getParentActivity(),text,true);
+                                        ProxyUtil.showLinkAlert(getParentActivity(),text);
 
                                     }
                                 });
