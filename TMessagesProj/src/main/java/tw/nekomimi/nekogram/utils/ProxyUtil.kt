@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -291,15 +290,21 @@ object ProxyUtil {
 
                                 }
 
-                                val saveTo = File(ctx.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "share_${text.hashCode()}.jpg")
+                                val saveTo = File(Environment.getExternalStorageDirectory(), "${Environment.DIRECTORY_DOWNLOADS}/share_${text.hashCode()}.jpg")
 
                                 saveTo.parentFile?.mkdirs()
 
-                                saveTo.createNewFile()
+                                runCatching {
 
-                                saveTo.outputStream().use {
+                                    saveTo.createNewFile()
 
-                                    code?.compress(Bitmap.CompressFormat.JPEG, 100, it);
+                                    saveTo.outputStream().use {
+
+                                        code?.compress(Bitmap.CompressFormat.JPEG, 100, it);
+
+                                    }
+
+                                    AndroidUtilities.addMediaToGallery(saveTo.path)
 
                                 }
 
@@ -353,19 +358,27 @@ object ProxyUtil {
     @JvmStatic
     fun tryReadQR(ctx: Activity, bitmap: Bitmap) {
 
-        val intArray = IntArray(bitmap.getWidth() * bitmap.getHeight())
-        bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight())
-        val source = RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray)
+        runCatching {
 
-        val result = qrReader.decode(BinaryBitmap(GlobalHistogramBinarizer(source)))
+            val intArray = IntArray(bitmap.getWidth() * bitmap.getHeight())
+            bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight())
+            val source = RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray)
 
-        if (result == null || result.text.isBlank()) {
+            val result = qrReader.decode(BinaryBitmap(GlobalHistogramBinarizer(source)))
 
-            AlertUtil.showToast(ctx, LocaleController.getString("NoQrFound", R.string.NoQrFound))
+            if (result == null || result.text.isBlank()) {
 
-        } else {
+                AlertUtil.showToast(LocaleController.getString("NoQrFound", R.string.NoQrFound))
 
-            showLinkAlert(ctx, result.text)
+            } else {
+
+                showLinkAlert(ctx, result.text)
+
+            }
+
+        }.onFailure {
+
+            AlertUtil.showToast(LocaleController.getString("NoQrFound", R.string.NoQrFound))
 
         }
 

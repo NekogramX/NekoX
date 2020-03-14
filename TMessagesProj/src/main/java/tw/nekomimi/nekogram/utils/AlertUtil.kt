@@ -8,7 +8,6 @@ import org.telegram.messenger.ApplicationLoader
 object AlertUtil {
 
     @JvmStatic
-    @JvmOverloads
-    fun showToast(ctx: Context = ApplicationLoader.applicationContext,text:String) = Toast.makeText(ctx,text,Toast.LENGTH_LONG).show()
+    fun showToast(text: String) = Toast.makeText(ApplicationLoader.applicationContext, text.takeIf { it.isNotBlank() } ?: "喵 !", Toast.LENGTH_LONG).show()
 
 }
