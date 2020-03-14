@@ -48,6 +48,7 @@
     <string name="BrokenLink">未知或損壞的鏈接</string>
     <string name="ShareQRCode">二維碼</string>
     <string name="ScanQRCode">扫描二维码</string>
+    <string name="NoQrFound">未找到二維碼</string>
     <string name="EnableDeveloperMode">啓用開發人員模式</string>
     <string name="DisableDeveloperMode">禁用開發人員模式</string>
     <string name="DeveloperSettings">開發人員設定</string>
