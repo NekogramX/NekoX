@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 repositories {
     mavenCentral()
     google()
@@ -11,27 +14,36 @@ configurations {
 }
 
 dependencies {
-    implementation 'androidx.core:core:1.1.0-beta01'
+
+    implementation 'androidx.core:core:1.3.0-alpha02'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0'
 
-    compileOnly 'org.checkerframework:checker-qual:2.5.2'
+    compileOnly 'org.checkerframework:checker-qual:2.8.1'
     compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
     implementation 'com.googlecode.mp4parser:isoparser:1.0.6'
     implementation 'com.stripe:stripe-android:2.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.osmdroid:osmdroid-android:6.1.5'
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation files('libs/libv2ray.aar')
+    implementation 'com.squareup.okhttp3:okhttp:4.4.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70"
+
 }
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.2'
-    //ndkVersion "20.0.5594570"
+    buildToolsVersion '29.0.3'
+    ndkVersion "21.0.6113669"
 
-    defaultConfig.applicationId = "tw.nekomimi.nekogram"
+    defaultConfig.applicationId = "nekox.messager"
 
-    sourceSets.main.jniLibs.srcDirs = ['./jni/']
+    sourceSets.main {
+        jniLibs.srcDir 'jniLibs'
+        jni.srcDirs = ['./jni/']
+    }
 
     externalNativeBuild {
         ndkBuild {
@@ -54,41 +66,45 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    signingConfigs {
+        def keystorePwd = null
+        def alias = null
+        def pwd = null
+        if (project.rootProject.file('local.properties').exists()) {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            keystorePwd = properties.getProperty("KEYSTORE_PASS")
+            alias = properties.getProperty("ALIAS_NAME")
+            pwd = properties.getProperty("ALIAS_PASS")
+        }
+        release {
+            storeFile project.rootProject.file('keystore.jks')
+            storePassword keystorePwd != null ? keystorePwd : System.getenv("KEYSTORE_PASS")
+            keyAlias alias != null ? alias : System.getenv("ALIAS_NAME")
+            keyPassword pwd != null ? pwd : System.getenv("ALIAS_PASS")
+        }
+        debug {
+            storeFile project.rootProject.file('keystore.jks')
+            storePassword keystorePwd != null ? keystorePwd : System.getenv("KEYSTORE_PASS")
+            keyAlias alias != null ? alias : System.getenv("ALIAS_NAME")
+            keyPassword pwd != null ? pwd : System.getenv("ALIAS_PASS")
+        }
+    }
+
+
     buildTypes {
         debug {
             debuggable true
             jniDebuggable true
-            applicationIdSuffix ".beta"
+            signingConfig signingConfigs.debug
+           // applicationIdSuffix ".beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
-        /*debugAsan {
-            debuggable true
-            jniDebuggable true
-            applicationIdSuffix ".beta"
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            packagingOptions {
-                doNotStrip "**.so"
-            }
-
-            sourceSets {
-                main {
-                    jniLibs {
-                        srcDir {
-                            'jniLibs'
-                        }
-                    }
-                    resources {
-                        srcDir {
-                            'jniRes'
-                        }
-                    }
-                }
-            }
-        }*/
 
         debugMultidex {
             initWith debug
@@ -98,14 +114,6 @@ android {
                 implementation 'com.android.support:multidex:1.0.3'
             }
             manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
-        }
-
-        HA {
-            debuggable false
-            jniDebuggable false
-            applicationIdSuffix ".beta"
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         release {
@@ -122,28 +130,6 @@ android {
         }
     }
 
-    sourceSets.debug {
-        manifest.srcFile 'config/debug/AndroidManifest.xml'
-    }
-
-    /*sourceSets.debugAsan {
-        manifest.srcFile 'config/debug/AndroidManifest.xml'
-    }*/
-
-    sourceSets.debugMultidex {
-        manifest.srcFile 'config/debug/AndroidManifest.xml'
-        java.srcDirs = ['src/multidex/java']
-    }
-
-    sourceSets.HA {
-        manifest.srcFile 'config/debug/AndroidManifest.xml'
-    }
-
-    sourceSets.release {
-        manifest.srcFile 'config/release/AndroidManifest.xml'
-        java.srcDirs = ['src/multidex/java']
-    }
-
     flavorDimensions "minApi"
 
     productFlavors {
@@ -151,134 +137,81 @@ android {
             ndk {
                 abiFilters "armeabi-v7a"
             }
-            ext {
-                abiVersionCode = 1
-            }
         }
         x86 {
             ndk {
                 abiFilters "x86"
             }
-            ext {
-                abiVersionCode = 2
+        }
+        armv7_SDK21 {
+            ndk {
+                abiFilters "armeabi-v7a"
             }
+            minSdkVersion 21
+        }
+        x86_SDK21 {
+            ndk {
+                abiFilters "x86"
+            }
+            minSdkVersion 21
         }
         armv7_SDK23 {
             ndk {
                 abiFilters "armeabi-v7a"
             }
-            sourceSets.debug {
-                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
-            }
-            sourceSets.release {
-                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
-            }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 3
-            }
         }
         x86_SDK23 {
             ndk {
                 abiFilters "x86"
             }
-            sourceSets.debug {
-                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
-            }
-            sourceSets.release {
-                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
-            }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 4
-            }
         }
         arm64 {
             ndk {
                 abiFilters "arm64-v8a"
-            }
-            ext {
-                abiVersionCode = 5
             }
         }
         x64 {
             ndk {
                 abiFilters "x86_64"
             }
-            ext {
-                abiVersionCode = 6
+        }
+        arm64_SDK21 {
+            ndk {
+                abiFilters "arm64-v8a"
             }
+            minSdkVersion 21
+        }
+        x64_SDK21 {
+            ndk {
+                abiFilters "x86_64"
+            }
+            minSdkVersion 21
         }
         arm64_SDK23 {
             ndk {
                 abiFilters "arm64-v8a"
             }
-            sourceSets.debug {
-                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
-            }
-            /*sourceSets.debugAsan {
-                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
-            }*/
-            sourceSets.release {
-                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
-            }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 7
-            }
         }
         x64_SDK23 {
             ndk {
                 abiFilters "x86_64"
             }
-            sourceSets.debug {
-                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
-            }
-            sourceSets.release {
-                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
-            }
             minSdkVersion 23
-            ext {
-                abiVersionCode = 8
-            }
         }
+
         afat {
-            sourceSets.debug {
-                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
-            }
-            /*sourceSets.debugAsan {
-                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
-            }*/
-            sourceSets.release {
-                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
-            }
-            ext {
-                abiVersionCode = 9
-            }
         }
+
     }
 
-    defaultConfig.versionCode = 10 * 1875
+    defaultConfig.versionCode = 1
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            output.getProcessManifestProvider().get().doLast {
-                def abiVersion = variant.productFlavors.get(0).abiVersionCode
-
-                def outputDir = manifestOutputDirectory
-                File directory
-                if (outputDir instanceof File) {
-                    directory = outputDir
-                } else {
-                    directory = outputDir.get().asFile
-                }
-
-                String manifestPath = directory.toString() + "/AndroidManifest.xml"
-                def manifestContent = file(manifestPath).getText()
-
-                manifestContent = manifestContent.replace(String.format('android:versionCode="%d"', defaultConfig.versionCode), String.format('android:versionCode="%s"', defaultConfig.versionCode + abiVersion))
-                file(manifestPath).write(manifestContent)
-            }
+            outputFileName = "NekoX-${defaultConfig.versionName}-${defaultConfig.versionCode}-${variant.productFlavors.get(0).name}-${buildType.name}.apk"
         }
     }
 
@@ -291,10 +224,25 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
-        versionName "5.15.0.3"
+        targetSdkVersion 29
+        versionName "5.15.0.27"
 
         vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
+
+        def appId = null
+        def appHash = null
+
+        //obtain your own keys at https://core.telegram.org/api/obtaining_api_id
+
+        if (project.rootProject.file('local.properties').exists()) {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            appId = properties.getProperty("TELEGRAM_APP_ID")
+            appHash = properties.getProperty("TELEGRAM_APP_HASH")
+        }
+
+        buildConfigField 'int', 'APP_ID', appId != null ? appId : System.getenv("TELEGRAM_APP_ID")
+        buildConfigField 'String', 'APP_HASH', "\"" + (appHash != null ? appHash : System.getenv("TELEGRAM_APP_HASH")) + "\""
 
         externalNativeBuild {
             ndkBuild {

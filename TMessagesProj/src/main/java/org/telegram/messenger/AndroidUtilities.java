@@ -14,12 +14,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -28,14 +23,9 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -48,17 +38,8 @@ import android.provider.CallLog;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
-
-import androidx.core.content.FileProvider;
-import androidx.viewpager.widget.ViewPager;
-
 import android.telephony.TelephonyManager;
-import android.text.Selection;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.SpannedString;
-import android.text.TextUtils;
+import android.text.*;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
@@ -66,14 +47,7 @@ import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.StateSet;
 import android.util.TypedValue;
-import android.view.Display;
-import android.view.MotionEvent;
-import android.view.Gravity;
-import android.view.Surface;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.AccelerateInterpolator;
@@ -82,17 +56,15 @@ import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.webkit.MimeTypeMap;
-import android.widget.EdgeEffect;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
+import android.widget.*;
+import androidx.core.content.FileProvider;
+import androidx.viewpager.widget.ViewPager;
 import com.android.internal.telephony.ITelephony;
 
+import kotlin.text.StringsKt;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.tgnet.ConnectionsManager;
+import org.telegram.tgnet.RequestTimeDelegate;
 import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.AlertDialog;
@@ -100,44 +72,23 @@ import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Cells.TextDetailSettingsCell;
-import org.telegram.ui.Components.BackgroundGradientDrawable;
-import org.telegram.ui.Components.ForegroundDetector;
-import org.telegram.ui.Components.LayoutHelper;
-import org.telegram.ui.Components.PickerBottomLayout;
-import org.telegram.ui.Components.ShareAlert;
-import org.telegram.ui.Components.TypefaceSpan;
+import org.telegram.ui.Components.*;
 import org.telegram.ui.ThemePreviewActivity;
 import org.telegram.ui.WallpapersListActivity;
+import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.utils.AlertUtil;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import tw.nekomimi.nekogram.NekoConfig;
 
 public class AndroidUtilities {
 
@@ -297,7 +248,7 @@ public class AndroidUtilities {
             Linkify.addLinks(text, Linkify.PHONE_NUMBERS);
         }
         if ((mask & Linkify.WEB_URLS) != 0) {
-            gatherLinks(links, text, LinkifyPort.WEB_URL, new String[]{"http://", "https://", "ton://", "tg://"}, sUrlMatchFilter);
+            gatherLinks(links, text, LinkifyPort.WEB_URL, new String[]{"http://", "https://", "ton://", "tg://","vmess://","ss://"}, sUrlMatchFilter);
         }
         pruneOverlaps(links);
         if (links.size() == 0) {
@@ -565,10 +516,10 @@ public class AndroidUtilities {
         if (pathString.matches(Pattern.quote(new File(ApplicationLoader.applicationContext.getCacheDir(), "voip_logs").getAbsolutePath()) + "/\\d+\\.log")) {
             return false;
         }
-        if (NekoConfig.saveCacheToPrivateDirectory && pathString.startsWith(new File(ApplicationLoader.applicationContext.getCacheDir(), "sdcard").getAbsolutePath())) {
+        if (!NekoConfig.saveCacheToSdcard && pathString.startsWith(new File(ApplicationLoader.applicationContext.getCacheDir(), "sdcard").getAbsolutePath())) {
             return false;
         }
-        if (NekoConfig.saveCacheToPrivateDirectory && pathString.startsWith(new File(ApplicationLoader.applicationContext.getFilesDir(), "Telegram").getAbsolutePath())) {
+        if (!NekoConfig.saveCacheToSdcard && pathString.startsWith(new File(ApplicationLoader.applicationContext.getFilesDir(), "Telegram").getAbsolutePath())) {
             return false;
         }
         int tries = 0;
@@ -1067,12 +1018,12 @@ public class AndroidUtilities {
 
     public static Typeface getTypeface(String assetPath) {
         synchronized (typefaceCache) {
-            if (NekoConfig.typeface == 1) {
+            if (NekoConfig.typeface == 1 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (assetPath.contains("medium") && assetPath.contains("italic")) {
-                    return Typeface.create(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP ? "sans-serif-medium" : "sans-serif", Typeface.ITALIC);
+                    return Typeface.create("sans-serif-medium", Typeface.ITALIC);
                 }
                 if (assetPath.contains("medium")) {
-                    return Typeface.create(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP ? "sans-serif-medium" : "sans-serif", Typeface.NORMAL);
+                    return Typeface.create("sans-serif-medium", Typeface.NORMAL);
                 }
                 if (assetPath.contains("italic")) {
                     return Typeface.create((Typeface) null, Typeface.ITALIC);
@@ -1264,7 +1215,7 @@ public class AndroidUtilities {
         } catch (Exception e) {
             FileLog.e(e);
         }
-        if (!NekoConfig.saveCacheToPrivateDirectory && (state == null || state.startsWith(Environment.MEDIA_MOUNTED))) {
+        if (NekoConfig.saveCacheToSdcard && (state == null || state.startsWith(Environment.MEDIA_MOUNTED))) {
             try {
                 File file = ApplicationLoader.applicationContext.getExternalCacheDir();
                 if (file != null) {
@@ -1277,7 +1228,7 @@ public class AndroidUtilities {
         try {
             File file = ApplicationLoader.applicationContext.getCacheDir();
             if (file != null) {
-                if(NekoConfig.saveCacheToPrivateDirectory) {
+                if (!NekoConfig.saveCacheToSdcard) {
                     file = new File(file, "sdcard");
                     file.mkdirs();
                 }
@@ -2276,8 +2227,7 @@ public class AndroidUtilities {
                 return String.format(Locale.US, "%d:%02d:%02d / %02d:%02d", ph, pm, ps, m, s);
             } else if (ph == 0) {
                 return String.format(Locale.US, "%02d:%02d / %d:%02d:%02d", pm, ps, h, m, s);
-            }
-            else {
+            } else {
                 return String.format(Locale.US, "%d:%02d:%02d / %d:%02d:%02d", ph, pm, ps, h, m, s);
             }
         }
@@ -2643,6 +2593,13 @@ public class AndroidUtilities {
                             password = data.getQueryParameter("pass");
                             secret = data.getQueryParameter("secret");
                         }
+                    } else if (scheme.equals("vmess")) {
+                        try {
+                            showVmessAlert(activity, new SharedConfig.VmessProxy(data.toString()));
+                        } catch (Exception ex) {
+                            AlertUtil.showToast(LocaleController.getString("BrokenLink",R.string.BrokenLink));
+                        }
+                        return true;
                     }
                 }
                 if (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(port)) {
@@ -2680,7 +2637,7 @@ public class AndroidUtilities {
         return true;
     }
 
-    public static void showProxyAlert(Activity activity, final String address, final String port, final String user, final String password, final String secret) {
+    public static void showProxyAlert(Context activity, final String address, final String port, final String user, final String password, final String secret) {
         BottomSheet.Builder builder = new BottomSheet.Builder(activity);
         final Runnable dismissRunnable = builder.getDismissRunnable();
 
@@ -2758,39 +2715,129 @@ public class AndroidUtilities {
         pickerBottomLayout.doneButtonBadgeTextView.setVisibility(View.GONE);
         pickerBottomLayout.doneButtonTextView.setText(LocaleController.getString("ConnectingConnectProxy", R.string.ConnectingConnectProxy).toUpperCase());
         pickerBottomLayout.doneButton.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
-            editor.putBoolean("proxy_enabled", true);
-            editor.putString("proxy_ip", address);
             int p = Utilities.parseInt(port);
-            editor.putInt("proxy_port", p);
 
             SharedConfig.ProxyInfo info;
+
             if (TextUtils.isEmpty(secret)) {
-                editor.remove("proxy_secret");
-                if (TextUtils.isEmpty(password)) {
-                    editor.remove("proxy_pass");
-                } else {
-                    editor.putString("proxy_pass", password);
-                }
-                if (TextUtils.isEmpty(user)) {
-                    editor.remove("proxy_user");
-                } else {
-                    editor.putString("proxy_user", user);
-                }
+
                 info = new SharedConfig.ProxyInfo(address, p, user, password, "");
+
             } else {
-                editor.remove("proxy_pass");
-                editor.remove("proxy_user");
-                editor.putString("proxy_secret", secret);
+
                 info = new SharedConfig.ProxyInfo(address, p, "", "", secret);
+
             }
-            editor.commit();
 
-            SharedConfig.currentProxy = SharedConfig.addProxy(info);
+            SharedConfig.setCurrentProxy(SharedConfig.addProxy(info));
 
-            ConnectionsManager.setProxySettings(true, address, p, user, password, secret);
+            SharedConfig.setProxyEnable(true);
+
             NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+
             dismissRunnable.run();
+        });
+        builder.show();
+    }
+
+    public static void showVmessAlert(Context activity, final SharedConfig.VmessProxy info) {
+        BottomSheet.Builder builder = new BottomSheet.Builder(activity);
+        final Runnable dismissRunnable = builder.getDismissRunnable();
+
+        builder.setApplyTopPadding(false);
+        builder.setApplyBottomPadding(false);
+        LinearLayout linearLayout = new LinearLayout(activity);
+        builder.setCustomView(linearLayout);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        for (int a = 0; a < 8; a++) {
+            String text = null;
+            String detail = null;
+            if (a == 0) {
+                text = info.bean.getAddress();
+                detail = LocaleController.getString("UseProxyAddress", R.string.UseProxyAddress);
+            } else if (a == 1) {
+                text = "" + info.bean.getPort();
+                detail = LocaleController.getString("UseProxyPort", R.string.UseProxyPort);
+            } else if (a == 2) {
+                text = info.bean.getId();
+                detail = LocaleController.getString("VmessUserId", R.string.VmessUserId);
+            } else if (a == 3) {
+                text = info.bean.getSecurity();
+                if ("none".equals(text)) continue;
+                detail = LocaleController.getString("VmessSecurity", R.string.VmessSecurity);
+            } else if (a == 4) {
+                text = info.bean.getNetwork() + (StringsKt.isBlank(info.bean.getStreamSecurity()) ? "" : ", tls");
+                detail = LocaleController.getString("VmessNetwork", R.string.VmessNetwork);
+            } else if (a == 5) {
+                text = info.bean.getHeaderType();
+                if ("none".equals(text)) continue;
+                detail = LocaleController.getString("VmessHeadType", R.string.VmessHeadType);
+            } else if (a == 6) {
+                text =info.bean.getRequestHost();
+                detail = LocaleController.getString("VmessRequestHost", R.string.VmessRequestHost);
+            } else {
+                text = LocaleController.getString("Checking", R.string.Checking);
+                detail = LocaleController.getString("Checking", R.string.Checking);
+            }
+            if (TextUtils.isEmpty(text)) {
+                continue;
+            }
+            TextDetailSettingsCell cell = new TextDetailSettingsCell(activity);
+            cell.setTextAndValue(text, detail, true);
+            cell.getTextView().setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
+            cell.getValueTextView().setTextColor(Theme.getColor(Theme.key_dialogTextGray3));
+            linearLayout.addView(cell, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
+            AtomicInteger count = new AtomicInteger();
+            if (a == 7) {
+                RequestTimeDelegate callback = new RequestTimeDelegate() {
+                    @Override
+                    public void run(long time) {
+                        int c = count.getAndIncrement();
+                        String colorKey;
+                        if (time != -1) {
+                            cell.setTextAndValue(LocaleController.getString("Available", R.string.Available), LocaleController.formatString("Ping", R.string.Ping, time), true);
+                            colorKey = Theme.key_windowBackgroundWhiteGreenText;
+                        } else if (c < 3) {
+                            ConnectionsManager.getInstance(UserConfig.selectedAccount).checkProxy(info.address, info.port, "", "", "", t -> AndroidUtilities.runOnUIThread(() -> run(t),500));
+                            colorKey = Theme.key_windowBackgroundWhiteGreenText;
+                        } else {
+                            cell.setTextAndValue(LocaleController.getString("Unavailable", R.string.Unavailable), LocaleController.getString("Unavailable", R.string.Unavailable), true);
+                            colorKey = Theme.key_windowBackgroundWhiteRedText4;
+                        }
+                        cell.getValueTextView().setTextColor(Theme.getColor(colorKey));
+                    }
+
+                };
+
+                ConnectionsManager.getInstance(UserConfig.selectedAccount).checkProxy(info.address, info.port, "","","",time ->AndroidUtilities.runOnUIThread(()->callback.run(time)));
+
+            }
+        }
+
+        PickerBottomLayout pickerBottomLayout = new PickerBottomLayout(activity, false);
+        pickerBottomLayout.setBackgroundColor(Theme.getColor(Theme.key_dialogBackground));
+        linearLayout.addView(pickerBottomLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.LEFT | Gravity.BOTTOM));
+        pickerBottomLayout.cancelButton.setPadding(AndroidUtilities.dp(18), 0, AndroidUtilities.dp(18), 0);
+        pickerBottomLayout.cancelButton.setTextColor(Theme.getColor(Theme.key_dialogTextBlue2));
+        pickerBottomLayout.cancelButton.setText(LocaleController.getString("Cancel", R.string.Cancel).toUpperCase());
+        pickerBottomLayout.cancelButton.setOnClickListener(view -> {
+            info.loader.stop();
+            dismissRunnable.run();
+        });
+        pickerBottomLayout.doneButtonTextView.setTextColor(Theme.getColor(Theme.key_dialogTextBlue2));
+        pickerBottomLayout.doneButton.setPadding(AndroidUtilities.dp(18), 0, AndroidUtilities.dp(18), 0);
+        pickerBottomLayout.doneButtonBadgeTextView.setVisibility(View.GONE);
+        pickerBottomLayout.doneButtonTextView.setText(LocaleController.getString("ConnectingConnectProxy", R.string.ConnectingConnectProxy).toUpperCase());
+        pickerBottomLayout.doneButton.setOnClickListener(v -> {
+
+            SharedConfig.setCurrentProxy(SharedConfig.addProxy(info));
+
+            SharedConfig.setProxyEnable(true);
+
+            NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+
+            dismissRunnable.run();
+
         });
         builder.show();
     }
@@ -2950,7 +2997,7 @@ public class AndroidUtilities {
         hsb[1] = Math.min(1.0f, hsb[1] + 0.05f);
         if (hsb[2] > 0.5f) {
             hsb[2] = Math.max(0.0f, hsb[2] * 0.90f);
-        } else{
+        } else {
             hsb[2] = Math.max(0.0f, hsb[2] * 0.90f);
         }
         return HSBtoRGB(hsb[0], hsb[1], hsb[2]) | 0xff000000;
