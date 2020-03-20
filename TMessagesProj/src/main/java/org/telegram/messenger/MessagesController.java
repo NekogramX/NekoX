@@ -55,6 +55,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import kotlin.collections.ArraysKt;
 import kotlin.concurrent.ThreadsKt;
+import tw.nekomimi.nekogram.ExternalGcm;
 import tw.nekomimi.nekogram.FilterPopup;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.NekoXConfig;
@@ -3711,6 +3712,11 @@ public class MessagesController extends BaseController implements NotificationCe
         getLocationController().update();
         checkProxyInfoInternal(false);
         checkTosUpdate();
+        if (lastPushRegisterSendTime != 0 && Math.abs(SystemClock.elapsedRealtime() - lastPushRegisterSendTime) >= 3 * 60 * 60 * 1000) {
+            if (ExternalGcm.INSTANCE != null) {
+                ExternalGcm.INSTANCE.sendRegistrationToServer();
+            }
+        }
     }
 
     private void checkTosUpdate() {

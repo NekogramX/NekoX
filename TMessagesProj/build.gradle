@@ -43,7 +43,7 @@ android {
     buildToolsVersion '29.0.3'
     ndkVersion "21.0.6113669"
 
-    defaultConfig.applicationId = "nekox.messager"
+    defaultConfig.applicationId = "nekox.messenger"
 
     externalNativeBuild {
         ndkBuild {
@@ -116,12 +116,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        release {
+        releaseNoGcm {
             initWith debug
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.release
-            useGoogleServices = true
+        }
+
+        release {
+            initWith releaseNoGcm
         }
 
         foss {
@@ -135,10 +138,16 @@ android {
         jni.srcDirs = []
     }
 
+    sourceSets.releaseNoGcm {
+        jniLibs.srcDir 'jniLibs'
+        jni.srcDirs = []
+    }
+
     sourceSets.release {
         jniLibs.srcDir 'jniLibs'
         jni.srcDirs = []
         java.srcDirs = ['/src/gservcies/java']
+        manifest.srcFile '/src/gservcies/AndroidManifest.xml'
     }
 
     sourceSets.foss {
@@ -292,9 +301,18 @@ android {
 
 }
 
-if (useGoogleServices) {
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
-    apply plugin: 'com.google.gms.google-services'
-    apply plugin: 'com.google.firebase.crashlytics'
+android {
+
+    tasks.all { task ->
+        if (((task.name.contains('Crashlytics'))) && !task.name.endsWith("Release")) {
+            task.enabled = false
+        }
+        if (((task.name.endsWith('GoogleServices'))) && !task.name.endsWith("ReleaseGoogleServices")) {
+            task.enabled = false
+        }
+    }
 
 }

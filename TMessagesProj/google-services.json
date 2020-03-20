@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:124118418489:android:153f97bab73b84640d39e8",
+        "mobilesdk_app_id": "1:124118418489:android:3dc02bf5a16e92600d39e8",
         "android_client_info": {
-          "package_name": "nekox.messager"
+          "package_name": "nekox.messenger"
         }
       },
       "oauth_client": [

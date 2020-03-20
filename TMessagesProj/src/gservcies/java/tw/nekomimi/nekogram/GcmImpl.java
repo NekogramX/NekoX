@@ -1,19 +1,25 @@
-package org.telegram.messager;
+package tw.nekomimi.nekogram;
 
 import android.text.TextUtils;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import org.telegram.messenger.GcmPushListenerService;
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.FileLog;
-import org.telegram.messenger.GcmPushListenerService;
 import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.Utilities;
 
-public class GcmInit {
+public class GcmImpl implements ExternalGcm.Interface {
 
     public static boolean hasPlayServices;
 
-    private void initPlayServices() {
+    @Override
+    public void initPlayServices() {
         AndroidUtilities.runOnUIThread(() -> {
             if (hasPlayServices = checkPlayServices()) {
                 final String currentPushString = SharedConfig.pushString;
@@ -56,7 +62,7 @@ public class GcmInit {
 
     private boolean checkPlayServices() {
         try {
-            int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ApplicationLoader.applicationContext);
             return resultCode == ConnectionResult.SUCCESS;
         } catch (Exception e) {
             FileLog.e(e);
@@ -64,5 +70,8 @@ public class GcmInit {
         return true;
     }
 
-
+    @Override
+    public void sendRegistrationToServer() {
+        GcmPushListenerService.sendRegistrationToServer(SharedConfig.pushString);
+    }
 }

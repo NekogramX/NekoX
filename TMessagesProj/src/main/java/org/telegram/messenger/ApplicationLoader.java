@@ -33,6 +33,7 @@ import org.telegram.ui.Components.ForegroundDetector;
 
 import java.io.File;
 
+import tw.nekomimi.nekogram.ExternalGcm;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
@@ -185,6 +186,9 @@ public class ApplicationLoader extends Application {
         }
 
         ApplicationLoader app = (ApplicationLoader) ApplicationLoader.applicationContext;
+        if (ExternalGcm.INSTANCE != null) {
+            ExternalGcm.INSTANCE.initPlayServices();
+        }
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("app initied");
         }
