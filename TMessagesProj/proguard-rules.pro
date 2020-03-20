@@ -18,6 +18,7 @@
 -dontwarn com.google.common.cache.**
 -dontwarn com.google.common.primitives.**
 -dontwarn com.googlecode.mp4parser.**
+
 # Use -keep to explicitly keep any other classes shrinking would remove
 # -dontoptimize
 -dontobfuscate

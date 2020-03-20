@@ -119,66 +119,6 @@ object Utils {
         return regV6.matches(addr)
     }
 
-    /**
-     * is valid url
-     */
-    fun isValidUrl(value: String?): Boolean {
-        try {
-            if (Patterns.WEB_URL.matcher(value).matches() || URLUtil.isValidUrl(value)) {
-                return true
-            }
-        } catch (e: WriterException) {
-            e.printStackTrace()
-            return false
-        }
-        return false
-    }
-
-
-    /**
-     * 判断服务是否后台运行
-
-     * @param context
-     * *            Context
-     * *
-     * @param className
-     * *            判断的服务名字
-     * *
-     * @return true 在运行 false 不在运行
-     */
-    fun isServiceRun(context: Context, className: String): Boolean {
-        var isRun = false
-        val activityManager = context
-                .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val serviceList = activityManager
-                .getRunningServices(999)
-        val size = serviceList.size
-        for (i in 0..size - 1) {
-            if (serviceList[i].service.className == className) {
-                isRun = true
-                break
-            }
-        }
-        return isRun
-    }
-
-    fun openUri(context: Context, uriString: String) {
-        val uri = Uri.parse(uriString)
-        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-    }
-
-    /**
-     * uuid
-     */
-    fun getUuid(): String {
-        try {
-            return UUID.randomUUID().toString().replace("-", "")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return ""
-        }
-    }
-
     fun urlDecode(url: String): String {
         try {
             return URLDecoder.decode(url, "UTF-8")

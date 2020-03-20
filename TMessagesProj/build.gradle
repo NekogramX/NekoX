@@ -40,11 +40,6 @@ android {
 
     defaultConfig.applicationId = "nekox.messager"
 
-    sourceSets.main {
-        jniLibs.srcDir 'jniLibs'
-        jni.srcDirs = ['./jni/']
-    }
-
     externalNativeBuild {
         ndkBuild {
             path "jni/Android.mk"
@@ -55,6 +50,17 @@ android {
         disable 'MissingTranslation'
         disable 'ExtraTranslation'
         disable 'BlockedPrivateApi'
+    }
+
+    packagingOptions {
+
+        exclude '/fabric/**'
+        exclude '/kotlin/**'
+        exclude '/META-INF/*.version'
+        exclude '/META-INF/*.kotlin_module'
+        exclude '/builddef.lst'
+        exclude '/*.txt'
+
     }
 
     dexOptions {
@@ -82,52 +88,54 @@ android {
             pwd = properties.getProperty("ALIAS_PASS")
         }
         release {
-            storeFile project.rootProject.file('keystore.jks')
+            storeFile project.file('release.jks')
             storePassword keystorePwd != null ? keystorePwd : System.getenv("KEYSTORE_PASS")
             keyAlias alias != null ? alias : System.getenv("ALIAS_NAME")
             keyPassword pwd != null ? pwd : System.getenv("ALIAS_PASS")
         }
         debug {
-            storeFile project.rootProject.file('keystore.jks')
-            storePassword keystorePwd != null ? keystorePwd : System.getenv("KEYSTORE_PASS")
-            keyAlias alias != null ? alias : System.getenv("ALIAS_NAME")
-            keyPassword pwd != null ? pwd : System.getenv("ALIAS_PASS")
+            storeFile project.file('debug.jks')
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
         }
     }
-
 
     buildTypes {
         debug {
             debuggable true
             jniDebuggable true
             signingConfig signingConfigs.debug
-           // applicationIdSuffix ".beta"
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
-        debugMultidex {
-            initWith debug
-            minifyEnabled false
-            multiDexEnabled true
-            dependencies {
-                implementation 'com.android.support:multidex:1.0.3'
-            }
-            manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
-        }
-
-        release {
-            debuggable false
-            jniDebuggable false
             minifyEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            multiDexEnabled true
-            dependencies {
-                implementation 'com.android.support:multidex:1.0.3'
-            }
-            manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
         }
+
+        release {
+            initWith debug
+            debuggable false
+            jniDebuggable false
+            signingConfig signingConfigs.release
+        }
+
+        foss {
+            initWith release
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    sourceSets.debug {
+        jniLibs.srcDir 'jniLibs'
+        jni.srcDirs = []
+    }
+
+    sourceSets.release {
+        jniLibs.srcDir 'jniLibs'
+        jni.srcDirs = []
+    }
+
+    sourceSets.foss {
+        jni.srcDirs = ['./jni/']
     }
 
     flavorDimensions "minApi"
@@ -137,11 +145,27 @@ android {
             ndk {
                 abiFilters "armeabi-v7a"
             }
+            sourceSets.main {
+                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+            }
+            dependencies {
+                implementation 'com.android.support:multidex:1.0.3'
+            }
+            multiDexEnabled true
+            manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
         }
         x86 {
             ndk {
                 abiFilters "x86"
             }
+            sourceSets.main {
+                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+            }
+            dependencies {
+                implementation 'com.android.support:multidex:1.0.3'
+            }
+            multiDexEnabled true
+            manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
         }
         armv7_SDK21 {
             ndk {
@@ -155,27 +179,31 @@ android {
             }
             minSdkVersion 21
         }
-        armv7_SDK23 {
-            ndk {
-                abiFilters "armeabi-v7a"
-            }
-            minSdkVersion 23
-        }
-        x86_SDK23 {
-            ndk {
-                abiFilters "x86"
-            }
-            minSdkVersion 23
-        }
         arm64 {
             ndk {
                 abiFilters "arm64-v8a"
             }
+            sourceSets.main {
+                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+            }
+            dependencies {
+                implementation 'com.android.support:multidex:1.0.3'
+            }
+            multiDexEnabled true
+            manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
         }
         x64 {
             ndk {
                 abiFilters "x86_64"
             }
+            sourceSets.main {
+                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+            }
+            dependencies {
+                implementation 'com.android.support:multidex:1.0.3'
+            }
+            multiDexEnabled true
+            manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
         }
         arm64_SDK21 {
             ndk {
@@ -189,20 +217,15 @@ android {
             }
             minSdkVersion 21
         }
-        arm64_SDK23 {
-            ndk {
-                abiFilters "arm64-v8a"
-            }
-            minSdkVersion 23
-        }
-        x64_SDK23 {
-            ndk {
-                abiFilters "x86_64"
-            }
-            minSdkVersion 23
-        }
-
         afat {
+            sourceSets.main {
+                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+            }
+            dependencies {
+                implementation 'com.android.support:multidex:1.0.3'
+            }
+            multiDexEnabled true
+            manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
         }
 
     }
@@ -253,4 +276,11 @@ android {
 
         manifestPlaceholders = [applicationClassName: "ApplicationLoader"]
     }
+
+    tasks.all { task ->
+        if (((task.name.endsWith('Ndk') || task.name.startsWith('generateJsonModel') || task.name.startsWith('externalNativeBuild'))) && !task.name.contains("Foss")) {
+            task.enabled = false
+        }
+    }
+
 }
