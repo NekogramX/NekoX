@@ -31,7 +31,12 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.4.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70"
 
+    releaseImplementation 'com.google.firebase:firebase-messaging:20.1.3'
+    releaseImplementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta02'
+
 }
+
+def useGoogleServices = false
 
 android {
     compileSdkVersion 29
@@ -116,6 +121,7 @@ android {
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.release
+            useGoogleServices = true
         }
 
         foss {
@@ -132,6 +138,7 @@ android {
     sourceSets.release {
         jniLibs.srcDir 'jniLibs'
         jni.srcDirs = []
+        java.srcDirs = ['/src/gservcies/java']
     }
 
     sourceSets.foss {
@@ -282,5 +289,12 @@ android {
             task.enabled = false
         }
     }
+
+}
+
+if (useGoogleServices) {
+
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.crashlytics'
 
 }
