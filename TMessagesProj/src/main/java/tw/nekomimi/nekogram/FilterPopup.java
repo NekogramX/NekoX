@@ -187,7 +187,7 @@ public class FilterPopup extends BaseController {
                     if (!folderDialogs.get(i).isEmpty())
                         dialogs.add(folders.get(i));
                 }
-                allDialogs.retainAll(filterUnreadDialogs(allDialogs));
+                allDialogs.retainAll(filterUnmutedDialogs(filterUnreadDialogs(allDialogs)));
                 break;
             case DialogType.Users:
                 for (int i = 0; i < folders.size(); i++) {
