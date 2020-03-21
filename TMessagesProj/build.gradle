@@ -132,17 +132,17 @@ android {
     }
 
     sourceSets.debug {
-        jniLibs.srcDir 'jniLibs'
+        jniLibs.srcDir 'src/main/libs'
         jni.srcDirs = []
     }
 
     sourceSets.releaseNoGcm {
-        jniLibs.srcDir 'jniLibs'
+        jniLibs.srcDir 'src/main/libs'
         jni.srcDirs = []
     }
 
     sourceSets.release {
-        jniLibs.srcDir 'jniLibs'
+        jniLibs.srcDir 'src/main/libs'
         jni.srcDirs = []
         java.srcDirs = ['/src/gservcies/java']
         manifest.srcFile '/src/gservcies/AndroidManifest.xml'

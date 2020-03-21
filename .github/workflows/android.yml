@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  linux:
-    name: Build
+  releaseBuild:
+    name: Build Release
     runs-on: ubuntu-latest
     if: "!endsWith(github.event.head_commit.message, '~')"
     steps:
@@ -33,4 +33,61 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir apks; find . -name "*.apk" -exec mv {} apks \;
-          ghr -n "Build $GITHUB_SHA" -b "${{ github.event.head_commit.message }}" -prerelease -delete latest apks/
+          ghr -n "C $GITHUB_SHA" \
+            -b "${{ github.event.head_commit.message }}" \
+            -prerelease -delete latest apks/
+  fossBuild:
+    name: Build FOSS
+    runs-on: ubuntu-latest
+    if: "!endsWith(github.event.head_commit.message, '~')"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+      - name: Build native libraries
+        run: |
+          cd TMessagesProj/libs
+          rm libv2ray.aar
+          go env -w GOPATH=$HOME/go
+          export GOPATH=$HOME/go
+          export PATH=$PATH:$GOPATH/bin
+          go get -u github.com/golang/protobuf/protoc-gen-go
+          go get -v golang.org/x/mobile/cmd/...
+          go get -v go.starlark.net/starlark
+          go get -v github.com/refraction-networking/utls
+          go get -v github.com/gorilla/websocket
+          go get -v -insecure v2ray.com/core
+          go get github.com/2dust/AndroidLibV2rayLite
+          gomobile init
+          env GO111MODULE=off gomobile bind -v -ldflags='-s -w' github.com/2dust/AndroidLibV2rayLite
+          cd ../jni
+          sudo apt-get install -y ninja-build
+          export NDK=$ANDROID_HOME/ndk-bundle
+          export NINJA_PATH=/usr/bin/ninja
+          export PATH=`echo $ANDROID_HOME/cmake/*/bin`:$PATH
+          git submodule init
+          git submodule update
+          ./build_ffmpeg_clang.sh
+          ./patch_ffmpeg.sh
+          ./patch_boringssl.sh
+          ./build_boringssl.sh
+      - name: assemble
+        env:
+          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+          ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
+          ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
+        run: |
+          ./gradlew assembleFoss
+      - name: Fins apks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir apks; find . -name "*.apk" -exec mv {} apks \;
+      - uses: actions/upload-artifact@v1
+        with:
+          name: NekoX-FOSS-${{ github.sha }}.zip
+          path: apks
