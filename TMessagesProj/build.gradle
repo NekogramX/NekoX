@@ -36,8 +36,6 @@ dependencies {
 
 }
 
-def useGoogleServices = false
-
 android {
     compileSdkVersion 29
     buildToolsVersion '29.0.3'
@@ -162,10 +160,9 @@ android {
                 abiFilters "armeabi-v7a"
             }
             sourceSets.main {
-                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+                java.srcDirs = ['src/main/java', 'src/multidex/java']
             }
             dependencies {
-                implementation 'com.android.support:multidex:1.0.3'
             }
             multiDexEnabled true
             manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
@@ -175,7 +172,7 @@ android {
                 abiFilters "x86"
             }
             sourceSets.main {
-                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+                java.srcDirs = ['src/main/java', 'src/multidex/java']
             }
             dependencies {
                 implementation 'com.android.support:multidex:1.0.3'
@@ -200,7 +197,7 @@ android {
                 abiFilters "arm64-v8a"
             }
             sourceSets.main {
-                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+                java.srcDirs = ['src/main/java', 'src/multidex/java']
             }
             dependencies {
                 implementation 'com.android.support:multidex:1.0.3'
@@ -213,7 +210,7 @@ android {
                 abiFilters "x86_64"
             }
             sourceSets.main {
-                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+                java.srcDirs = ['src/main/java', 'src/multidex/java']
             }
             dependencies {
                 implementation 'com.android.support:multidex:1.0.3'
@@ -235,7 +232,7 @@ android {
         }
         afat {
             sourceSets.main {
-                java.srcDirs = ['/src/main/java', 'src/multidex/java']
+                java.srcDirs = ['src/main/java', 'src/multidex/java']
             }
             dependencies {
                 implementation 'com.android.support:multidex:1.0.3'
@@ -280,8 +277,8 @@ android {
             appHash = properties.getProperty("TELEGRAM_APP_HASH")
         }
 
-        buildConfigField 'int', 'APP_ID', appId != null ? appId : System.getenv("TELEGRAM_APP_ID")
-        buildConfigField 'String', 'APP_HASH', "\"" + (appHash != null ? appHash : System.getenv("TELEGRAM_APP_HASH")) + "\""
+        buildConfigField 'int', 'APP_ID', appId != null ? appId : "1391584"
+        buildConfigField 'String', 'APP_HASH', "\"" + (appHash != null ? appHash : "355c91550b0d658cfb7ff89dcf91a08c") + "\""
 
         externalNativeBuild {
             ndkBuild {
