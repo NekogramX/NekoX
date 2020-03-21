@@ -247,14 +247,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "NekoX-${defaultConfig.versionName}-${defaultConfig.versionCode}-${variant.productFlavors.get(0).name}-${buildType.name}.apk"
-        }
-    }
-
-    variantFilter { variant ->
-        def names = variant.flavors*.name
-        if (variant.buildType.name != "release" && !names.contains("afat")) {
-            setIgnore(true)
+            outputFileName = "NekoX-${variant.productFlavors.get(0).name}-${buildType.name}.apk"
         }
     }
 
