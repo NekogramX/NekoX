@@ -30,7 +30,7 @@ jobs:
           RELEASE_CHANNEL:  ${{ secrets.RELEASE_CHANNEL }}
           CANARY_CHANNEL:  ${{ secrets.CANARY_CHANNEL }}
       - name: Find apks
-        run: mkdir apks; find . -name "*.apk" | xargs -0 -I {} mv {} apks
+        run: mkdir apks; find . -name "*.apk" -exec "mv {} apks"
       - name: Upload apks
         uses: fnkr/github-action-ghr@v1
         env:
