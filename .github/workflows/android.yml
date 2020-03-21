@@ -22,9 +22,8 @@ jobs:
           ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
           ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
         run: |
-          ./gradlew assembleRelease
-          ./gradlew assembleReleaseNoGcm
-          echo ::set-env name=APK_FILE::$(find TMessagesProj/buiild/outputs/apk/afat/release -name "*.apk")
+          ./gradlew assembleAfatRelease
+          echo ::set-env name=APK_FILE::$(find TMessagesProj/build/outputs/apk/afat/release -name "*.apk")
       - uses: NekogramX/nekox-build-script@master
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
