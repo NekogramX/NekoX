@@ -90,61 +90,43 @@ android {
             pwd = properties.getProperty("ALIAS_PASS")
         }
         release {
-            storeFile project.file('release.jks')
+            storeFile project.file('release.keystore')
             storePassword keystorePwd != null ? keystorePwd : System.getenv("KEYSTORE_PASS")
             keyAlias alias != null ? alias : System.getenv("ALIAS_NAME")
             keyPassword pwd != null ? pwd : System.getenv("ALIAS_PASS")
         }
-        debug {
-            storeFile project.file('debug.jks')
-            storePassword "android"
-            keyAlias "androiddebugkey"
-            keyPassword "android"
-        }
     }
 
     buildTypes {
-        debug {
+        canary {
             debuggable true
             jniDebuggable true
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        releaseNoGcm {
+        release {
             initWith debug
             debuggable false
             jniDebuggable false
-            signingConfig signingConfigs.release
-        }
-
-        release {
-            initWith releaseNoGcm
         }
 
         foss {
             initWith release
-            signingConfig signingConfigs.debug
         }
     }
 
-    sourceSets.debug {
-        jniLibs.srcDir 'src/main/libs'
-        jni.srcDirs = []
-    }
-
-    sourceSets.releaseNoGcm {
+    sourceSets.canary {
         jniLibs.srcDir 'src/main/libs'
         jni.srcDirs = []
     }
 
     sourceSets.release {
-        jniLibs.srcDir 'src/main/libs'
-        jni.srcDirs = []
         java.srcDirs = ['/src/gservcies/java']
         manifest.srcFile '/src/gservcies/AndroidManifest.xml'
+        jni.srcDirs = ['./jni/']
     }
 
     sourceSets.foss {
@@ -283,7 +265,7 @@ android {
     }
 
     tasks.all { task ->
-        if (((task.name.endsWith('Ndk') || task.name.startsWith('generateJsonModel') || task.name.startsWith('externalNativeBuild'))) && !task.name.contains("Foss")) {
+        if (((task.name.endsWith('Ndk') || task.name.startsWith('generateJsonModel') || task.name.startsWith('externalNativeBuild'))) && task.name.contains("Canary")) {
             task.enabled = false
         }
     }

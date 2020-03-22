@@ -16,17 +16,19 @@ MTproto protocol manuals: https://core.telegram.org/mtproto
 
 ## Compilation Guide
 
+Place your keysotre at TMessageProj/release.keystore, and fill out KEYSTORE_PASS, ALIAS_NAME, ALIAS_PASS in local.properties, environment variables are also recommended
+
 ### Specify APP_ID and APP_HASH
 
 Just fill out TELEGRAM_APP_ID and TELEGRAM_APP_HASH in local.properties
 
 ### Build Types
 
-#### Debug
+#### Canary
 
-`./gradlew assemble<Variant>Debug`
+`./gradlew assemble<Variant>Canary`
 
-The default debug key is used, and placing yours is not needed.
+with precompiled native libraries, for debug use.
 
 #### Release
 
@@ -34,23 +36,15 @@ The default debug key is used, and placing yours is not needed.
 
 The difference between release and other build types is that it adds fcm and firebase crash analysis, if you don't like them, use releaseNoGcm.
 
-To compile the release version, please place your keysotre at TMessageProj/release.jks, and fill in KEYSTORE_PASS, ALIAS_NAME, ALIAS_PASS in local.properties, environment variables are also recommended
-
 If you don't use NekoX's APP_ID and APP_HASH, you need to register a physical firebase app and replace google-services.json to ensure fcm works
-
-#### ReleaseNoGcm
-
-`./gradlew assemble<Variant>ReleaseNoGcm`
-
-OK, a version without firebase cloud messaging, maybe this makes you feel more free, or your phone does not have Google services.
 
 #### Foss
 
 `./gradlew assemble<Variant>Foss`
 
-It's not any different from releaseNoGcm, if you trust us that we haven't fiddled with precompiled native libraries.
+OK, a version without firebase cloud messaging, maybe this makes you feel more free, or your phone does not have Google services.
 
-To compile the foss version, you need to run `build_ffmpeg_clang.sh` `patch_ffmpeg.sh` `patch_boringssl.sh` `build_boringssl.sh` under **TMessageProj/jni** in turn, and then follow the [instructions](https://github.com/2dust/AndroidLibV2rayLite/blob/master/.travis.yml) to compile https://github.com/2dust/AndroidLibV2rayLite to **TMessageProj/libs/libv2ary.aar** first.
+To compile the foss version, please refer to [this script](.github/workflows/release.yml).
 
 ### Build Variants
 
