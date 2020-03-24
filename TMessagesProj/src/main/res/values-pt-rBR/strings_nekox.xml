@@ -32,6 +32,8 @@
     <string name="AddProxySocks5">Adicionar Proxy Socks5</string>
     <string name="AddProxyTelegram">Adicionar Proxy MTProto</string>
     <string name="AddProxyVmess">Adicionar Proxy Vmess</string>
+    <string name="AddProxySS">Adicionar Shadowsocks Proxy</string>
+    <string name="AddProxyTrojan">Adicionar Trojan Proxy</string>
     <string name="EditProxy">Editar Proxy</string>
     <string name="ShareProxy">Compartilhar Proxy</string>
     <string name="ProxyDelete">Excluir proxy</string>
@@ -44,6 +46,11 @@
     <string name="VmessRequestHost">Host do Pedido / Segurança QUIC</string>
     <string name="VmessPath">Path / QUIC Key</string>
     <string name="VmessTls">Usar TLS</string>
+    <string name="ProxyInfoSS">Configurações do Proxy Shadowsocks</string>
+    <string name="SSPassword">Senha</string>
+    <string name="SSMethod">Método de criptografia</string>
+    <string name="ProxyInfoTrojan">Configurações do Proxy Trojan</string>
+    <string name="TrojanESNI">Usar ESNI</string>
     <string name="ImportProxyFromClipboard">Importar da área de transferência</string>
     <string name="BrokenLink">Link desconhecido / quebrado</string>
     <string name="ShareQRCode">QR Code</string>
