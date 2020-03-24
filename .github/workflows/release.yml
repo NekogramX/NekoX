@@ -21,6 +21,7 @@ jobs:
           sudo mv ghr*linux_amd64/ghr /usr/local/bin; rm -rf ghr*linux_amd64
       - name: assembleRelease
         run: |
+          git submodule update --init --recursive
           sudo bash <<EOF
             export KEYSTORE_PASS="${{ secrets.KEYSTORE_PASS }}"
             export ALIAS_NAME="${{ secrets.ALIAS_NAME }}"
