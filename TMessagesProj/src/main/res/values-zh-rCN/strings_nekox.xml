@@ -32,6 +32,7 @@
     <string name="AddProxySocks5">添加 Socks5 代理</string>
     <string name="AddProxyTelegram">添加 MTProto 代理</string>
     <string name="AddProxyVmess">添加 Vmess 代理</string>
+    <string name="AddProxySS">添加 Shadowsocks 代理</string>
     <string name="EditProxy">编辑代理</string>
     <string name="ShareProxy">分享代理</string>
     <string name="ProxyDelete">删除代理</string>
@@ -44,6 +45,10 @@
     <string name="VmessRequestHost">伪装域名 / QUIC 加密方式</string>
     <string name="VmessPath">路径 / QUIC 加密密钥</string>
     <string name="VmessTls">使用 TLS</string>
+    <string name="ProxyInfoSS">Shadowsocks 代理设置</string>
+    <string name="SSPassword">密码</string>
+    <string name="SSMethod">加密方法</string>
+    <string name="MinApi21Required">抱歉，您至少需要 Android 5 (API21)。</string>
     <string name="ImportProxyFromClipboard">从剪贴板导入</string>
     <string name="BrokenLink">未知或损坏的链接</string>
     <string name="ShareQRCode">二维码</string>
