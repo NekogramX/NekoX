@@ -19,13 +19,16 @@ jobs:
           wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
           tar xvzf ghr.tar.gz; rm ghr.tar.gz
           sudo mv ghr*linux_amd64/ghr /usr/local/bin; rm -rf ghr*linux_amd64
-      - name: assemble
+      - name: assembleRelease
         run: |
           sudo bash <<EOF
             export KEYSTORE_PASS="${{ secrets.KEYSTORE_PASS }}"
             export ALIAS_NAME="${{ secrets.ALIAS_NAME }}"
             export ALIAS_PASS="${{ secrets.ALIAS_PASS }}"
-            ./gradlew assembleReleaseNoGcm assembleRelease
+            ./gradlew assembleRelease \
+                      assembleReleaseNoGcm \
+                      assembleLegacyRelease \
+                      assembleLegacyReleaseNoGcm
           EOF
           echo ::set-env name=AAB_FILE::$(find TMessagesProj/build/outputs/bundle -name "*.aab")
       - name: Upload apks
