@@ -20,6 +20,8 @@ jobs:
           go-version: 1.13
       - name: Build native libraries
         run: |
+          git submodule update --init --recursive
+
           cd TMessagesProj/libs
 
           go env -w GOPATH=$HOME/go
@@ -44,9 +46,6 @@ jobs:
           export NINJA_PATH=/usr/bin/ninja
           export PATH=`echo $ANDROID_HOME/cmake/*/bin`:$PATH
 
-          git submodule init
-          git submodule update --init --recursive
-
           ./build_ffmpeg_clang.sh
           ./patch_ffmpeg.sh
           ./patch_boringssl.sh
@@ -60,7 +59,7 @@ jobs:
             export KEYSTORE_PASS="${{ secrets.KEYSTORE_PASS }}"
             export ALIAS_NAME="${{ secrets.ALIAS_NAME }}"
             export ALIAS_PASS="${{ secrets.ALIAS_PASS }}"
-            ./gradlew assembleAfatFoss
+            ./gradlew ss-libev:assembleRelease && ./gradlew assembleAfatFoss
           EOF
       - uses: actions/upload-artifact@master
         with:

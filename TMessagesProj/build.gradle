@@ -88,9 +88,9 @@ android {
         }
         release {
             storeFile project.file('release.keystore')
-            storePassword keystorePwd != null ? keystorePwd : System.getenv("KEYSTORE_PASS")
-            keyAlias alias != null ? alias : System.getenv("ALIAS_NAME")
-            keyPassword pwd != null ? pwd : System.getenv("ALIAS_PASS")
+            storePassword (keystorePwd != null ? keystorePwd : System.getenv("KEYSTORE_PASS"))
+            keyAlias (alias != null ? alias : System.getenv("ALIAS_NAME"))
+            keyPassword (pwd != null ? pwd : System.getenv("ALIAS_PASS"))
         }
         debug {
             storeFile project.file('debug.keystore')
@@ -184,10 +184,7 @@ android {
             multiDexEnabled true
             manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
             dependencies {
-                debugImplementation files('libs/ss-libev.aar')
-                releaseImplementation files('libs/ss-libev.aar')
-                releaseNoGcmImplementation files('libs/ss-libev.aar')
-                fossImplementation project(path: ':ss-libev', configuration: 'default')
+                implementation project(path: ':ss-libev', configuration: 'default')
             }
         }
 
@@ -207,10 +204,7 @@ android {
             minSdkVersion 21
             versionNameSuffix '-minApi21'
             dependencies {
-                debugImplementation files('libs/ss-libev.aar')
-                releaseImplementation files('libs/ss-libev.aar')
-                releaseNoGcmImplementation files('libs/ss-libev.aar')
-                fossImplementation project(path: ':ss-libev', configuration: 'default')
+                implementation project(path: ':ss-libev', configuration: 'default')
             }
         }
     }
