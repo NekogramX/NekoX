@@ -43,6 +43,7 @@
     <string name="AddProxySocks5">Add Socks5 Proxy</string>
     <string name="AddProxyTelegram">Add MTProto Proxy</string>
     <string name="AddProxyVmess">Add Vmess Proxy</string>
+    <string name="AddProxySS">Add Shadowsocks Proxy</string>
 
     <string name="EditProxy">Edit Proxy</string>
     <string name="ShareProxy">Share Proxy</string>
@@ -57,6 +58,12 @@
     <string name="VmessRequestHost">Request Host / QUIC Security</string>
     <string name="VmessPath">Path / QUIC Key</string>
     <string name="VmessTls">Use TLS</string>
+
+    <string name="ProxyInfoSS">Shadowsocks Proxy Settings</string>
+    <string name="SSPassword">Password</string>
+    <string name="SSMethod">Encrypt Method</string>
+
+    <string name="MinApi21Required">Sorry, you need at least Android 5 (API21).</string>
 
     <string name="ImportProxyFromClipboard">Import From Clipboard</string>
     <string name="BrokenLink">Unknown / Broken Link</string>

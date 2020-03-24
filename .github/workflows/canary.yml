@@ -15,13 +15,14 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: assembleAfatCanary
-        env:
-          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
-          ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
-          ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
+      - name: assembleAfatRelease
         run: |
-          ./gradlew assembleAfatCanary
+          sudo bash <<EOF
+            export KEYSTORE_PASS="${{ secrets.KEYSTORE_PASS }}"
+            export ALIAS_NAME="${{ secrets.ALIAS_NAME }}"
+            export ALIAS_PASS="${{ secrets.ALIAS_PASS }}"
+            ./gradlew assembleAfatRelease
+          EOF
           echo ::set-env name=APK_FILE::$(find TMessagesProj/build/outputs/apk -name "*.apk")
       - uses: NekogramX/nekox-build-script@master
         env:

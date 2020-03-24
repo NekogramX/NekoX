@@ -16,19 +16,17 @@ MTproto protocol manuals: https://core.telegram.org/mtproto
 
 ## Compilation Guide
 
-Place your keysotre at TMessageProj/release.keystore, and fill out KEYSTORE_PASS, ALIAS_NAME, ALIAS_PASS in local.properties, environment variables are also recommended
-
 ### Specify APP_ID and APP_HASH
 
 Just fill out TELEGRAM_APP_ID and TELEGRAM_APP_HASH in local.properties
 
 ### Build Types
 
-#### Canary
+#### Debug
 
-`./gradlew assemble<Variant>Canary`
+`./gradlew assemble<Variant>Debug`
 
-with precompiled native libraries, for debug use.
+The default debug key is used, and placing yours is not needed.
 
 #### Release
 
@@ -36,13 +34,15 @@ with precompiled native libraries, for debug use.
 
 The difference between release and other build types is that it adds fcm and firebase crash analysis, if you don't like them, use releaseNoGcm.
 
+To compile the release version, please place your keysotre at TMessageProj/release.jks, and fill in KEYSTORE_PASS, ALIAS_NAME, ALIAS_PASS in local.properties, environment variables are also recommended
+
 If you don't use NekoX's APP_ID and APP_HASH, you need to register a physical firebase app and replace google-services.json to ensure fcm works
 
 #### Foss
 
 `./gradlew assemble<Variant>Foss`
 
-OK, a version without firebase cloud messaging, maybe this makes you feel more free, or your phone does not have Google services.
+OK, a version without firebase cloud messaging and precompiled native libraries, maybe this makes you feel more free, or your phone does not have Google services.
 
 To compile the foss version, please refer to [this script](.github/workflows/release.yml).
 
@@ -60,6 +60,17 @@ If you don't know their difference, `Afat` is recommended.
 NekoX is forked from Nekogram-FOSS, thus most locales follows the translations of Telegram for Android, checkout https://translations.telegram.org/en/android/.
 
 As for the specialized strings, we use Crowdin to translate Nekogram. Join project at https://neko.crowdin.com/nekogram and https://nekox.crowdin.com/nekox. Help us bring Nekogram to the world!
+
+## OPEN SOURCE LICENSES
+
+<ul>
+    <li>Nekogram: <a href="https://github.com/Nekogram/Nekogram/blob/master/LICENSE">GPLv2</a></li>
+    <li>Nekogram-FOSS: <a href="https://github.com/NekoInverter/Nekogram-FOSS/blob/master/LICENSE">GPLv2</a></li>
+    <li>Telegram-FOSS: <a href="https://github.com/Telegram-FOSS-Team/Telegram-FOSS/blob/master/LICENSE">GPLv2</a></li>
+    <li>v2rayNG</li>: <a href="https://github.com/2dust/v2rayNG/blob/master/LICENSE">GPLv3</a></li>
+    <li>AndroidLibV2rayLite: <a href="https://github.com/2dust/AndroidLibV2rayLite/blob/master/LICENSE">LGPLv3</a></li>
+    <li>shadowsocks-libev: <a href="https://github.com/shadowsocks/shadowsocks-libev/blob/master/LICENSE">GPLv3</a></li>
+</ul>
 
 ## Contributors
 

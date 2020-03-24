@@ -17,8 +17,8 @@ import com.google.zxing.*
 import com.google.zxing.common.GlobalHistogramBinarizer
 import com.google.zxing.qrcode.QRCodeReader
 import com.google.zxing.qrcode.QRCodeWriter
+import com.v2ray.ang.V2RayConfig.SS_PROTOCOL
 import com.v2ray.ang.V2RayConfig.VMESS_PROTOCOL
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.json.JSONArray
 import org.telegram.messenger.*
@@ -131,17 +131,19 @@ object ProxyUtil {
         var exists = false
 
         clip.primaryClip?.getItemAt(0)?.text?.split('\n')?.map { it.split(" ") }?.forEach {
-            it.forEach {
 
-                if (it.startsWith("tg://proxy") ||
-                        it.startsWith("tg://socks") ||
-                        it.startsWith("https://t.me/proxy") ||
-                        it.startsWith("https://t.me/socks") ||
-                        it.startsWith("vmess://")) {
+            it.forEach { line ->
+
+                if (line.startsWith("tg://proxy") ||
+                        line.startsWith("tg://socks") ||
+                        line.startsWith("https://t.me/proxy") ||
+                        line.startsWith("https://t.me/socks") ||
+                        line.startsWith("vmess://") ||
+                        line.startsWith("ss://")) {
 
                     exists = true
 
-                    import(ctx, it)
+                    import(ctx, line)
 
                 }
 
@@ -151,7 +153,7 @@ object ProxyUtil {
 
         if (!exists) {
 
-            AlertUtil.showToast( LocaleController.getString("BrokenLink", R.string.BrokenLink))
+            AlertUtil.showToast(LocaleController.getString("BrokenLink", R.string.BrokenLink))
 
         }
 
@@ -164,6 +166,18 @@ object ProxyUtil {
             if (link.startsWith(VMESS_PROTOCOL)) {
 
                 AndroidUtilities.showVmessAlert(ctx, SharedConfig.VmessProxy(link))
+
+            } else if (link.startsWith(SS_PROTOCOL)) {
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+
+                    AlertUtil.showToast(LocaleController.getString("MinApi21Required", R.string.MinApi21Required))
+
+                    return
+
+                }
+
+                AndroidUtilities.showShadowsocksAlert(ctx, SharedConfig.ShadowsocksProxy(link))
 
             } else {
 
@@ -181,7 +195,9 @@ object ProxyUtil {
 
         }.onFailure {
 
-            Toast.makeText(ctx, LocaleController.getString("BrokenLink", R.string.BrokenLink), Toast.LENGTH_LONG).show()
+            FileLog.e(it)
+
+            AlertUtil.showToast(LocaleController.getString("BrokenLink", R.string.BrokenLink))
 
         }
 
@@ -192,6 +208,10 @@ object ProxyUtil {
     fun shareProxy(ctx: Activity, info: SharedConfig.ProxyInfo, type: Int) {
 
         val url = if (info is SharedConfig.VmessProxy) {
+
+            info.bean.toString()
+
+        } else if (info is SharedConfig.ShadowsocksProxy) {
 
             info.bean.toString()
 

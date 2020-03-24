@@ -14,7 +14,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.*;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,9 +27,14 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.*;
+import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -39,7 +48,12 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.text.*;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.SpannedString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
@@ -47,7 +61,14 @@ import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.StateSet;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.AccelerateInterpolator;
@@ -56,12 +77,18 @@ import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.webkit.MimeTypeMap;
-import android.widget.*;
+import android.widget.EdgeEffect;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
 import androidx.core.content.FileProvider;
 import androidx.viewpager.widget.ViewPager;
+
 import com.android.internal.telephony.ITelephony;
 
-import kotlin.text.StringsKt;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.RequestTimeDelegate;
@@ -72,23 +99,47 @@ import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Cells.TextDetailSettingsCell;
-import org.telegram.ui.Components.*;
+import org.telegram.ui.Components.BackgroundGradientDrawable;
+import org.telegram.ui.Components.ForegroundDetector;
+import org.telegram.ui.Components.LayoutHelper;
+import org.telegram.ui.Components.PickerBottomLayout;
+import org.telegram.ui.Components.ShareAlert;
+import org.telegram.ui.Components.TypefaceSpan;
 import org.telegram.ui.ThemePreviewActivity;
 import org.telegram.ui.WallpapersListActivity;
-import tw.nekomimi.nekogram.NekoConfig;
-import tw.nekomimi.nekogram.utils.AlertUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import kotlin.text.StringsKt;
+import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.utils.AlertUtil;
 
 public class AndroidUtilities {
 
@@ -1561,8 +1612,7 @@ public class AndroidUtilities {
                 Rect insets = (Rect) mStableInsetsField.get(mAttachInfo);
                 return insets.bottom;
             }
-        } catch (Exception e) {
-            FileLog.e(e);
+        } catch (Exception ignored) {
         }
         return 0;
     }
@@ -2789,6 +2839,97 @@ public class AndroidUtilities {
             linearLayout.addView(cell, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
             AtomicInteger count = new AtomicInteger();
             if (a == 7) {
+                RequestTimeDelegate callback = new RequestTimeDelegate() {
+                    @Override
+                    public void run(long time) {
+                        int c = count.getAndIncrement();
+                        String colorKey;
+                        if (time != -1) {
+                            cell.setTextAndValue(LocaleController.getString("Available", R.string.Available), LocaleController.formatString("Ping", R.string.Ping, time), true);
+                            colorKey = Theme.key_windowBackgroundWhiteGreenText;
+                        } else if (c < 3) {
+                            ConnectionsManager.getInstance(UserConfig.selectedAccount).checkProxy(info.address, info.port, "", "", "", t -> AndroidUtilities.runOnUIThread(() -> run(t),500));
+                            colorKey = Theme.key_windowBackgroundWhiteGreenText;
+                        } else {
+                            cell.setTextAndValue(LocaleController.getString("Unavailable", R.string.Unavailable), LocaleController.getString("Unavailable", R.string.Unavailable), true);
+                            colorKey = Theme.key_windowBackgroundWhiteRedText4;
+                        }
+                        cell.getValueTextView().setTextColor(Theme.getColor(colorKey));
+                    }
+
+                };
+
+                ConnectionsManager.getInstance(UserConfig.selectedAccount).checkProxy(info.address, info.port, "","","",time ->AndroidUtilities.runOnUIThread(()->callback.run(time)));
+
+            }
+        }
+
+        PickerBottomLayout pickerBottomLayout = new PickerBottomLayout(activity, false);
+        pickerBottomLayout.setBackgroundColor(Theme.getColor(Theme.key_dialogBackground));
+        linearLayout.addView(pickerBottomLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.LEFT | Gravity.BOTTOM));
+        pickerBottomLayout.cancelButton.setPadding(AndroidUtilities.dp(18), 0, AndroidUtilities.dp(18), 0);
+        pickerBottomLayout.cancelButton.setTextColor(Theme.getColor(Theme.key_dialogTextBlue2));
+        pickerBottomLayout.cancelButton.setText(LocaleController.getString("Cancel", R.string.Cancel).toUpperCase());
+        pickerBottomLayout.cancelButton.setOnClickListener(view -> {
+            info.loader.stop();
+            dismissRunnable.run();
+        });
+        pickerBottomLayout.doneButtonTextView.setTextColor(Theme.getColor(Theme.key_dialogTextBlue2));
+        pickerBottomLayout.doneButton.setPadding(AndroidUtilities.dp(18), 0, AndroidUtilities.dp(18), 0);
+        pickerBottomLayout.doneButtonBadgeTextView.setVisibility(View.GONE);
+        pickerBottomLayout.doneButtonTextView.setText(LocaleController.getString("ConnectingConnectProxy", R.string.ConnectingConnectProxy).toUpperCase());
+        pickerBottomLayout.doneButton.setOnClickListener(v -> {
+
+            SharedConfig.setCurrentProxy(SharedConfig.addProxy(info));
+
+            SharedConfig.setProxyEnable(true);
+
+            NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+
+            dismissRunnable.run();
+
+        });
+        builder.show();
+    }
+
+    public static void showShadowsocksAlert(Context activity, final SharedConfig.ShadowsocksProxy info) {
+        BottomSheet.Builder builder = new BottomSheet.Builder(activity);
+        final Runnable dismissRunnable = builder.getDismissRunnable();
+
+        builder.setApplyTopPadding(false);
+        builder.setApplyBottomPadding(false);
+        LinearLayout linearLayout = new LinearLayout(activity);
+        builder.setCustomView(linearLayout);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        for (int a = 0; a < 5; a++) {
+            String text = null;
+            String detail = null;
+            if (a == 0) {
+                text = info.bean.getHost();
+                detail = LocaleController.getString("UseProxyAddress", R.string.UseProxyAddress);
+            } else if (a == 1) {
+                text = "" + info.bean.getRemotePort();
+                detail = LocaleController.getString("UseProxyPort", R.string.UseProxyPort);
+            } else if (a == 2) {
+                text = info.bean.getPassword();
+                detail = LocaleController.getString("SSPassword", R.string.SSPassword);
+            } else if (a == 3) {
+                text = info.bean.getMethod();
+                detail = LocaleController.getString("SSMethod", R.string.SSMethod);
+            } else {
+                text = LocaleController.getString("Checking", R.string.Checking);
+                detail = LocaleController.getString("Checking", R.string.Checking);
+            }
+            if (TextUtils.isEmpty(text)) {
+                continue;
+            }
+            TextDetailSettingsCell cell = new TextDetailSettingsCell(activity);
+            cell.setTextAndValue(text, detail, true);
+            cell.getTextView().setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
+            cell.getValueTextView().setTextColor(Theme.getColor(Theme.key_dialogTextGray3));
+            linearLayout.addView(cell, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
+            AtomicInteger count = new AtomicInteger();
+            if (a == 4) {
                 RequestTimeDelegate callback = new RequestTimeDelegate() {
                     @Override
                     public void run(long time) {

@@ -40,6 +40,8 @@ import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
@@ -673,16 +675,19 @@ public class BottomSheet extends Dialog {
             containerView.addView(customView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.TOP, 0, topOffset, 0, 0));
         } else {
             if (items != null) {
-                FrameLayout rowLayout = null;
-                int lastRowLayoutNum = 0;
+                FrameLayout rootView = new ScrollView(getContext());
+                LinearLayout rowView = new LinearLayout(getContext());
+                rowView.setOrientation(LinearLayout.VERTICAL);
+                rootView.addView(rowView,new ScrollView.LayoutParams(-1,-1));
+                containerView.addView(rootView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.LEFT | Gravity.TOP, 0, topOffset, 0, 0));
+
                 for (int a = 0; a < items.length; a++) {
                     if (items[a] == null) {
                         continue;
                     }
                     BottomSheetCell cell = new BottomSheetCell(getContext(), 0);
                     cell.setTextAndIcon(items[a], itemIcons != null ? itemIcons[a] : 0, bigTitle);
-                    containerView.addView(cell, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.LEFT | Gravity.TOP, 0, topOffset, 0, 0));
-                    topOffset += 48;
+                    rowView.addView(cell,LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.LEFT | Gravity.TOP, 0, topOffset, 0, 0));
                     cell.setTag(a);
                     cell.setOnClickListener(v -> dismissWithButtonClick((Integer) v.getTag()));
                     itemViews.add(cell);

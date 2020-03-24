@@ -9,6 +9,9 @@
 -keep class com.google.android.exoplayer2.util.** { *; }
 -keep class com.google.android.exoplayer2.metadata.** { *; }
 -keep class com.v2ray.ang.dto.** { *; }
+
+-keep class io.github.trojan_gfw.** { *; }
+
 -dontwarn com.coremedia.**
 -dontwarn org.telegram.**
 -dontwarn com.google.android.exoplayer2.ext.**

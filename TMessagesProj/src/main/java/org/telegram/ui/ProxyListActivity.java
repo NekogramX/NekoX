@@ -9,6 +9,7 @@
 package org.telegram.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -35,7 +35,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.DownloadController;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessagesController;
@@ -62,6 +61,7 @@ import org.telegram.ui.Components.RecyclerListView;
 import java.util.List;
 
 import okhttp3.HttpUrl;
+import tw.nekomimi.nekogram.ShadowsocksSettingsActivity;
 import tw.nekomimi.nekogram.VmessSettingsActivity;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
 
@@ -128,12 +128,16 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             super.onMeasure(MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(AndroidUtilities.dp(64) + 1, MeasureSpec.EXACTLY));
         }
 
+        @SuppressLint("SetTextI18n")
         public void setProxy(SharedConfig.ProxyInfo proxyInfo) {
             String server;
             int port;
             if (proxyInfo instanceof SharedConfig.VmessProxy) {
                 server = ((SharedConfig.VmessProxy) proxyInfo).bean.getAddress();
                 port = ((SharedConfig.VmessProxy) proxyInfo).bean.getPort();
+            } else if (proxyInfo instanceof SharedConfig.ShadowsocksProxy) {
+                server = ((SharedConfig.ShadowsocksProxy) proxyInfo).bean.getHost();
+                port = ((SharedConfig.ShadowsocksProxy) proxyInfo).bean.getRemotePort();
             } else {
                 server = proxyInfo.address;
                 port = proxyInfo.port;
@@ -143,7 +147,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
             } else if (proxyInfo.isInternal) {
                 textView.setText(LocaleController.formatString("PublicPrefix", R.string.PublicPrefix) + " " + server + ":" + port);
             } else {
-                textView.setText(server + ":" + port);
+                textView.setText(server + ": " + port);
             }
             currentInfo = proxyInfo;
         }
@@ -279,6 +283,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
     private int menu_add_input_socks = 2;
     private int menu_add_input_telegram = 3;
     private int menu_add_input_vmess = 4;
+    private int menu_add_input_ss = 7;
     private int menu_add_import_from_clipboard = 5;
     private int menu_add_scan_qr = 6;
 
@@ -303,8 +308,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
         ActionBarMenuItem addItem = menu.addItem(menu_add, R.drawable.add);
 
-        addItem.addSubItem(menu_add_import_from_clipboard,LocaleController.getString("ImportProxyFromClipboard",R.string.ImportProxyFromClipboard)).setOnClickListener((v) -> ProxyUtil.importFromClipboard(context));
-        addItem.addSubItem(menu_add_scan_qr,LocaleController.getString("ScanQRCode",R.string.ScanQRCode)).setOnClickListener((v) -> {
+        addItem.addSubItem(menu_add_import_from_clipboard, LocaleController.getString("ImportProxyFromClipboard", R.string.ImportProxyFromClipboard)).setOnClickListener((v) -> ProxyUtil.importFromClipboard(context));
+        addItem.addSubItem(menu_add_scan_qr, LocaleController.getString("ScanQRCode", R.string.ScanQRCode)).setOnClickListener((v) -> {
 
             CameraScanActivity.showAsSheet(this, new CameraScanActivity.CameraScanActivityDelegate() {
 
@@ -351,7 +356,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                                 @Override
                                 public void didFindQr(String text) {
 
-                                    ProxyUtil.showLinkAlert(getParentActivity(),text);
+                                    ProxyUtil.showLinkAlert(getParentActivity(), text);
 
                                 }
                             });
@@ -369,9 +374,15 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
         });
 
-        addItem.addSubItem(menu_add_input_socks,LocaleController.getString("AddProxySocks5", R.string.AddProxySocks5)).setOnClickListener((v) -> presentFragment(new ProxySettingsActivity(0)));
+        addItem.addSubItem(menu_add_input_socks, LocaleController.getString("AddProxySocks5", R.string.AddProxySocks5)).setOnClickListener((v) -> presentFragment(new ProxySettingsActivity(0)));
         addItem.addSubItem(menu_add_input_telegram, LocaleController.getString("AddProxyTelegram", R.string.AddProxyTelegram)).setOnClickListener((v) -> presentFragment(new ProxySettingsActivity(1)));
-        addItem.addSubItem(menu_add_input_vmess,  LocaleController.getString("AddProxyVmess", R.string.AddProxyVmess)).setOnClickListener((v) -> presentFragment(new VmessSettingsActivity()));
+        addItem.addSubItem(menu_add_input_vmess, LocaleController.getString("AddProxyVmess", R.string.AddProxyVmess)).setOnClickListener((v) -> presentFragment(new VmessSettingsActivity()));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            addItem.addSubItem(menu_add_input_ss, LocaleController.getString("AddProxySS", R.string.AddProxySS)).setOnClickListener((v) -> presentFragment(new ShadowsocksSettingsActivity()));
+
+        }
 
         listAdapter = new ListAdapter(context);
 
@@ -478,6 +489,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
                         if (info instanceof SharedConfig.VmessProxy) {
                             presentFragment(new VmessSettingsActivity((SharedConfig.VmessProxy) info));
+                        } else if (info instanceof SharedConfig.ShadowsocksProxy) {
+                            presentFragment(new ShadowsocksSettingsActivity((SharedConfig.ShadowsocksProxy) info));
                         } else {
                             presentFragment(new ProxySettingsActivity(info));
                         }
@@ -557,6 +570,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 LocaleController.getString("AddProxySocks5", R.string.AddProxySocks5),
                 LocaleController.getString("AddProxyTelegram", R.string.AddProxyTelegram),
                 LocaleController.getString("AddProxyVmess", R.string.AddProxyVmess),
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? null : LocaleController.getString("AddProxySS", R.string.AddProxySS),
+
                 LocaleController.getString("ImportProxyFromClipboard", R.string.ImportProxyFromClipboard),
                 LocaleController.getString("ScanQRCode", R.string.ScanQRCode)
 
@@ -576,7 +591,9 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
 
             } else if (i == 3) {
 
-                // AlertsCreator.showSimpleToast(this, "unimplemented :(");
+                presentFragment(new ShadowsocksSettingsActivity());
+
+            } else if (i == 4) {
 
                 ProxyUtil.importFromClipboard(getParentActivity());
 
@@ -627,7 +644,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                                     @Override
                                     public void didFindQr(String text) {
 
-                                        ProxyUtil.showLinkAlert(getParentActivity(),text);
+                                        ProxyUtil.showLinkAlert(getParentActivity(), text);
 
                                     }
                                 });

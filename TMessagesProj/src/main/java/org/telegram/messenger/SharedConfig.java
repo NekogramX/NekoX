@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import kotlin.text.StringsKt;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.ProxyManager;
+import tw.nekomimi.nekogram.ShadowsocksLoader;
 import tw.nekomimi.nekogram.VmessLoader;
 import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
@@ -200,6 +201,47 @@ public class SharedConfig {
             loader.stop();
 
             loader = new VmessLoader();
+            loader.initConfig(bean, port);
+            loader.start();
+
+        }
+
+    }
+
+    public static class ShadowsocksProxy extends ProxyInfo {
+
+        public ShadowsocksLoader.Bean bean;
+        public ShadowsocksLoader loader;
+
+        public ShadowsocksProxy(String ssLink) {
+
+            this(ShadowsocksLoader.Bean.Companion.parse(ssLink));
+
+        }
+
+        public ShadowsocksProxy(ShadowsocksLoader.Bean bean) {
+
+            this.bean = bean;
+
+            address = "127.0.0.1";
+            username = "";
+            password = "";
+            secret = "";
+            port = ProxyManager.getPortForBean(bean);
+
+            loader = new ShadowsocksLoader();
+            loader.initConfig(bean, port);
+            loader.start();
+
+        }
+
+        public void reset() {
+
+            port = ProxyManager.getPortForBean(bean);
+
+            loader.stop();
+
+            loader = new ShadowsocksLoader();
             loader.initConfig(bean, port);
             loader.start();
 
@@ -824,7 +866,10 @@ public class SharedConfig {
                         if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
 
                             if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password) ||
-                                    (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).bean.toString())))) {
+                                    (currentProxy instanceof VmessProxy && vmessLink.equals(((VmessProxy) currentProxy).bean.toString())) ||
+                                    (currentProxy instanceof ShadowsocksProxy && vmessLink.equals(((ShadowsocksProxy) currentProxy).bean.toString())))
+
+                            ) {
 
                                 currentProxy = info;
 
@@ -834,7 +879,7 @@ public class SharedConfig {
 
                     } catch (InvalidProxyException ignored) {
 
-                        Log.w("nekox", "invalid config: " + config);
+                        FileLog.d("ignored invalid config : " + ignored.getMessage() + "\n\n" + config.toString());
 
                     }
 
@@ -842,56 +887,6 @@ public class SharedConfig {
                 }
 
             } catch (JSONException e) {
-            }
-
-        }
-
-        File flyChatListFile = new File(ApplicationLoader.applicationContext.getFilesDir(), "flychat_list.json");
-
-        if (flyChatListFile.isFile()) {
-
-            try {
-
-                JSONArray serverList = new JSONArray(FileUtil.readUtf8String(flyChatListFile));
-
-                for (int index = 0; index < serverList.length(); index++) {
-
-                    JSONObject config = serverList.getJSONObject(index);
-
-                    ProxyInfo info = new ProxyInfo(
-                            config.getString("ip"),
-                            config.optInt("port"),
-                            null,
-                            null,
-                            config.getString("secret"));
-
-                    info.isInternal = true;
-                    info.descripton = "來自閉源釣魚軟件 FlyChat :)";
-
-                    if (StringsKt.isBlank(info.secret)) {
-
-                        info.secret = "eedc4484ea28bac866577326e76460754d6d6963726f736f66742e636f6d";
-
-                    }
-
-                    proxy.add(info);
-
-                    if (currentProxy == null && !TextUtils.isEmpty(proxyAddress)) {
-
-                        if (proxyAddress.equals(info.address) && (proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password))) {
-
-                            currentProxy = info;
-
-                        }
-
-                    }
-
-                }
-
-            } catch (JSONException e) {
-
-                FileLog.e("invalid flychat config", e);
-
             }
 
         }
@@ -937,8 +932,6 @@ public class SharedConfig {
             currentProxy = proxyList.get(0);
 
         }
-
-        Log.d("nekox", "proxy addr " + currentProxy.address + ", port: " + currentProxy.port + ", enable: " + enable);
 
         ConnectionsManager.setProxySettings(enable, SharedConfig.currentProxy.address, SharedConfig.currentProxy.port, SharedConfig.currentProxy.username, SharedConfig.currentProxy.password, SharedConfig.currentProxy.secret);
 
@@ -997,7 +990,7 @@ public class SharedConfig {
 
                         try {
 
-                            info = new VmessProxy(proxyObj.getString("vmess_link"));
+                            info = parseProxyInfo(proxyObj.getString("vmess_link"));
 
                         } catch (Exception e) {
 
@@ -1026,6 +1019,11 @@ public class SharedConfig {
 
                             currentProxy = info;
 
+                        } else if ((info instanceof ShadowsocksProxy && vmessLink.equals(((ShadowsocksProxy) info).bean.toString()))) {
+
+                            currentProxy = info;
+
+
                         } else if (proxyAddress.equals(info.address) && proxyPort == info.port && proxyUsername.equals(info.username) && proxyPassword.equals(info.password)) {
 
                             currentProxy = info;
@@ -1035,7 +1033,7 @@ public class SharedConfig {
 
                 }
             } catch (JSONException e) {
-                Log.e("nekox", "load proxy error", e);
+                FileLog.e("load proxy error", e);
             }
 
         }
@@ -1052,11 +1050,29 @@ public class SharedConfig {
 
     public static ProxyInfo parseProxyInfo(String url) throws InvalidProxyException {
 
-        if (url.startsWith(V2RayConfig.VMESS_PROTOCOL) || url.startsWith(SS_PROTOCOL)) {
+        if (url.startsWith(V2RayConfig.VMESS_PROTOCOL)) {
 
             try {
 
                 return new VmessProxy(url);
+
+            } catch (Exception ex) {
+
+                throw new InvalidProxyException(ex);
+
+            }
+
+        } else if (url.startsWith(SS_PROTOCOL)) {
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+
+                throw new InvalidProxyException("shadowsocks requires min api 21");
+
+            }
+
+            try {
+
+                return new ShadowsocksProxy(url);
 
             } catch (Exception ex) {
 
@@ -1094,6 +1110,10 @@ public class SharedConfig {
         public InvalidProxyException() {
         }
 
+        public InvalidProxyException(String messsage) {
+            super(messsage);
+        }
+
         public InvalidProxyException(Throwable cause) {
 
             super(cause);
@@ -1112,6 +1132,9 @@ public class SharedConfig {
                 if (info instanceof VmessProxy) {
                     proxyObJ.put("port", info.port);
                     proxyObJ.put("vmess_link", ((VmessProxy) info).bean.toString());
+                } else if (info instanceof ShadowsocksProxy) {
+                    proxyObJ.put("port", info.port);
+                    proxyObJ.put("vmess_link", ((ShadowsocksProxy) info).bean.toString());
                 } else {
                     proxyObJ.put("server", info.address != null ? info.address : "");
                     proxyObJ.put("port", info.port);
