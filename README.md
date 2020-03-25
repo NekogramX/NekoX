@@ -1,6 +1,6 @@
 # NekoX
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 ![Logo](https://raw.githubusercontent.com/NekogramX/NekoX/master/TMessagesProj/src/main/res/mipmap-xxxhdpi/ic_launcher.png)  
 
@@ -84,6 +84,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://nekox.me"><img src="https://avatars3.githubusercontent.com/u/56506714?v=4" width="100px;" alt=""/><br /><sub><b>世界</b></sub></a><br /><a href="https://github.com/NekogramX/NekoX/commits?author=nekohasekai" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/NekoInverter"><img src="https://avatars2.githubusercontent.com/u/42698724?v=4" width="100px;" alt=""/><br /><sub><b>猫耳逆变器</b></sub></a><br /><a href="https://github.com/NekogramX/NekoX/commits?author=NekoInverter" title="Code">💻</a></td>
   </tr>
 </table>
 
