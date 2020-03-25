@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "nekohasekai",
+      "name": "世界",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/56506714?v=4",
+      "profile": "https://nekox.me",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "NekoX",
+  "projectOwner": "NekogramX",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
