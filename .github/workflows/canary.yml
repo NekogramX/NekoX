@@ -18,12 +18,10 @@ jobs:
       - name: assembleAfatRelease
         run: |
           git submodule update --init --recursive
-          cat >> local.properties <<EOF
-          KEYSTORE_PASS=${{ secrets.KEYSTORE_PASS }}
-          ALIAS_NAME=${{ secrets.ALIAS_NAME }}
-          ALIAS_PASS=${{ secrets.ALIAS_PASS }}
-          EOF
           sudo bash <<EOF
+            export KEYSTORE_PASS="${{ secrets.KEYSTORE_PASS }}"
+            export ALIAS_NAME="${{ secrets.ALIAS_NAME }}"
+            export ALIAS_PASS="${{ secrets.ALIAS_PASS }}"
             ./gradlew ss-libev:assembleRelease && ./gradlew assembleAfatRelease
           EOF
           echo ::set-env name=APK_FILE::$(find TMessagesProj/build/outputs/apk -name "*.apk")
