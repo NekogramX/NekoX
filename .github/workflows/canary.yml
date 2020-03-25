@@ -15,16 +15,14 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: assembleAfatRelease
+      - name: Run Gradle Build
         run: |
           git submodule update --init --recursive
           sudo bash <<EOF
-            export KEYSTORE_PASS="${{ secrets.KEYSTORE_PASS }}"
-            export ALIAS_NAME="${{ secrets.ALIAS_NAME }}"
-            export ALIAS_PASS="${{ secrets.ALIAS_PASS }}"
-            ./gradlew ss-libev:assembleRelease && ./gradlew assembleAfatRelease
+            export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
+            ./gradlew ss-libev:assembleRelease && ./gradlew assembleMinApi21Release
           EOF
-          echo ::set-env name=APK_FILE::$(find TMessagesProj/build/outputs/apk -name "*.apk")
+          echo ::set-env name=APK_FILE::$(find TMessagesProj/build/outputs/apk -name "*arm64-v8a*.apk")
       - uses: NekogramX/nekox-build-script@master
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}

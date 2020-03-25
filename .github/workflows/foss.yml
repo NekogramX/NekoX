@@ -56,9 +56,7 @@ jobs:
       - name: assemble
         run: |
           sudo bash <<EOF
-            export KEYSTORE_PASS="${{ secrets.KEYSTORE_PASS }}"
-            export ALIAS_NAME="${{ secrets.ALIAS_NAME }}"
-            export ALIAS_PASS="${{ secrets.ALIAS_PASS }}"
+            export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
             ./gradlew ss-libev:assembleRelease && ./gradlew assembleAfatFoss
           EOF
       - uses: actions/upload-artifact@master
