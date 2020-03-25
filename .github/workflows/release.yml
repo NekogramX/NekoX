@@ -3,7 +3,7 @@ name: Release Build
 on:
   push:
     tags:
-    - 'v*'
+      - 'v*'
 
 jobs:
   releaseBuild:
@@ -14,57 +14,21 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - uses: actions/setup-go@v1
-        with:
-          go-version: 1.13
       - name: Setup ghr
         run: |
           wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
           tar xvzf ghr.tar.gz; rm ghr.tar.gz
           sudo mv ghr*linux_amd64/ghr /usr/local/bin; rm -rf ghr*linux_amd64
-      - name: Build native libraries
+      - name: assembleRelease
         run: |
-          cd TMessagesProj/libs
-
-          go env -w GOPATH=$HOME/go
-          export GOPATH=$HOME/go
-          export PATH=$PATH:$GOPATH/bin
-
-          go get -u github.com/golang/protobuf/protoc-gen-go
-          go get -v golang.org/x/mobile/cmd/...
-          go get -v go.starlark.net/starlark
-          go get -v github.com/refraction-networking/utls
-          go get -v github.com/gorilla/websocket
-          go get -v -insecure v2ray.com/core
-          go get github.com/2dust/AndroidLibV2rayLite
-
-          gomobile init
-          env GO111MODULE=off gomobile bind -v -ldflags='-s -w' github.com/2dust/AndroidLibV2rayLite
-
-          cd ../jni
-
-          sudo apt-get install -y ninja-build
-          export NDK=$ANDROID_HOME/ndk-bundle
-          export NINJA_PATH=/usr/bin/ninja
-          export PATH=`echo $ANDROID_HOME/cmake/*/bin`:$PATH
-
-          git submodule init
-          git submodule update
-
-          ./build_ffmpeg_clang.sh
-          ./patch_ffmpeg.sh
-          ./patch_boringssl.sh
-          ./build_boringssl.sh
-
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-      - name: assemble
-        env:
-          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
-          ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
-          ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
-        run: |
-          ./gradlew assembleFoss assembleRelease bundleAfatRelease
+          git submodule update --init --recursive
+          sudo bash <<EOF
+            export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
+            ./gradlew assembleRelease \
+                      assembleReleaseNoGcm \
+                      assembleLegacyRelease \
+                      assembleLegacyReleaseNoGcm
+          EOF
           echo ::set-env name=AAB_FILE::$(find TMessagesProj/build/outputs/bundle -name "*.aab")
       - name: Upload apks
         env:
@@ -73,11 +37,14 @@ jobs:
         run: |
           mkdir apks; find . -name "*.apk" -exec mv {} apks \;
 
-          ghr -delete \
-            -b "${{ github.event.head_commit.message }}" \
+          ghr -b "${{ github.event.head_commit.message }}" \
             -n "${{ github.ref }}" "${{ github.ref }}" apks/
 
           cd apks
+
+          gpg --import <<EOF
+          $GPG_KEY
+          EOF
 
           echo "DA55ACBFDDA40853BFC5496ECD109927C34A63C4"  > $HOME/.gnupg/sshcontrol
 
@@ -103,8 +70,6 @@ jobs:
 
           git checkout -b release
           git push gitee  release -f
-
-      - uses: r0adkll/upload-google-play@master
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_ACCOUNT_SERVICE }}
           packageName: nekox.messenger

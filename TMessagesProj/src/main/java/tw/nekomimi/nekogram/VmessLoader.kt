@@ -59,33 +59,42 @@ class VmessLoader {
                         if (result.isBlank()) {
                             error("invalid url format")
                         }
-                        val vmessQRCode = Gson().fromJson(result, VmessQRCode::class.java)
-                        if (vmessQRCode.add.isBlank()
-                                || vmessQRCode.port.isBlank()
-                                || vmessQRCode.id.isBlank()
-                                || vmessQRCode.aid.isBlank()
-                                || vmessQRCode.net.isBlank()
-                        ) {
-                            error("invalid protocol")
+
+                        if (result.contains("= vmess")) {
+
+                            vmess = resolveSomeIOSAppShitCsvLink(result)
+
+                        } else {
+
+                            val vmessQRCode = Gson().fromJson(result, VmessQRCode::class.java)
+                            if (vmessQRCode.add.isBlank()
+                                    || vmessQRCode.port.isBlank()
+                                    || vmessQRCode.id.isBlank()
+                                    || vmessQRCode.aid.isBlank()
+                                    || vmessQRCode.net.isBlank()
+                            ) {
+                                error("invalid protocol")
+                            }
+
+                            vmess.configType = V2RayConfig.EConfigType.Vmess
+                            vmess.security = "auto"
+                            vmess.network = "tcp"
+                            vmess.headerType = "none"
+
+                            vmess.configVersion = Utils.parseInt(vmessQRCode.v)
+                            vmess.remarks = vmessQRCode.ps
+                            vmess.address = vmessQRCode.add
+                            vmess.port = Utils.parseInt(vmessQRCode.port)
+                            vmess.id = vmessQRCode.id
+                            vmess.alterId = Utils.parseInt(vmessQRCode.aid)
+                            vmess.network = vmessQRCode.net
+                            vmess.headerType = vmessQRCode.type
+                            vmess.requestHost = vmessQRCode.host
+                            vmess.path = vmessQRCode.path
+                            vmess.streamSecurity = vmessQRCode.tls
                         }
-
-                        vmess.configType = V2RayConfig.EConfigType.Vmess
-                        vmess.security = "auto"
-                        vmess.network = "tcp"
-                        vmess.headerType = "none"
-
-                        vmess.configVersion = Utils.parseInt(vmessQRCode.v)
-                        vmess.remarks = vmessQRCode.ps
-                        vmess.address = vmessQRCode.add
-                        vmess.port = Utils.parseInt(vmessQRCode.port)
-                        vmess.id = vmessQRCode.id
-                        vmess.alterId = Utils.parseInt(vmessQRCode.aid)
-                        vmess.network = vmessQRCode.net
-                        vmess.headerType = vmessQRCode.type
-                        vmess.requestHost = vmessQRCode.host
-                        vmess.path = vmessQRCode.path
-                        vmess.streamSecurity = vmessQRCode.tls
                     }
+
                     upgradeServerVersion(vmess)
 
                     return vmess
@@ -156,6 +165,40 @@ class VmessLoader {
                 throw IllegalArgumentException(e)
 
             }
+
+        }
+
+        fun resolveSomeIOSAppShitCsvLink(csv: String): VmessBean {
+
+            val args = csv.split(",")
+
+            val bean = VmessBean()
+
+            bean.configType = V2RayConfig.EConfigType.Vmess
+            bean.address = args[1]
+            bean.port = args[2].toInt()
+            bean.security = args[3]
+            bean.id = args[4].replace("\"","")
+            bean.streamSecurity = if (args[5].contains("true")) "tls" else ""
+            bean.network = args[7].substringAfter("=")
+
+            runCatching {
+
+                bean.path = args[8]
+                        .substringAfter("obfs-path=\"")
+                        .substringBefore("\"")
+
+            }
+
+            runCatching {
+
+                bean.requestHost = args[8]
+                        .substringAfter("Host:")
+                        .substringBefore("[")
+
+            }
+
+            return bean
 
         }
 

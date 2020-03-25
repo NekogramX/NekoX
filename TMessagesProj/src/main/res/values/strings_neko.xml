@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Nekogram" translatable="false">Nekogram X</string>
-    <string name="NekogramBeta" translatable="false">Nekogram X Beta</string>
-    <string name="NekogramWithEmoji" translatable="false">&#128566; NekogramX</string>
+    <string name="Nekogram" translatable="false">Nekogram</string>
+    <string name="NekogramBeta" translatable="false">Nekogram Beta</string>
+    <string name="NekogramWithEmoji" translatable="false">&#128566; Nekogram</string>
     <string name="NekogramEmojiDialogs" translatable="false">&#128566;</string>
     <string name="NekogramEmojiDialogsUnread" translatable="false">&#129300;</string>
     <string name="NekoSettings">Neko Settings</string>
@@ -91,4 +91,6 @@
     <string name="TapOnActionBar">Tap on the title bar</string>
     <string name="TapOnFab">Tap on the pencil button</string>
     <string name="HideKeyboardOnChatScroll">Hide keyboard on chat scroll</string>
+    <string name="UserRestrictionsSendStickers2">Send Stickers</string>
+    <string name="UserRestrictionsSendGifs">Send GIFs</string>
 </resources>

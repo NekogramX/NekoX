@@ -236,10 +236,14 @@ public class ProxySettingsActivity extends BaseFragment {
                         editor.putString("proxy_secret", currentProxyInfo.secret);
                         if (currentProxyInfo instanceof SharedConfig.VmessProxy) {
                             editor.putString("vmess_link", ((SharedConfig.VmessProxy) currentProxyInfo).bean.toString());
+                        } else  if (currentProxyInfo instanceof SharedConfig.ShadowsocksProxy) {
+                            editor.putString("vmess_link", ((SharedConfig.ShadowsocksProxy) currentProxyInfo).bean.toString());
+                        } else  if (currentProxyInfo instanceof SharedConfig.ShadowsocksRProxy) {
+                            editor.putString("vmess_link", ((SharedConfig.ShadowsocksRProxy) currentProxyInfo).bean.toString());
                         }
                         ConnectionsManager.setProxySettings(SharedConfig.proxyEnabled, currentProxyInfo.address, currentProxyInfo.port, currentProxyInfo.username, currentProxyInfo.password, currentProxyInfo.secret);
                     }
-                    editor.commit();
+                    editor.apply();
 
                     NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
 

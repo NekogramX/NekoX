@@ -30,6 +30,44 @@ object ProxyManager {
 
     }
 
+    @JvmStatic
+    fun getPortForBean(bean: ShadowsocksLoader.Bean): Int {
+
+        val hash = bean.hash.toString()
+
+        var port = pref.getInt(hash, -1)
+
+        if (!isPorxyAvilable(port)) {
+
+            port = mkNewPort()
+
+            pref.edit().putInt(hash, port).apply()
+
+        }
+
+        return port
+
+    }
+
+    @JvmStatic
+    fun getPortForBean(bean: ShadowsocksRLoader.Bean): Int {
+
+        val hash = bean.hash.toString()
+
+        var port = pref.getInt(hash, -1)
+
+        if (!isPorxyAvilable(port)) {
+
+            port = mkNewPort()
+
+            pref.edit().putInt(hash, port).apply()
+
+        }
+
+        return port
+
+    }
+
     fun mkNewPort(): Int {
 
         val random = Random(System.currentTimeMillis())
