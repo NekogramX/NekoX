@@ -21,13 +21,9 @@ jobs:
           sudo mv ghr*linux_amd64/ghr /usr/local/bin; rm -rf ghr*linux_amd64
       - name: assembleRelease
         run: |
-          git submodule update --init --recursive
           sudo bash <<EOF
             export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
-            ./gradlew assembleRelease \
-                      assembleReleaseNoGcm \
-                      assembleLegacyRelease \
-                      assembleLegacyReleaseNoGcm
+            ./gradlew assembleRelease && ./gradlew assembleReleaseNoGcm
           EOF
           echo ::set-env name=AAB_FILE::$(find TMessagesProj/build/outputs/bundle -name "*.aab")
       - name: Upload apks
@@ -70,6 +66,7 @@ jobs:
 
           git checkout -b release
           git push gitee  release -f
+      - uses: r0adkll/upload-google-play@master
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_ACCOUNT_SERVICE }}
           packageName: nekox.messenger
