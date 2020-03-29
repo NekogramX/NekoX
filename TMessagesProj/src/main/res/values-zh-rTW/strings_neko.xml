@@ -86,4 +86,7 @@
     <string name="TapOnActionBar">點按標題欄</string>
     <string name="TapOnFab">點按鉛筆按鈕</string>
     <string name="HideKeyboardOnChatScroll">當滾動瀏覽對話時隱藏鍵盤</string>
+    <string name="UserRestrictionsSendStickers2">傳送貼圖</string>
+    <string name="UserRestrictionsSendGifs">發送動圖</string>
+    <string name="UseAvatarAsDrawerBackground">使用頭像作為程式集背景</string>
 </resources>
